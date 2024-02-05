@@ -1,16 +1,18 @@
-import 'package:cotiznow/src/presentation/pages/pages.dart';
-import 'package:flutter/material.dart';
+import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/authentication/register.dart';
+
+import 'authentication/login.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        '/login': (context) => const Main(),
-        '/register': (context) => const Main(),
+        '/login': (context) => Login(),
+        '/register': (context) => Register(),
         '/principal': (context) => const Main(),
       },
       home: const Main(),

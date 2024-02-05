@@ -1,4 +1,3 @@
-import 'package:cotiznow/src/presentation/utils/colors.dart';
 import 'package:cotiznow/lib.dart';
 
 import '../widgets/components/button.dart';
@@ -111,7 +110,7 @@ class Main extends StatelessWidget {
                       CustomElevatedButton(
                         text: 'Ingresar',
                         onPressed: () {
-                          print("le di click");
+                          Get.offAllNamed('/login');
                         },
                         height: 50.0,
                         width: 150.0,

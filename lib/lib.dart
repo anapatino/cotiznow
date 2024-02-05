@@ -4,3 +4,6 @@ export 'src/presentation/pages/app.dart';
 export 'src/presentation/pages/main.dart';
 export 'package:flutter/material.dart';
 export 'package:google_fonts/google_fonts.dart';
+export 'package:cotiznow/src/presentation/utils/colors.dart';
+export 'package:get/get.dart';
+export 'package:animate_do/animate_do.dart';
