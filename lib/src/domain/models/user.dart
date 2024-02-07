@@ -1,5 +1,5 @@
 class Users {
-  String name, lastName, adress, phone, email, password;
+  String name, lastName, adress, phone, email, password, role, account;
 
   Users(
       {required this.name,
@@ -7,7 +7,9 @@ class Users {
       required this.phone,
       required this.adress,
       required this.email,
-      required this.password});
+      required this.password,
+      required this.role,
+      required this.account});
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
@@ -17,6 +19,8 @@ class Users {
       adress: json['adress'] ?? '',
       email: json['email'] ?? '',
       password: json['password'] ?? '',
+      role: json['role'] ?? '',
+      account: json['account'] ?? '',
     );
   }
 }

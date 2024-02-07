@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:cotiznow/lib.dart';
+
+import '../../../domain/controllers/user_controller.dart';
 
 class Administrator extends StatelessWidget {
-  const Administrator({super.key});
+  UserController userController = Get.find();
+
+  Administrator({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +15,8 @@ class Administrator extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Dashboard Administrator'),
         ),
-        body: const Center(
-          child: Text('Dashboard Administrator'),
+        body: Center(
+          child: Text('Dashboard Administrator ${userController.name}'),
         ),
       ),
     );

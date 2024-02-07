@@ -12,16 +12,26 @@ class UserRequest {
       return await authentication.signInWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return Future.error('El usuario no existe');
-      } else if (e.code == 'wrong-password') {
-        return Future.error('Contraseña incorrecta');
-      } else if (e.code == 'The email address is badly formatted') {
-        return Future.error(
-            'La dirección de correo electrónico está mal formateada');
+      switch (e.code) {
+        case 'user-not-found':
+          return Future.error('El usuario no existe');
+        case 'wrong-password':
+          return Future.error('Contraseña incorrecta');
+        case 'invalid-email':
+          return Future.error('Correo electrónico inválido');
+        case 'user-disabled':
+          return Future.error('Usuario deshabilitado');
+        case 'too-many-requests':
+          return Future.error('Demasiados intentos. Intenta más tarde.');
+        case 'operation-not-allowed':
+          return Future.error('Operación no permitida.');
+        default:
+          return Future.error(
+              'Error al iniciar sesión, compruebe verificando de nuevo sus datos.');
       }
+    } catch (e) {
+      return Future.error('Error inesperado: $e');
     }
-    return Future.error('Error al ingresar');
   }
 
   static Future<UserCredential> register(String name, String lastName,

@@ -1,8 +1,10 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/dashboard/administrator.dart';
 
 import '../../../domain/controllers/user_controller.dart';
 import '../../widgets/components/button.dart';
 import '../../widgets/components/input.dart';
+import '../dashboard/customer.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController controllerEmail = TextEditingController();
@@ -24,20 +26,37 @@ class Login extends StatelessWidget {
         userController.login(email, password).then((value) async {
           if (userController.userEmail.isNotEmpty) {
             //await publicityController.viewPublicity();
-            print("Has ingresado correctamente");
-            //Get.offAllNamed('/login');
-          } else {
-            //messageResponse(context, "El correo/contraseña no es correcto");
+            if (userController.role == "customer" &&
+                userController.account == "enable") {
+              Get.offAll(() => Customer());
+            }
+            if (userController.role == "administrator" &&
+                userController.account == "enable") {
+              Get.offAll(() => Administrator());
+            }
           }
         }).catchError((error) {
-          //messageResponse(context, "Error: $error");
-          print("$error");
+          Get.snackbar(
+            'Validacion de usuario',
+            '$error',
+            colorText: Colors.white,
+            duration: const Duration(seconds: 5),
+            backgroundColor: Palette.error,
+            icon: const Icon(Icons.error_outline_rounded),
+          );
         });
 
         controllerEmail.clear();
         controllerPassword.clear();
       } else {
-        //messageResponse(context, "Por favor, ingresa el correo y la contraseña.");
+        Get.snackbar(
+          'Error al ingresar',
+          'Ingrese los campos requeridos para poder ingresar',
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.error_outline_rounded),
+        );
       }
     }
 

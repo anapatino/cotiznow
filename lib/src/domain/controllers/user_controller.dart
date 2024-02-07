@@ -5,31 +5,45 @@ import '../../data/service/user_request.dart';
 import '../models/user.dart';
 
 class UserController extends GetxController {
-  final Rx<dynamic> _user = "".obs;
-  final Rx<dynamic> _lastName = "".obs;
-  String get userEmail => _user.value;
-  String get lastName => _lastName.value;
+  final Rx<dynamic> _email = "".obs;
+  final Rx<dynamic> _name = "".obs;
+  final Rx<dynamic> _role = "".obs;
+  final Rx<dynamic> _account = "".obs;
+  final Rx<dynamic> _phone = "".obs;
+
+  String get userEmail => _email.value;
+  String get name => _name.value;
+  String get role => _role.value;
+  String get account => _account.value;
+  String get phone => _phone.value;
+
   Future<void> login(String email, String password) async {
     try {
       UserCredential user = await UserRequest.login(email, password);
-      _user.value = user.user!.email;
       Users foundUser = await UserRequest.findUser(email);
-      _lastName.value = foundUser.lastName;
+      _email.value = user.user!.email;
+      _name.value = foundUser.name;
+      _role.value = foundUser.role;
+      _account.value = foundUser.account;
+      _phone.value = foundUser.phone;
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
     }
   }
 
-  Future<void> register(String firstName, String lastName, String email,
+  Future<void> register(String name, String lastName, String email,
       String password, String phone, String address) async {
     try {
       UserCredential user = await UserRequest.register(
-          firstName, lastName, email, password, phone, address);
-      _user.value = user.user!.email;
+          name, lastName, email, password, phone, address);
+      _email.value = user.user!.email;
       Users foundUser = await UserRequest.findUser(email);
-      _lastName.value = foundUser.lastName;
+      _name.value = foundUser.name;
+      _role.value = foundUser.role;
+      _account.value = foundUser.account;
+      _phone.value = foundUser.phone;
     } on FirebaseAuthException catch (e) {
-      log('Excepcion en controller:$e');
+      return Future.error(e);
     }
   }
 }

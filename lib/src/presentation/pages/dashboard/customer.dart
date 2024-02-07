@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:cotiznow/lib.dart';
+
+import '../../../domain/controllers/user_controller.dart';
 
 class Customer extends StatelessWidget {
-  const Customer({super.key});
+  UserController userController = Get.find();
+
+  Customer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +15,8 @@ class Customer extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Dashboard cliente'),
         ),
-        body: const Center(
-          child: Text('Dashboard cliente'),
+        body: Center(
+          child: Text('Dashboard cliente ${userController.name}'),
         ),
       ),
     );

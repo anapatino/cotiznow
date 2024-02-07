@@ -1,5 +1,7 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/dashboard/customer.dart';
 
+import '../../../domain/controllers/user_controller.dart';
 import '../../widgets/components/button.dart';
 import '../../widgets/components/input.dart';
 
@@ -9,7 +11,8 @@ class Register extends StatelessWidget {
   final TextEditingController controllerPhone = TextEditingController();
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
-  final TextEditingController controllerAdress = TextEditingController();
+  final TextEditingController controllerAddress = TextEditingController();
+  UserController userController = Get.find();
 
   Register({super.key});
 
@@ -17,6 +20,56 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    Future<void> registerUser() async {
+      String name = controllerName.text;
+      String lastName = controllerLastName.text;
+      String phone = controllerPhone.text;
+      String email = controllerEmail.text;
+      String password = controllerPassword.text;
+      String address = controllerAddress.text;
+
+      if (name.isNotEmpty &&
+          lastName.isNotEmpty &&
+          phone.isNotEmpty &&
+          email.isNotEmpty &&
+          password.isNotEmpty &&
+          address.isNotEmpty) {
+        userController
+            .register(name, lastName, email, password, phone, address)
+            .then((value) async {
+          if (userController.userEmail.isNotEmpty) {
+            //await publicityController.viewPublicity();
+            Get.offAll(() => Customer());
+          }
+        }).catchError((error) {
+          Get.snackbar(
+            'Validacion de usuario',
+            '$error',
+            colorText: Colors.white,
+            duration: const Duration(seconds: 5),
+            backgroundColor: Palette.error,
+            icon: const Icon(Icons.error_outline_rounded),
+          );
+        });
+        controllerName.clear();
+        controllerLastName.clear();
+        controllerPhone.clear();
+        controllerEmail.clear();
+        controllerPassword.clear();
+        controllerAddress.clear();
+      } else {
+        Get.snackbar(
+          'Error al registrar',
+          'Ingrese los campos requeridos para poder ingresar',
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.error_outline_rounded),
+        );
+      }
+    }
+
     return SlideInRight(
       duration: const Duration(milliseconds: 10),
       child: Scaffold(
@@ -169,7 +222,7 @@ class Register extends StatelessWidget {
                             inputColor: Colors.white,
                             textColor: Colors.black,
                             onChanged: (value) {},
-                            controller: controllerAdress,
+                            controller: controllerAddress,
                           ),
                           CustomTextField(
                             icon: Icons.mail_rounded,
@@ -198,9 +251,7 @@ class Register extends StatelessWidget {
                           ),
                           CustomElevatedButton(
                             text: 'Registrar',
-                            onPressed: () {
-                              Get.offAllNamed('/login');
-                            },
+                            onPressed: registerUser,
                             height: screenHeight * 0.065,
                             width: screenWidth * 0.75,
                             textColor: Palette.secondary,
