@@ -34,14 +34,20 @@ class UserRequest {
     }
   }
 
-  static Future<UserCredential> register(String name, String lastName,
-      String email, String password, String phone, String address) async {
+  static Future<UserCredential> register(
+      String name,
+      String lastName,
+      String email,
+      String password,
+      String phone,
+      String address,
+      String role) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      await saveUserData(
-          userCredential.user!.uid, name, lastName, email, phone, address);
+      await saveUserData(userCredential.user!.uid, name, lastName, email, phone,
+          address, role);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -54,7 +60,7 @@ class UserRequest {
   }
 
   static Future<void> saveUserData(String userId, String name, String lastName,
-      String email, String phone, String address) async {
+      String email, String phone, String address, String role) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'name': name,
@@ -63,7 +69,7 @@ class UserRequest {
         'phone': phone,
         'address': address,
         'account': "enable",
-        'role': "customer",
+        'role': role,
       });
     } catch (e) {
       throw Future.error('Error al registrar usuario en la base de datos');

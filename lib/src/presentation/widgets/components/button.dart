@@ -33,7 +33,7 @@ class CustomElevatedButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           side: hasBorder
-              ? BorderSide(color: borderColor ?? Colors.transparent)
+              ? BorderSide(color: borderColor ?? Colors.transparent, width: 3)
               : BorderSide.none,
         ),
         child: Text(text,

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../../data/service/user_request.dart';
@@ -43,10 +42,10 @@ class UserController extends GetxController {
   }
 
   Future<void> register(String name, String lastName, String email,
-      String password, String phone, String address) async {
+      String password, String phone, String address, String role) async {
     try {
       UserCredential user = await UserRequest.register(
-          name, lastName, email, password, phone, address);
+          name, lastName, email, password, phone, address, role);
       _email.value = user.user!.email;
       Users foundUser = await UserRequest.findUser(email);
       _name.value = foundUser.name;
