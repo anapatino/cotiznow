@@ -2,6 +2,7 @@ import 'package:cotiznow/lib.dart';
 
 import '../../../domain/controllers/user_controller.dart';
 
+// ignore: must_be_immutable
 class Customer extends StatelessWidget {
   UserController userController = Get.find();
 

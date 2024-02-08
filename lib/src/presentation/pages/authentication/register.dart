@@ -214,7 +214,7 @@ class Register extends StatelessWidget {
                             controller: controllerPhone,
                           ),
                           CustomTextField(
-                            icon: Icons.add_location_sharp,
+                            icon: Icons.location_on_rounded,
                             hintText: 'Dirección',
                             isPassword: false,
                             width: screenWidth * 0.75,

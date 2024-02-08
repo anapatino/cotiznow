@@ -6,6 +6,7 @@ class Palette {
   static const Color accent = Color.fromRGBO(79, 109, 245, 1);
   static const Color error = Color.fromRGBO(245, 75, 75, 1);
 
+  static const Color grey = Color.fromRGBO(245, 245, 245, 1);
   static const Color textlabel = Color.fromRGBO(91, 91, 91, 1);
   static const Color textColor = Color.fromRGBO(30, 30, 30, 1);
 }

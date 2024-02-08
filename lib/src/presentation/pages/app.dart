@@ -1,7 +1,8 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/authentication/register.dart';
-
-import 'authentication/login.dart';
+import 'package:cotiznow/src/presentation/routes/administrator.dart';
+import 'package:cotiznow/src/presentation/routes/authentication.dart';
+import 'package:cotiznow/src/presentation/routes/customer.dart';
+import 'package:cotiznow/src/presentation/routes/home.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -10,11 +11,12 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/login': (context) => Login(),
-        '/register': (context) => Register(),
-        '/principal': (context) => const Main(),
-      },
+      getPages: [
+        ...HomeRoutes.routes,
+        ...AuthenticationRoutes.routes,
+        ...AdministratorRoutes.routes,
+        ...CustomerRoutes.routes,
+      ],
       home: const Main(),
     );
   }
