@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/models/user.dart';
 import 'package:cotiznow/src/presentation/widgets/components/card/card_user.dart';
 
 import '../../../domain/controllers/user_controller.dart';
@@ -17,54 +18,37 @@ class Profiles extends StatefulWidget {
 }
 
 class _ProfilesState extends State<Profiles> {
-  List<Map<String, String>> userList = [
-    {
-      "name": "Laura sofia quintero aliendra",
-      "email": "laura@gmail.com",
-      "phone": "3015849730",
-      "role": "customer",
-    },
-    {
-      "name": "Laura sofia quintero",
-      "email": "laura@gmail.com",
-      "phone": "3015849730",
-      "role": "customer",
-    },
-    {
-      "name": "administrador",
-      "email": "laura@gmail.com",
-      "phone": "3015849730",
-      "role": "administrator",
-    },
-    {
-      "name": "angel administrador",
-      "email": "laura@gmail.com",
-      "phone": "3015849730",
-      "role": "administrator",
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    widget.userController.getUsersList();
+  }
+
   String? selectedOption;
   Widget _buildUserList() {
-    List<Map<String, String>> filteredList = [];
+    List<Users>? filteredList = [];
 
     if (selectedOption == 'Clientes') {
-      filteredList =
-          userList.where((user) => user['role'] == 'customer').toList();
+      filteredList = widget.userController.listUsers
+          ?.where((user) => user.role == 'customer')
+          .toList();
     } else if (selectedOption == 'Administrador') {
-      filteredList =
-          userList.where((user) => user['role'] == 'administrator').toList();
+      filteredList = widget.userController.listUsers
+          ?.where((user) => user.role == 'administrator')
+          .toList();
     } else {
-      filteredList = userList;
+      filteredList = widget.userController.listUsers;
     }
 
     return Expanded(
       child: ListView.builder(
-        itemCount: filteredList.length,
+        itemCount: filteredList?.length ?? 0,
         itemBuilder: (context, index) {
+          Users user = filteredList![index];
           return CardUser(
-            name: filteredList[index]["name"]!,
-            email: filteredList[index]["email"]!,
-            phone: filteredList[index]["phone"]!,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
           );
         },
       ),

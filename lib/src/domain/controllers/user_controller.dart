@@ -10,12 +10,23 @@ class UserController extends GetxController {
   final Rx<dynamic> _role = "".obs;
   final Rx<dynamic> _account = "".obs;
   final Rx<dynamic> _phone = "".obs;
+  final Rxn<List<Users>> _listUsers = Rxn<List<Users>>();
 
   String get userEmail => _email.value;
   String get name => _name.value;
   String get role => _role.value;
   String get account => _account.value;
   String get phone => _phone.value;
+  List<Users>? get listUsers => _listUsers.value;
+
+  Future<void> getUsersList() async {
+    try {
+      List<Users> list = await UserRequest.getUsersList();
+      _listUsers.value = list;
+    } on FirebaseAuthException catch (e) {
+      return Future.error(e);
+    }
+  }
 
   Future<void> login(String email, String password) async {
     try {

@@ -81,4 +81,17 @@ class UserRequest {
     });
     return user!;
   }
+
+  static Future<List<Users>> getUsersList() async {
+    List<Users> userList = [];
+    try {
+      await database.collection('users').get().then((value) => {
+            for (var doc in value.docs)
+              {userList.add(Users.fromJson(doc.data()))}
+          });
+      return userList;
+    } catch (e) {
+      throw Future.error('Error al obtener la lista de usuarios: $e');
+    }
+  }
 }
