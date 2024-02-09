@@ -91,4 +91,36 @@ class MaterialsRequest {
           'Error al obtener las secciones desde la base de datos');
     }
   }
+
+  static Future<List<Materials>> getMaterialsBySectionId(
+      String sectionId) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await database
+          .collection('materials')
+          .where('section_id', isEqualTo: sectionId)
+          .get();
+
+      List<Materials> materialsList = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data();
+        return Materials(
+          urlPhoto: data['url_photo'] ?? '',
+          name: data['name'] ?? '',
+          unit: data['unit'] ?? '',
+          size: data['size'] ?? '',
+          purchasePrice: data['purchase_price'] ?? '',
+          salePrice: data['sale_price'] ?? '',
+          sectionId: data['section_id'] ?? '',
+          quantity: data['quantity'] ?? '',
+          description: data['description'] ?? '',
+          status: data['status'] ?? '',
+          id: doc.id,
+        );
+      }).toList();
+
+      return materialsList;
+    } catch (e) {
+      throw Future.error(
+          'Error al obtener los materiales desde la base de datos');
+    }
+  }
 }

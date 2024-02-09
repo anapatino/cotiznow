@@ -5,8 +5,10 @@ import '../models/materials.dart';
 
 class MaterialsService extends GetxController {
   final Rxn<List<Materials>> _materialsList = Rxn<List<Materials>>();
+  final Rxn<List<Materials>> _materialsBySectionList = Rxn<List<Materials>>();
 
   List<Materials>? get materialsList => _materialsList.value;
+  List<Materials>? get materialsBySectionList => _materialsBySectionList.value;
 
   Future<String> registerMaterial(
     Materials material,
@@ -44,6 +46,17 @@ class MaterialsService extends GetxController {
     } catch (e) {
       throw Future.error(
           'Error al obtener los materiales desde la base de datos');
+    }
+  }
+
+  Future<List<Materials>> getMaterialsBySectionId(String sectionId) async {
+    try {
+      List<Materials> list =
+          await MaterialsRequest.getMaterialsBySectionId(sectionId);
+      _materialsBySectionList.value = list;
+      return list;
+    } catch (e) {
+      throw Future.error('Error al obtener los materiales por sectionId');
     }
   }
 }
