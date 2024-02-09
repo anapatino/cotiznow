@@ -1,13 +1,12 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/models/user.dart';
+import 'package:cotiznow/src/presentation/pages/authentication/register_administrator.dart';
 import 'package:cotiznow/src/presentation/widgets/components/card/card_user.dart';
 
 import '../../../domain/controllers/user_controller.dart';
 import '../../routes/administrator.dart';
-import '../../widgets/components/button.dart';
 import '../../widgets/components/drawer.dart';
 import '../../widgets/components/dropdown.dart';
-import '../../widgets/components/input.dart';
 
 /// ignore: must_be_immutable
 class Profiles extends StatefulWidget {
@@ -20,13 +19,6 @@ class Profiles extends StatefulWidget {
 }
 
 class _ProfilesState extends State<Profiles> {
-  late TextEditingController controllerName;
-  late TextEditingController controllerLastName;
-  late TextEditingController controllerPhone;
-  late TextEditingController controllerEmail;
-  late TextEditingController controllerPassword;
-  late TextEditingController controllerAddress;
-
   double screenWidth = 0;
   double screenHeight = 0;
   bool isContainerVisible = false;
@@ -34,15 +26,6 @@ class _ProfilesState extends State<Profiles> {
   @override
   void initState() {
     super.initState();
-
-    // Inicializa los controladores en el initState
-    controllerName = TextEditingController();
-    controllerLastName = TextEditingController();
-    controllerPhone = TextEditingController();
-    controllerEmail = TextEditingController();
-    controllerPassword = TextEditingController();
-    controllerAddress = TextEditingController();
-
     widget.userController.getUsersList();
   }
 
@@ -87,143 +70,6 @@ class _ProfilesState extends State<Profiles> {
     setState(() {
       isContainerVisible = !isContainerVisible;
     });
-  }
-
-  Widget registerAdministrator() {
-    return BounceInUp(
-      duration: const Duration(seconds: 10),
-      child: Visibility(
-        visible: isContainerVisible,
-        child: Positioned(
-          top: screenHeight * 0.3,
-          child: Container(
-            width: screenWidth * 1,
-            decoration: const BoxDecoration(
-              color: Palette.accent,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: screenHeight * 0.04,
-                ),
-                Text("Registrar cliente",
-                    style: GoogleFonts.varelaRound(
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.05,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
-                    )),
-                SizedBox(
-                  height: screenHeight * 0.04,
-                ),
-                CustomTextField(
-                  icon: Icons.person,
-                  hintText: 'Nombre',
-                  isPassword: false,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                  inputColor: Colors.white,
-                  textColor: Colors.black,
-                  onChanged: (value) {},
-                  controller: controllerName,
-                ),
-                CustomTextField(
-                  icon: Icons.person,
-                  hintText: 'Apellido',
-                  isPassword: false,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                  inputColor: Colors.white,
-                  textColor: Colors.black,
-                  onChanged: (value) {},
-                  controller: controllerLastName,
-                ),
-                CustomTextField(
-                  icon: Icons.phone,
-                  hintText: 'Telefono',
-                  isPassword: false,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                  inputColor: Colors.white,
-                  textColor: Colors.black,
-                  onChanged: (value) {},
-                  controller: controllerPhone,
-                ),
-                CustomTextField(
-                  icon: Icons.location_on_rounded,
-                  hintText: 'Dirección',
-                  isPassword: false,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                  inputColor: Colors.white,
-                  textColor: Colors.black,
-                  onChanged: (value) {},
-                  controller: controllerAddress,
-                ),
-                CustomTextField(
-                  icon: Icons.mail_rounded,
-                  hintText: 'Correo electronico',
-                  isPassword: false,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                  inputColor: Colors.white,
-                  textColor: Colors.black,
-                  onChanged: (value) {},
-                  controller: controllerEmail,
-                ),
-                CustomTextField(
-                  icon: Icons.key_outlined,
-                  hintText: 'Contraseña',
-                  isPassword: true,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                  inputColor: Colors.white,
-                  textColor: Colors.black,
-                  onChanged: (value) {},
-                  controller: controllerPassword,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.07,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomElevatedButton(
-                        text: 'Cancelar',
-                        onPressed: _toggleContainerVisibility,
-                        height: screenHeight * 0.065,
-                        width: screenWidth * 0.35,
-                        textColor: Colors.white,
-                        textSize: screenWidth * 0.04,
-                        borderColor: Palette.accent,
-                        backgroundColor: Palette.accent,
-                        hasBorder: true,
-                      ),
-                      CustomElevatedButton(
-                        text: 'Registrar',
-                        onPressed: () {},
-                        height: screenHeight * 0.065,
-                        width: screenWidth * 0.35,
-                        textColor: Colors.white,
-                        textSize: screenWidth * 0.04,
-                        backgroundColor: Palette.primary,
-                        hasBorder: false,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -275,33 +121,27 @@ class _ProfilesState extends State<Profiles> {
                   ],
                 ),
               ),
-              registerAdministrator(),
+              if (isContainerVisible)
+                AdministratorRegistration(
+                  onCancelRegistration: () {
+                    _toggleContainerVisibility();
+                  },
+                )
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: _toggleContainerVisibility,
-            backgroundColor: Palette.primary,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            shape: const CircleBorder(),
-          ),
+          floatingActionButton: isContainerVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: _toggleContainerVisibility,
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
+                ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Dispose de los controladores en el dispose
-    controllerName.dispose();
-    controllerLastName.dispose();
-    controllerPhone.dispose();
-    controllerEmail.dispose();
-    controllerPassword.dispose();
-    controllerAddress.dispose();
-
-    super.dispose();
   }
 }
