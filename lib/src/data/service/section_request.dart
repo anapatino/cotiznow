@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/models/sections.dart';
+import '../../domain/models/section.dart';
 
 class SectionsRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
@@ -40,7 +40,7 @@ class SectionsRequest {
     }
   }
 
-  static Future<String> updateSection(Sections section) async {
+  static Future<String> updateSection(Section section) async {
     try {
       await database.collection('sections').doc(section.id).update({
         'icon': section.icon,
@@ -55,14 +55,14 @@ class SectionsRequest {
     }
   }
 
-  static Future<List<Sections>> getAllSections() async {
+  static Future<List<Section>> getAllSections() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await database.collection('sections').get();
 
-      List<Sections> sectionsList = querySnapshot.docs.map((doc) {
+      List<Section> sectionsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
-        return Sections(
+        return Section(
           id: doc.id,
           icon: data['icon'] ?? '',
           name: data['name'] ?? '',

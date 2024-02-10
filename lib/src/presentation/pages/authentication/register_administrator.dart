@@ -1,6 +1,6 @@
 import 'package:cotiznow/lib.dart';
 
-import '../../widgets/components/button.dart';
+import '../../widgets/components/button/button.dart';
 import '../../widgets/components/input.dart';
 
 class AdministratorRegistration extends StatefulWidget {

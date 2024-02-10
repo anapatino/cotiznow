@@ -1,12 +1,13 @@
+import 'package:cotiznow/lib.dart';
 import 'package:get/get.dart';
 
-import '../../data/service/sections_request.dart';
-import '../models/sections.dart';
+import '../../data/service/section_request.dart';
+import '../models/section.dart';
 
-class SectionsService extends GetxController {
-  final Rxn<List<Sections>> _sectionsList = Rxn<List<Sections>>();
+class SectionsController extends GetxController {
+  final Rxn<List<Section>> _sectionsList = Rxn<List<Section>>();
 
-  List<Sections>? get sectionsList => _sectionsList.value;
+  List<Section>? get sectionsList => _sectionsList.value;
 
   Future<String> registerSection(
     String icon,
@@ -33,19 +34,21 @@ class SectionsService extends GetxController {
     }
   }
 
-  Future<String> updateSection(Sections section) async {
+  Future<String> updateSection(Section section) async {
     try {
       return await SectionsRequest.updateSection(section);
     } catch (e) {
-      throw Future.error('Error al registrar sección en la base de datos');
+      throw Future.error('Error al actualizar la sección en la base de datos');
     }
   }
 
   Future<void> getAllSections() async {
     try {
-      List<Sections> list = await SectionsRequest.getAllSections();
+      List<Section> list = await SectionsRequest.getAllSections();
       _sectionsList.value = list;
+      print(list);
     } catch (e) {
+      print(e);
       throw Future.error(
           'Error al obtener las secciones desde la base de datos');
     }

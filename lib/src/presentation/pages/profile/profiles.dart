@@ -94,7 +94,7 @@ class _ProfilesState extends State<Profiles> {
           body: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -1,7 +1,7 @@
-class Sections {
+class Section {
   String icon, name, description, status, id;
 
-  Sections({
+  Section({
     required this.id,
     required this.icon,
     required this.name,
@@ -9,8 +9,8 @@ class Sections {
     required this.status,
   });
 
-  factory Sections.fromJson(Map<String, dynamic>? json) {
-    return Sections(
+  factory Section.fromJson(Map<String, dynamic>? json) {
+    return Section(
       id: json?['id'] ?? '',
       icon: json?['icon'] ?? '',
       name: json?['name'] ?? '',

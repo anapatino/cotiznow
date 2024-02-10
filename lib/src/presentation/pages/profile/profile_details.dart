@@ -4,7 +4,7 @@ import 'package:cotiznow/src/presentation/routes/customer.dart';
 
 import '../../../domain/controllers/user_controller.dart';
 import '../../routes/administrator.dart';
-import '../../widgets/components/button.dart';
+import '../../widgets/components/button/button.dart';
 import '../../widgets/components/drawer.dart';
 import '../../widgets/components/dropdown.dart';
 import '../../widgets/components/input.dart';

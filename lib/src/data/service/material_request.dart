@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cotiznow/src/domain/models/materials.dart';
+import 'package:cotiznow/src/domain/models/material.dart';
 
 class MaterialsRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
 
   static Future<String> registerMaterial(
-    Materials material,
+    Material material,
   ) async {
     try {
       await database.collection('sections').add({
@@ -42,7 +42,7 @@ class MaterialsRequest {
     }
   }
 
-  static Future<String> updateMaterial(Materials material) async {
+  static Future<String> updateMaterial(Material material) async {
     try {
       await database.collection('materials').doc(material.id).update({
         'url_photo': material.urlPhoto,
@@ -63,14 +63,14 @@ class MaterialsRequest {
     }
   }
 
-  static Future<List<Materials>> getAllMaterials() async {
+  static Future<List<Material>> getAllMaterials() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await database.collection('materials').get();
 
-      List<Materials> materialsList = querySnapshot.docs.map((doc) {
+      List<Material> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
-        return Materials(
+        return Material(
           urlPhoto: data['url_photo'] ?? '',
           name: data['name'] ?? '',
           unit: data['unit'] ?? '',
@@ -92,7 +92,7 @@ class MaterialsRequest {
     }
   }
 
-  static Future<List<Materials>> getMaterialsBySectionId(
+  static Future<List<Material>> getMaterialsBySectionId(
       String sectionId) async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await database
@@ -100,9 +100,9 @@ class MaterialsRequest {
           .where('section_id', isEqualTo: sectionId)
           .get();
 
-      List<Materials> materialsList = querySnapshot.docs.map((doc) {
+      List<Material> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
-        return Materials(
+        return Material(
           urlPhoto: data['url_photo'] ?? '',
           name: data['name'] ?? '',
           unit: data['unit'] ?? '',

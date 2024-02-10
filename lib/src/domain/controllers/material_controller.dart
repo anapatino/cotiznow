@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 
-import '../../data/service/materials_request.dart';
-import '../models/materials.dart';
+import '../../data/service/material_request.dart';
+import '../models/material.dart';
 
-class MaterialsService extends GetxController {
-  final Rxn<List<Materials>> _materialsList = Rxn<List<Materials>>();
-  final Rxn<List<Materials>> _materialsBySectionList = Rxn<List<Materials>>();
+class MaterialsController extends GetxController {
+  final Rxn<List<Material>> _materialsList = Rxn<List<Material>>();
+  final Rxn<List<Material>> _materialsBySectionList = Rxn<List<Material>>();
 
-  List<Materials>? get materialsList => _materialsList.value;
-  List<Materials>? get materialsBySectionList => _materialsBySectionList.value;
+  List<Material>? get materialsList => _materialsList.value;
+  List<Material>? get materialsBySectionList => _materialsBySectionList.value;
 
   Future<String> registerMaterial(
-    Materials material,
+    Material material,
   ) async {
     try {
       return await MaterialsRequest.registerMaterial(material);
@@ -31,7 +31,7 @@ class MaterialsService extends GetxController {
     }
   }
 
-  Future<String> updateMaterial(Materials material) async {
+  Future<String> updateMaterial(Material material) async {
     try {
       return await MaterialsRequest.updateMaterial(material);
     } catch (e) {
@@ -41,7 +41,7 @@ class MaterialsService extends GetxController {
 
   Future<void> getAllMaterials() async {
     try {
-      List<Materials> list = await MaterialsRequest.getAllMaterials();
+      List<Material> list = await MaterialsRequest.getAllMaterials();
       _materialsList.value = list;
     } catch (e) {
       throw Future.error(
@@ -49,9 +49,9 @@ class MaterialsService extends GetxController {
     }
   }
 
-  Future<List<Materials>> getMaterialsBySectionId(String sectionId) async {
+  Future<List<Material>> getMaterialsBySectionId(String sectionId) async {
     try {
-      List<Materials> list =
+      List<Material> list =
           await MaterialsRequest.getMaterialsBySectionId(sectionId);
       _materialsBySectionList.value = list;
       return list;

@@ -2,7 +2,7 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/dashboard/customer.dart';
 
 import '../../../domain/controllers/user_controller.dart';
-import '../../widgets/components/button.dart';
+import '../../widgets/components/button/button.dart';
 import '../../widgets/components/input.dart';
 
 class Register extends StatelessWidget {

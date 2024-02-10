@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final double height;
   final Color inputColor;
   final Color textColor;
+  final double? border;
   final TextEditingController controller;
   final Function(String)? onChanged;
 
@@ -23,6 +24,7 @@ class CustomTextField extends StatefulWidget {
     this.textColor = Colors.black,
     this.onChanged,
     required this.controller,
+    this.border,
   });
 
   @override
@@ -37,6 +39,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    double? border = widget.border != null ? widget.border : 10;
 
     return Container(
       height: widget.height + screenHeight * 0.032,
@@ -48,7 +51,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             height: widget.height,
             decoration: BoxDecoration(
               color: widget.inputColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(border!),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
