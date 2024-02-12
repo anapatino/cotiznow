@@ -39,9 +39,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double? border = widget.border != null ? widget.border : 10;
+    double? border = widget.border ?? 10;
 
-    return Container(
+    return SizedBox(
       height: widget.height + screenHeight * 0.032,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             height: widget.height,
             decoration: BoxDecoration(
               color: widget.inputColor,
-              borderRadius: BorderRadius.circular(border!),
+              borderRadius: BorderRadius.circular(border),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

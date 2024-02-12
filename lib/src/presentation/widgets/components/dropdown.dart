@@ -3,7 +3,9 @@ import 'package:cotiznow/lib.dart';
 class CustomDropdown extends StatefulWidget {
   final List<String> options;
   final double width;
+  final double height;
   final double widthItems;
+  final double? border;
   final ValueChanged<String?>? onChanged;
 
   const CustomDropdown({
@@ -12,6 +14,8 @@ class CustomDropdown extends StatefulWidget {
     required this.width,
     required this.widthItems,
     this.onChanged,
+    this.border,
+    required this.height,
   }) : super(key: key);
 
   @override
@@ -27,10 +31,10 @@ class _CustomDropdownState extends State<CustomDropdown> {
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
       width: screenWidth * widget.width,
-      height: screenHeight * 0.06,
+      height: screenHeight * widget.height,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(widget.border ?? 30),
         color: Palette.grey,
       ),
       child: Padding(

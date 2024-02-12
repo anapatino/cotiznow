@@ -22,14 +22,14 @@ class _ProfilesState extends State<Profiles> {
   double screenWidth = 0;
   double screenHeight = 0;
   bool isContainerVisible = false;
+  String? selectedOption;
+  List<String> options = ['Elija una opción', 'Clientes', 'Administrador'];
 
   @override
   void initState() {
     super.initState();
     widget.userController.getUsersList();
   }
-
-  String? selectedOption;
 
   Widget _buildUserList() {
     List<Users>? filteredList = [];
@@ -77,7 +77,6 @@ class _ProfilesState extends State<Profiles> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
 
-    List<String> options = ['Elija una opción', 'Clientes', 'Administrador'];
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: SafeArea(
@@ -115,18 +114,26 @@ class _ProfilesState extends State<Profiles> {
                           selectedOption = newValue;
                         });
                       },
+                      height: 0.06,
                     ),
                     SizedBox(height: screenHeight * 0.02),
                     _buildUserList(),
                   ],
                 ),
               ),
-              if (isContainerVisible)
-                AdministratorRegistration(
-                  onCancelRegistration: () {
-                    _toggleContainerVisibility();
-                  },
-                )
+              Positioned(
+                top: screenHeight * 0.023,
+                child: Opacity(
+                  opacity: isContainerVisible ? 1 : 0.0,
+                  child: SingleChildScrollView(
+                    child: AdministratorRegistration(
+                      onCancelRegistration: () {
+                        _toggleContainerVisibility();
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           floatingActionButton: isContainerVisible

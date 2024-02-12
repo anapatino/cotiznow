@@ -173,6 +173,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       options: options,
                       width: 0.65,
                       widthItems: 0.35,
+                      height: 0.6,
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedOption = newValue;

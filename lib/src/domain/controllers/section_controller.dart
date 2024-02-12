@@ -42,13 +42,12 @@ class SectionsController extends GetxController {
     }
   }
 
-  Future<void> getAllSections() async {
+  Future<List<Section>> getAllSections() async {
     try {
       List<Section> list = await SectionsRequest.getAllSections();
       _sectionsList.value = list;
-      print(list);
+      return list;
     } catch (e) {
-      print(e);
       throw Future.error(
           'Error al obtener las secciones desde la base de datos');
     }
