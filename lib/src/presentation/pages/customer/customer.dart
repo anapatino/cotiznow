@@ -9,21 +9,31 @@ import '../../widgets/components/drawer.dart';
 import '../../widgets/components/dropdown.dart';
 
 /// ignore: must_be_immutable
-class Profiles extends StatefulWidget {
+import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/models/user.dart';
+import 'package:cotiznow/src/presentation/pages/authentication/register_administrator.dart';
+import 'package:cotiznow/src/presentation/widgets/components/card/card_user.dart';
+
+import '../../../domain/controllers/user_controller.dart';
+import '../../routes/administrator.dart';
+import '../../widgets/components/drawer.dart';
+import '../../widgets/components/dropdown.dart';
+
+/// ignore: must_be_immutable
+class Customer extends StatefulWidget {
   UserController userController = Get.find();
 
-  Profiles({super.key});
+  Customer({super.key});
 
   @override
-  State<Profiles> createState() => _ProfilesState();
+  State<Customer> createState() => _CustomerState();
 }
 
-class _ProfilesState extends State<Profiles> {
+class _CustomerState extends State<Customer> {
   double screenWidth = 0;
   double screenHeight = 0;
   bool isContainerVisible = false;
   String? selectedOption;
-  List<String> options = ['Elija una opción', 'Clientes', 'Administrador'];
 
   @override
   void initState() {
@@ -32,7 +42,7 @@ class _ProfilesState extends State<Profiles> {
   }
 
   Widget _buildUserList() {
-    List<Users>? filteredList = [];
+    List<Users>? filteredList = widget.userController.listUsers;
 
     if (selectedOption == 'Clientes') {
       filteredList = widget.userController.listUsers
@@ -42,11 +52,10 @@ class _ProfilesState extends State<Profiles> {
       filteredList = widget.userController.listUsers
           ?.where((user) => user.role == 'administrator')
           .toList();
-    } else {
-      filteredList = widget.userController.listUsers;
     }
 
-    return Expanded(
+    return SizedBox(
+      height: screenHeight * 0.75,
       child: ListView.builder(
         itemCount: filteredList?.length ?? 0,
         itemBuilder: (context, index) {
@@ -56,7 +65,6 @@ class _ProfilesState extends State<Profiles> {
             email: user.email,
             phone: user.phone,
             lastName: user.lastName,
-            password: user.password,
             address: user.address,
             role: user.role,
             account: user.account,
@@ -76,6 +84,7 @@ class _ProfilesState extends State<Profiles> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    List<String> options = ['Clientes', 'Administrador'];
 
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
@@ -108,13 +117,13 @@ class _ProfilesState extends State<Profiles> {
                     CustomDropdown(
                       options: options,
                       width: 0.9,
+                      height: 0.06,
                       widthItems: 0.65,
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedOption = newValue;
                         });
                       },
-                      height: 0.06,
                     ),
                     SizedBox(height: screenHeight * 0.02),
                     _buildUserList(),
@@ -122,7 +131,7 @@ class _ProfilesState extends State<Profiles> {
                 ),
               ),
               Positioned(
-                top: screenHeight * 0.023,
+                top: 10,
                 child: Opacity(
                   opacity: isContainerVisible ? 1 : 0.0,
                   child: SingleChildScrollView(

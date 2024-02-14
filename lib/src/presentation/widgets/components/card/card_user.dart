@@ -1,12 +1,10 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/profile/profile_details.dart';
 
 class CardUser extends StatelessWidget {
   final String name;
   final String lastName;
   final String phone;
   final String email;
-  final String password;
   final String address;
   final String role;
   final String account;
@@ -17,7 +15,6 @@ class CardUser extends StatelessWidget {
       required this.email,
       required this.phone,
       required this.lastName,
-      required this.password,
       required this.address,
       required this.role,
       required this.account});
@@ -30,16 +27,17 @@ class CardUser extends StatelessWidget {
       padding: EdgeInsets.only(bottom: screenHeight * 0.02),
       child: InkWell(
         onTap: () {
-          Get.offAll(() => ProfileDetails(
-                name: name,
-                lastName: lastName,
-                phone: phone,
-                email: email,
-                password: password,
-                address: address,
-                account: account,
-                role: role,
-              ));
+          Get.toNamed('/profiles', arguments: {
+            'name': name,
+            'lastName': lastName,
+            'phone': phone,
+            'password': lastName,
+            'email': email,
+            'address': address,
+            'role': role,
+            'account': account
+          });
+          print('$name se ha dado click');
         },
         child: Container(
           width: screenWidth * 0.85,

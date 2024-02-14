@@ -1,8 +1,9 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/profile/profile_details.dart';
 import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
 
 import '../pages/dashboard/administrator.dart';
-import '../pages/profile/profiles.dart';
+import '../pages/customer/customer.dart';
 import '../widgets/components/drawer.dart';
 
 class AdministratorRoutes {
@@ -23,11 +24,11 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: profiles,
-      page: () => Profiles(),
+      page: () => ProfileDetails(),
     ),
     GetPage(
       name: customers,
-      page: () => const Main(),
+      page: () => Customer(),
     ),
     GetPage(
       name: sections,

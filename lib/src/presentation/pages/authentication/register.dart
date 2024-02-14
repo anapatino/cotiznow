@@ -29,6 +29,7 @@ class Register extends StatelessWidget {
       String password = controllerPassword.text;
       String address = controllerAddress.text;
       String role = "customer";
+      String account = "enable";
       if (name.isNotEmpty &&
           lastName.isNotEmpty &&
           phone.isNotEmpty &&
@@ -36,7 +37,8 @@ class Register extends StatelessWidget {
           password.isNotEmpty &&
           address.isNotEmpty) {
         userController
-            .register(name, lastName, email, password, phone, address, role)
+            .register(
+                name, lastName, email, password, phone, address, role, account)
             .then((value) async {
           if (userController.userEmail.isNotEmpty) {
             //await publicityController.viewPublicity();

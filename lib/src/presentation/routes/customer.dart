@@ -1,10 +1,11 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/dashboard/customer.dart';
+import '../pages/profile/profile_details.dart';
 import '../widgets/components/drawer.dart';
 
 class CustomerRoutes {
   static const String customer = '/customer-dashboard';
-  static const String profile = '/profile-details';
+  static const String profiles = '/profiles';
   static const String sections = '/sections';
   static const String requestVisit = '/request-visit';
   static const String whatsapp = '/whatsapp';
@@ -15,12 +16,8 @@ class CustomerRoutes {
       page: () => Customer(),
     ),
     GetPage(
-      name: profile,
-      page: () => const Main(),
-    ),
-    GetPage(
-      name: sections,
-      page: () => const Main(),
+      name: profiles,
+      page: () => ProfileDetails(),
     ),
     GetPage(
       name: sections,
@@ -44,12 +41,12 @@ class CustomerRoutes {
     DrawerItemConfig(
       icon: Icons.person,
       title: 'Perfil',
-      routeName: profile,
+      routeName: profiles,
     ),
     DrawerItemConfig(
       icon: Icons.grid_view_rounded,
       title: 'Principal',
-      routeName: sections,
+      routeName: customer,
     ),
     DrawerItemConfig(
       icon: Icons.person_pin_rounded,

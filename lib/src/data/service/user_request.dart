@@ -41,13 +41,14 @@ class UserRequest {
       String password,
       String phone,
       String address,
-      String role) async {
+      String role,
+      String account) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
       await saveUserData(userCredential.user!.uid, name, lastName, email, phone,
-          address, role);
+          address, role, account);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -59,8 +60,15 @@ class UserRequest {
     return Future.error('Error al autenticar el usuario');
   }
 
-  static Future<void> saveUserData(String userId, String name, String lastName,
-      String email, String phone, String address, String role) async {
+  static Future<void> saveUserData(
+      String userId,
+      String name,
+      String lastName,
+      String email,
+      String phone,
+      String address,
+      String role,
+      String account) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'name': name,
@@ -68,11 +76,29 @@ class UserRequest {
         'email': email,
         'phone': phone,
         'address': address,
-        'account': "enable",
+        'account': account,
         'role': role,
       });
     } catch (e) {
       throw Future.error('Error al registrar usuario en la base de datos');
+    }
+  }
+
+  static Future<String> updateUserData(Users user) async {
+    try {
+      await database.collection('users').doc(user.id).update({
+        'name': user.name,
+        'lastName': user.lastName,
+        'email': user.email,
+        'phone': user.phone,
+        'address': user.address,
+        'account': user.account,
+        'role': user.role,
+      });
+
+      return "Se ha actualizado exitosamente el usuario";
+    } catch (e) {
+      throw Future.error('Error al actualizar el usuario');
     }
   }
 
@@ -82,6 +108,7 @@ class UserRequest {
       for (var doc in value.docs) {
         if (doc.data()['email'] == email) {
           user = Users.fromJson(doc.data());
+          user!.id = doc.id;
         }
       }
     });

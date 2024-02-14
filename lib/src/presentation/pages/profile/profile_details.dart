@@ -3,6 +3,7 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/customer.dart';
 
 import '../../../domain/controllers/user_controller.dart';
+import '../../../domain/models/user.dart';
 import '../../routes/administrator.dart';
 import '../../widgets/components/button/button.dart';
 import '../../widgets/components/drawer.dart';
@@ -11,32 +12,8 @@ import '../../widgets/components/input.dart';
 
 // ignore: must_be_immutable
 class ProfileDetails extends StatefulWidget {
-  final TextEditingController controllerName = TextEditingController();
-  final TextEditingController controllerLastName = TextEditingController();
-  final TextEditingController controllerPhone = TextEditingController();
-  final TextEditingController controllerEmail = TextEditingController();
-  final TextEditingController controllerRole = TextEditingController();
-  final TextEditingController controllerAddress = TextEditingController();
-  final String name;
-  final String lastName;
-  final String phone;
-  final String email;
-  final String password;
-  final String address;
-  final String account;
-  final String role;
-
-  UserController userController = Get.find();
   ProfileDetails({
     super.key,
-    required this.name,
-    required this.lastName,
-    required this.phone,
-    required this.email,
-    required this.password,
-    required this.address,
-    required this.account,
-    required this.role,
   });
 
   @override
@@ -44,34 +21,103 @@ class ProfileDetails extends StatefulWidget {
 }
 
 class _ProfileDetailsState extends State<ProfileDetails> {
+  final TextEditingController controllerName = TextEditingController();
+  final TextEditingController controllerLastName = TextEditingController();
+  final TextEditingController controllerPhone = TextEditingController();
+  final TextEditingController controllerEmail = TextEditingController();
+  final TextEditingController controllerRole = TextEditingController();
+  final TextEditingController controllerAddress = TextEditingController();
+  final TextEditingController controllerAccount = TextEditingController();
+
+  UserController userController = Get.find();
+  Map<String, dynamic>? parameters = Get.arguments;
+  String? selectedOption;
+  String? selectedOptionRole;
+
   @override
   void initState() {
     super.initState();
-    widget.controllerName.text = widget.name;
-    widget.controllerLastName.text = widget.lastName;
-    widget.controllerPhone.text = widget.phone;
-    widget.controllerAddress.text = widget.address;
-    widget.controllerEmail.text = widget.email;
-    widget.controllerRole.text = widget.role;
+    validateFields();
   }
 
-  @override
-  void dispose() {
-    widget.controllerName.dispose();
-    widget.controllerLastName.dispose();
-    widget.controllerPhone.dispose();
-    widget.controllerAddress.dispose();
-    widget.controllerEmail.dispose();
-    widget.controllerRole.dispose();
-    super.dispose();
+  void validateFields() {
+    if (mounted) {
+      if (parameters != null) {
+        controllerName.text = parameters?['name'];
+        controllerLastName.text = parameters?['lastName'];
+        controllerPhone.text = parameters?['phone'];
+        controllerAddress.text = parameters?['address'];
+        controllerEmail.text = parameters?['email'];
+        controllerRole.text = parameters?['role'];
+        controllerAccount.text = parameters?['account'];
+      } else {
+        controllerName.text = userController.name;
+        controllerLastName.text = userController.lastName;
+        controllerPhone.text = userController.phone;
+        controllerAddress.text = userController.address;
+        controllerEmail.text = userController.userEmail;
+        controllerRole.text =
+            userController.role == "customer" ? "Cliente" : "Administrador";
+        controllerAccount.text =
+            userController.account == "enable" ? "Activa" : "Desactivada";
+      }
+    }
+  }
+
+  Future<void> updateUser() async {
+    String role = "";
+    String account = "";
+    if (selectedOptionRole != null) {
+      role = selectedOptionRole == "Cliente" ? "customer" : "administrator";
+    } else {
+      role = userController.role;
+    }
+    if (selectedOption != null) {
+      account = selectedOption == "habilitar" ? "enable" : "disable";
+    }
+
+    Users updatedUser = Users(
+      name: controllerName.text,
+      lastName: controllerLastName.text,
+      phone: controllerPhone.text,
+      address: controllerAddress.text,
+      email: controllerEmail.text,
+      role: role,
+      account: account,
+      id: userController.idUser,
+    );
+
+    try {
+      String message = await userController.updateUser(updatedUser);
+      userController.role == "customer"
+          ? Get.offAllNamed("/administrator-dashboard")
+          : Get.offAllNamed("/customer-dashboard");
+      Get.snackbar(
+        'Usuario actualizado correctamente',
+        message,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+        backgroundColor: Palette.accent,
+        icon: const Icon(Icons.check_circle_outline_rounded),
+      );
+    } catch (error) {
+      Get.snackbar(
+        'Error al actualizar usuario',
+        error.toString(),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+        backgroundColor: Palette.error,
+        icon: const Icon(Icons.error_outline_rounded),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> options = ['Clientes', 'Administrador'];
+    List<String> options = ['habilitar', 'deshabilitar'];
+    List<String> optionsRole = ['Cliente', 'Administrador'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    String? selectedOption;
 
     return SafeArea(
       child: Scaffold(
@@ -79,9 +125,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
             actions: const [],
           ),
           drawer: CustomDrawer(
-            name: widget.userController.name,
-            email: widget.userController.userEmail,
-            itemConfigs: widget.userController.role == "customer"
+            name: userController.name,
+            email: userController.userEmail,
+            itemConfigs: userController.role == "customer"
                 ? CustomerRoutes().itemConfigs
                 : AdministratorRoutes().itemConfigs,
             context: context,
@@ -89,111 +135,159 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Detalles cliente",
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.06,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 1,
-                        )),
-                    SizedBox(
-                      height: screenHeight * 0.03,
-                    ),
+              child: Center(
+                child: Column(children: [
+                  Text("Perfil",
+                      style: GoogleFonts.varelaRound(
+                        color: Colors.black,
+                        fontSize: screenWidth * 0.06,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 1,
+                      )),
+                  SizedBox(
+                    height: screenHeight * 0.015,
+                  ),
+                  CustomTextField(
+                    icon: Icons.person,
+                    hintText: 'Nombre',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerName,
+                  ),
+                  CustomTextField(
+                    icon: Icons.person,
+                    hintText: 'Apellido',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerLastName,
+                  ),
+                  CustomTextField(
+                    icon: Icons.phone,
+                    hintText: 'Telefono',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerPhone,
+                  ),
+                  CustomTextField(
+                    icon: Icons.location_on_rounded,
+                    hintText: 'Dirección',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerAddress,
+                  ),
+                  CustomTextField(
+                    icon: Icons.mail_rounded,
+                    hintText: 'Correo electronico',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerEmail,
+                  ),
+                  if (userController.role == "customer")
                     CustomTextField(
-                      icon: Icons.person,
-                      hintText: 'Nombre',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: widget.controllerName,
-                    ),
-                    CustomTextField(
-                      icon: Icons.person,
-                      hintText: 'Apellido',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: widget.controllerLastName,
-                    ),
-                    CustomTextField(
-                      icon: Icons.phone,
-                      hintText: 'Telefono',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: widget.controllerPhone,
-                    ),
-                    CustomTextField(
-                      icon: Icons.location_on_rounded,
-                      hintText: 'Dirección',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: widget.controllerAddress,
-                    ),
-                    CustomTextField(
-                      icon: Icons.mail_rounded,
-                      hintText: 'Correo electronico',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: widget.controllerEmail,
-                    ),
-                    CustomTextField(
-                      icon: Icons.person,
+                      icon: Icons.account_circle_rounded,
                       hintText: 'Rol',
                       isPassword: false,
                       width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
+                      height: screenHeight * 0.073,
                       inputColor: Palette.grey,
                       textColor: Colors.black,
                       onChanged: (value) {},
-                      controller: widget.controllerRole,
+                      controller: controllerRole,
                     ),
-                    CustomDropdown(
-                      options: options,
-                      width: 0.65,
-                      widthItems: 0.35,
-                      height: 0.6,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedOption = newValue;
-                        });
-                      },
+                  if (userController.role == "customer")
+                    CustomTextField(
+                      icon: Icons.admin_panel_settings_sharp,
+                      hintText: 'Cuenta',
+                      isPassword: false,
+                      width: screenWidth * 0.75,
+                      height: screenHeight * 0.073,
+                      inputColor: Palette.grey,
+                      textColor: Colors.black,
+                      onChanged: (value) {},
+                      controller: controllerAccount,
                     ),
-                    SizedBox(
-                      height: screenHeight * 0.04,
+                  if (userController.role == "administrator")
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("  Estado",
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.035,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 1,
+                            )),
+                        CustomDropdown(
+                          options: options,
+                          width: 0.75,
+                          widthItems: 0.55,
+                          height: 0.073,
+                          border: 10,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOption = newValue;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          height: screenHeight * 0.02,
+                        ),
+                        Text("  Rol",
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.035,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 1,
+                            )),
+                        CustomDropdown(
+                          options: optionsRole,
+                          width: 0.75,
+                          widthItems: 0.55,
+                          height: 0.073,
+                          border: 10,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOptionRole = newValue;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          height: screenHeight * 0.02,
+                        ),
+                        CustomElevatedButton(
+                          text: 'Actualizar',
+                          onPressed: updateUser,
+                          height: screenHeight * 0.065,
+                          width: screenWidth * 0.75,
+                          textColor: Colors.white,
+                          textSize: screenWidth * 0.04,
+                          backgroundColor: Palette.primary,
+                          hasBorder: false,
+                        )
+                      ],
                     ),
-                    CustomElevatedButton(
-                      text: 'Actualizar',
-                      onPressed: () {},
-                      height: screenHeight * 0.065,
-                      width: screenWidth * 0.85,
-                      textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
-                      backgroundColor: Palette.primary,
-                      hasBorder: false,
-                    )
-                  ]),
+                ]),
+              ),
             ),
           )),
     );
