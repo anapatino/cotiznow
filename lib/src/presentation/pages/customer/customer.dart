@@ -9,17 +9,6 @@ import '../../widgets/components/drawer.dart';
 import '../../widgets/components/dropdown.dart';
 
 /// ignore: must_be_immutable
-import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/models/user.dart';
-import 'package:cotiznow/src/presentation/pages/authentication/register_administrator.dart';
-import 'package:cotiznow/src/presentation/widgets/components/card/card_user.dart';
-
-import '../../../domain/controllers/user_controller.dart';
-import '../../routes/administrator.dart';
-import '../../widgets/components/drawer.dart';
-import '../../widgets/components/dropdown.dart';
-
-/// ignore: must_be_immutable
 class Customer extends StatefulWidget {
   UserController userController = Get.find();
 
@@ -38,39 +27,58 @@ class _CustomerState extends State<Customer> {
   @override
   void initState() {
     super.initState();
-    widget.userController.getUsersList();
+  }
+
+  Future<List<Users>> _fetchUserList() async {
+    await widget.userController.getUsersList();
+    return widget.userController.listUsers ?? [];
   }
 
   Widget _buildUserList() {
-    List<Users>? filteredList = widget.userController.listUsers;
-
-    if (selectedOption == 'Clientes') {
-      filteredList = widget.userController.listUsers
-          ?.where((user) => user.role == 'customer')
-          .toList();
-    } else if (selectedOption == 'Administrador') {
-      filteredList = widget.userController.listUsers
-          ?.where((user) => user.role == 'administrator')
-          .toList();
-    }
-
-    return SizedBox(
-      height: screenHeight * 0.75,
-      child: ListView.builder(
-        itemCount: filteredList?.length ?? 0,
-        itemBuilder: (context, index) {
-          Users user = filteredList![index];
-          return CardUser(
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            lastName: user.lastName,
-            address: user.address,
-            role: user.role,
-            account: user.account,
+    return FutureBuilder<List<Users>>(
+      future: _fetchUserList(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
-        },
-      ),
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text('Error al cargar la lista de usuarios'),
+          );
+        } else {
+          List<Users> filteredList = snapshot.data ?? [];
+          if (selectedOption == 'Clientes') {
+            filteredList =
+                filteredList.where((user) => user.role == 'customer').toList();
+          } else if (selectedOption == 'Administrador') {
+            filteredList = filteredList
+                .where((user) => user.role == 'administrator')
+                .toList();
+          } else if (selectedOption == 'Todos') {
+            filteredList = filteredList;
+          }
+
+          return SizedBox(
+            height: screenHeight * 0.75,
+            child: ListView.builder(
+              itemCount: filteredList.length,
+              itemBuilder: (context, index) {
+                Users user = filteredList[index];
+                return CardUser(
+                  name: user.name,
+                  email: user.email,
+                  phone: user.phone,
+                  lastName: user.lastName,
+                  address: user.address,
+                  role: user.role,
+                  account: user.account,
+                );
+              },
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -84,7 +92,7 @@ class _CustomerState extends State<Customer> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = ['Clientes', 'Administrador'];
+    List<String> options = ['Todos', 'Clientes', 'Administrador'];
 
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
@@ -131,7 +139,9 @@ class _CustomerState extends State<Customer> {
                 ),
               ),
               Positioned(
-                top: 10,
+                top: isContainerVisible
+                    ? screenHeight * 0.02
+                    : screenHeight * 0.97,
                 child: Opacity(
                   opacity: isContainerVisible ? 1 : 0.0,
                   child: SingleChildScrollView(

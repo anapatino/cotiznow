@@ -1,10 +1,14 @@
 import 'package:cotiznow/lib.dart';
 
-class RoundIconButton extends StatefulWidget {
+import '../../../utils/icon_list.dart';
+
+class RoundIconButton extends StatelessWidget {
   final String icon;
   final String title;
   final Function onClick;
-  final bool isActive; // Nueva propiedad
+  final Function onLongPress;
+
+  final bool isActive;
 
   const RoundIconButton({
     Key? key,
@@ -12,13 +16,9 @@ class RoundIconButton extends StatefulWidget {
     required this.title,
     required this.onClick,
     this.isActive = false,
+    required this.onLongPress,
   }) : super(key: key);
 
-  @override
-  _RoundIconButtonState createState() => _RoundIconButtonState();
-}
-
-class _RoundIconButtonState extends State<RoundIconButton> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -29,19 +29,22 @@ class _RoundIconButtonState extends State<RoundIconButton> {
         children: [
           GestureDetector(
             onTap: () {
-              widget.onClick();
+              onClick();
+            },
+            onLongPress: () {
+              onLongPress();
             },
             child: Container(
               width: screenWidth * 0.18,
               height: screenWidth * 0.18,
               decoration: BoxDecoration(
-                color: widget.isActive ? Palette.primary : Palette.grey,
+                color: isActive ? Palette.primary : Palette.grey,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Icon(
-                  Icons.access_time_rounded,
-                  color: widget.isActive ? Colors.white : Palette.textColor,
+                  IconList.getIconDataFromString(icon),
+                  color: isActive ? Colors.white : Palette.textColor,
                   size: screenWidth * 0.085,
                 ),
               ),
@@ -49,7 +52,7 @@ class _RoundIconButtonState extends State<RoundIconButton> {
           ),
           SizedBox(height: screenHeight * 0.012),
           Text(
-            widget.title,
+            title,
             style: GoogleFonts.varelaRound(
               color: Palette.textColor,
               fontSize: screenWidth * 0.03,

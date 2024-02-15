@@ -1,27 +1,24 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/section_controller.dart';
-import 'package:cotiznow/src/domain/models/section.dart';
 
 import '../../utils/icon_list.dart';
 import '../../widgets/components/button/button.dart';
 import '../../widgets/components/button/icon_button.dart';
 import '../../widgets/components/input.dart';
 
-class UpdateSectionForm extends StatefulWidget {
+class RegisterSectionForm extends StatefulWidget {
   final Function onCancelForm;
-  final Section section;
 
-  const UpdateSectionForm({
+  const RegisterSectionForm({
     Key? key,
     required this.onCancelForm,
-    required this.section,
   }) : super(key: key);
 
   @override
-  State<UpdateSectionForm> createState() => _UpdateSectionFormState();
+  State<RegisterSectionForm> createState() => _RegisterSectionFormState();
 }
 
-class _UpdateSectionFormState extends State<UpdateSectionForm> {
+class _RegisterSectionFormState extends State<RegisterSectionForm> {
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
   SectionsController sectionsController = Get.find();
@@ -47,16 +44,12 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
     String description = controllerDescription.text;
     String icon = "";
     String status = "enable";
-    Section section = Section(
-        id: "",
-        icon: icon,
-        name: name,
-        description: description,
-        status: status);
     if (name.isNotEmpty && description.isNotEmpty && icon.isNotEmpty) {
-      sectionsController.updateSection(section).then((value) async {
+      sectionsController
+          .registerSection(icon, name, description, status)
+          .then((value) async {
         Get.snackbar(
-          'Actualización de sección exitoso',
+          'Registro de sección exitoso',
           value,
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
@@ -65,7 +58,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
         );
       }).catchError((error) {
         Get.snackbar(
-          'Error al actualizar sección',
+          'Error al registrar sección',
           '$error',
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
@@ -76,7 +69,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
       _onCancelForm();
     } else {
       Get.snackbar(
-        'Error al actualizar sección',
+        'Error al registrar sección',
         'Ingrese los campos requeridos para poder registrar',
         colorText: Colors.white,
         duration: const Duration(seconds: 5),
@@ -109,7 +102,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
                 height: screenHeight * 0.04,
               ),
               Text(
-                "Actualizar sección",
+                "Registrar Sección",
                 style: GoogleFonts.varelaRound(
                   color: Colors.white,
                   fontSize: screenWidth * 0.05,
@@ -146,8 +139,8 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
                             onClick: () {
                               handleIconClick(index);
                             },
-                            isActive: activeIndex == index,
                             onLongPress: () {},
+                            isActive: activeIndex == index,
                           );
                         },
                       ),

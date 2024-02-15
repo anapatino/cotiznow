@@ -8,7 +8,7 @@ import '../../widgets/components/input.dart';
 // ignore: must_be_immutable
 class AdministratorRegistration extends StatefulWidget {
   final Function onCancelRegistration;
-  AdministratorRegistration({
+  const AdministratorRegistration({
     super.key,
     required this.onCancelRegistration,
   });

@@ -63,7 +63,7 @@ class UserController extends GetxController {
       String phone,
       String address,
       String role,
-      String enable) async {
+      String account) async {
     try {
       UserCredential user = await UserRequest.register(
           name, lastName, email, password, phone, address, role, account);
