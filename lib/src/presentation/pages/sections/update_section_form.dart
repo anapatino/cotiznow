@@ -10,11 +10,15 @@ import '../../widgets/components/input.dart';
 class UpdateSectionForm extends StatefulWidget {
   final Function onCancelForm;
   final Section section;
+  final String name;
+  final String description;
 
   const UpdateSectionForm({
     Key? key,
     required this.onCancelForm,
     required this.section,
+    required this.name,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -26,10 +30,13 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
   TextEditingController controllerDescription = TextEditingController();
   SectionsController sectionsController = Get.find();
   int activeIndex = -1;
+  String icon = "";
 
   @override
   void initState() {
     super.initState();
+    controllerDescription.text = widget.section.description;
+    controllerName.text = widget.section.name;
   }
 
   void _resetForm() {
@@ -45,7 +52,6 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
   Future<void> registerSection() async {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String icon = "";
     String status = "enable";
     Section section = Section(
         id: "",
@@ -144,7 +150,8 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
                             icon: "${IconList.icons[index]["icon"]}",
                             title: "${IconList.icons[index]["title"]}",
                             onClick: () {
-                              handleIconClick(index);
+                              handleIconClick(
+                                  index, "${IconList.icons[index]["icon"]}");
                             },
                             isActive: activeIndex == index,
                             onLongPress: () {},
@@ -196,7 +203,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
                       hasBorder: true,
                     ),
                     CustomElevatedButton(
-                      text: 'Registrar',
+                      text: 'Actualizar',
                       onPressed: () {},
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.35,
@@ -218,13 +225,14 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
     );
   }
 
-  void handleIconClick(int index) {
+  void handleIconClick(int index, String newIcon) {
     setState(() {
       if (activeIndex == index) {
         activeIndex = -1;
       } else {
         activeIndex = index;
       }
+      icon = newIcon;
     });
   }
 }

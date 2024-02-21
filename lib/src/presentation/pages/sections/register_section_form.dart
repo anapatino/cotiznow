@@ -23,7 +23,7 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
   TextEditingController controllerDescription = TextEditingController();
   SectionsController sectionsController = Get.find();
   int activeIndex = -1;
-
+  String icon = "";
   @override
   void initState() {
     super.initState();
@@ -42,7 +42,7 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
   Future<void> registerSection() async {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String icon = "";
+
     String status = "enable";
     if (name.isNotEmpty && description.isNotEmpty && icon.isNotEmpty) {
       sectionsController
@@ -137,7 +137,8 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
                             icon: "${IconList.icons[index]["icon"]}",
                             title: "${IconList.icons[index]["title"]}",
                             onClick: () {
-                              handleIconClick(index);
+                              handleIconClick(
+                                  index, "${IconList.icons[index]["icon"]}");
                             },
                             onLongPress: () {},
                             isActive: activeIndex == index,
@@ -211,13 +212,14 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
     );
   }
 
-  void handleIconClick(int index) {
+  void handleIconClick(int index, String newIcon) {
     setState(() {
       if (activeIndex == index) {
         activeIndex = -1;
       } else {
         activeIndex = index;
       }
+      icon = newIcon;
     });
   }
 }

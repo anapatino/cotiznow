@@ -25,9 +25,9 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerPassword = TextEditingController();
   TextEditingController controllerAddress = TextEditingController();
-  String? selectedOption;
-  List<String> options = ['Cliente', 'Administrado'];
   UserController userController = Get.find();
+
+  String? selectedOption;
 
   @override
   void initState() {
@@ -41,7 +41,11 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
     String email = controllerEmail.text;
     String password = controllerPassword.text;
     String address = controllerAddress.text;
-    String role = selectedOption == "Clientes" ? "customer" : "administrator";
+    String role = selectedOption == "Cliente"
+        ? "customer"
+        : selectedOption == "Administrador"
+            ? "administrator"
+            : "super_administrator";
     String account = "enable";
     if (name.isNotEmpty &&
         lastName.isNotEmpty &&
@@ -104,6 +108,10 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    List<String> options = userController.role == "administrator"
+        ? ['Cliente', 'Administrador']
+        : ['Cliente', 'Administrador', 'Super Administrador'];
+
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(

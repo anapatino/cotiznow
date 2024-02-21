@@ -35,7 +35,9 @@ class _SectionsState extends State<Sections> {
   void initState() {
     super.initState();
     controllerSearch = TextEditingController();
-    _fetchSectionsList();
+    controllerSearch?.addListener(() {
+      filterSections(controllerSearch!.text);
+    });
   }
 
   @override
@@ -78,36 +80,34 @@ class _SectionsState extends State<Sections> {
           body: Stack(children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Secciones",
-                      style: GoogleFonts.varelaRound(
-                        color: Colors.black,
-                        fontSize: screenWidth * 0.06,
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Secciones",
+                    style: GoogleFonts.varelaRound(
+                      color: Colors.black,
+                      fontSize: screenWidth * 0.06,
                     ),
-                    SizedBox(height: screenHeight * 0.02),
-                    CustomTextField(
-                      icon: Icons.search_rounded,
-                      hintText: 'Buscar',
-                      isPassword: false,
-                      width: screenWidth * 0.9,
-                      height: screenHeight * 0.06,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      border: 30,
-                      onChanged: (value) {
-                        filterSections(value);
-                      },
-                      controller: controllerSearch!,
-                    ),
-                    SizedBox(height: screenHeight * 0.01),
-                    _buildSectionsList(),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  CustomTextField(
+                    icon: Icons.search_rounded,
+                    hintText: 'Buscar',
+                    isPassword: false,
+                    width: screenWidth * 0.9,
+                    height: screenHeight * 0.06,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    border: 30,
+                    onChanged: (value) {
+                      filterSections(value);
+                    },
+                    controller: controllerSearch!,
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  _buildSectionsList(),
+                ],
               ),
             ),
             Visibility(
@@ -121,6 +121,8 @@ class _SectionsState extends State<Sections> {
                       toggleUpdateFormVisibility(section);
                     },
                     section: section,
+                    name: section.name,
+                    description: section.description,
                   ),
                 ),
               ),
@@ -173,42 +175,58 @@ class _SectionsState extends State<Sections> {
     });
   }
 
-  void _fetchSectionsList() async {
-    await widget.sectionsController.getAllSections();
-    setState(() {
-      filteredSections = widget.sectionsController.sectionsList
-              ?.where((section) => section.status == "enable")
-              .toList() ??
-          [];
-    });
-  }
-
   Widget _buildSectionsList() {
-    return _buildRoundIconButtons(filteredSections);
+    return FutureBuilder<List<Section>>(
+      future: widget.sectionsController.getAllSections(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        final sections = snapshot.data!;
+        List<Section> filteredSections =
+            sections.where((section) => section.status == 'enable').toList();
+        if (controllerSearch!.text.isNotEmpty) {
+          filteredSections = sections
+              .where((section) =>
+                  section.name
+                      .toLowerCase()
+                      .contains(controllerSearch!.text.toLowerCase()) &&
+                  section.status == 'enable')
+              .toList();
+        }
+
+        return _buildRoundIconButtons(filteredSections);
+      },
+    );
   }
 
   Widget _buildRoundIconButtons(List<Section> sections) {
-    return SizedBox(
-      width: screenWidth * 0.9,
-      height: screenHeight * 0.7,
-      child: SingleChildScrollView(
-        child: Wrap(
-          spacing: 0.01,
-          runSpacing: 10.0,
-          children: sections.map((section) {
-            int index = sections.indexOf(section);
-            return RoundIconButton(
-              icon: section.icon,
-              title: section.name,
-              onClick: () {
-                handleIconClick(index, section);
-              },
-              onLongPress: () {
-                showDisableSectionAlert(section);
-              },
-              isActive: activeIndex == index,
-            );
-          }).toList(),
+    return Expanded(
+      child: SizedBox(
+        width: screenWidth * 0.9,
+        height: screenHeight * 0.7,
+        child: SingleChildScrollView(
+          child: Wrap(
+            spacing: 0.01,
+            runSpacing: 10.0,
+            children: filteredSections.map((section) {
+              int index = filteredSections.indexOf(section);
+              return RoundIconButton(
+                icon: section.icon,
+                title: section.name,
+                onClick: () {
+                  handleIconClick(index, section);
+                },
+                onLongPress: () {
+                  showDisableSectionAlert(section);
+                },
+                isActive: activeIndex == index,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

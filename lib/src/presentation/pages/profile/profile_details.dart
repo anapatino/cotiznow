@@ -202,7 +202,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     onChanged: (value) {},
                     controller: controllerEmail,
                   ),
-                  if (userController.role == "customer")
+                  if (userController.role != "super_administrador")
                     CustomTextField(
                       icon: Icons.account_circle_rounded,
                       hintText: 'Rol',
@@ -214,7 +214,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       onChanged: (value) {},
                       controller: controllerRole,
                     ),
-                  if (userController.role == "customer")
+                  if (userController.role != "super_administrador")
                     CustomTextField(
                       icon: Icons.admin_panel_settings_sharp,
                       hintText: 'Cuenta',
@@ -226,7 +226,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       onChanged: (value) {},
                       controller: controllerAccount,
                     ),
-                  if (userController.role == "administrator")
+                  if (userController.role == "super_administrator")
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

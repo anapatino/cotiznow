@@ -48,16 +48,7 @@ class _CustomerState extends State<Customer> {
           );
         } else {
           List<Users> filteredList = snapshot.data ?? [];
-          if (selectedOption == 'Clientes') {
-            filteredList =
-                filteredList.where((user) => user.role == 'customer').toList();
-          } else if (selectedOption == 'Administrador') {
-            filteredList = filteredList
-                .where((user) => user.role == 'administrator')
-                .toList();
-          } else if (selectedOption == 'Todos') {
-            filteredList = filteredList;
-          }
+          filteredList = _filterListByOption(filteredList);
 
           return SizedBox(
             height: screenHeight * 0.75,
@@ -82,6 +73,20 @@ class _CustomerState extends State<Customer> {
     );
   }
 
+  List<Users> _filterListByOption(List<Users> userList) {
+    if (widget.userController.role == "administrator") {
+      return userList.where((user) => user.role == 'customer').toList();
+    } else {
+      if (selectedOption == 'Clientes') {
+        return userList.where((user) => user.role == 'customer').toList();
+      } else if (selectedOption == 'Administrador') {
+        return userList.where((user) => user.role == 'administrator').toList();
+      } else {
+        return userList;
+      }
+    }
+  }
+
   void _toggleContainerVisibility() {
     setState(() {
       isContainerVisible = !isContainerVisible;
@@ -92,7 +97,9 @@ class _CustomerState extends State<Customer> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = ['Todos', 'Clientes', 'Administrador'];
+    List<String> options = widget.userController.role == "administrator"
+        ? ['Clientes']
+        : ['Todos', 'Clientes', 'Administrador'];
 
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
