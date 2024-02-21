@@ -54,7 +54,7 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
           backgroundColor: Palette.accent,
-          icon: const Icon(Icons.supervised_user_circle_sharp),
+          icon: const Icon(Icons.check_circle),
         );
       }).catchError((error) {
         Get.snackbar(
@@ -63,7 +63,7 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
           backgroundColor: Palette.error,
-          icon: const Icon(Icons.error_outline_rounded),
+          icon: const Icon(Icons.error),
         );
       });
       _onCancelForm();
@@ -87,7 +87,6 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
-        height: screenHeight * 0.58,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(
@@ -191,7 +190,7 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
                     ),
                     CustomElevatedButton(
                       text: 'Registrar',
-                      onPressed: () {},
+                      onPressed: registerSection,
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.35,
                       textColor: Colors.white,

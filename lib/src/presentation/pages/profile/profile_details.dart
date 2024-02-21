@@ -118,6 +118,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     List<String> optionsRole = ['Cliente', 'Administrador'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isEnable = userController.role != "super_administrador" ? false : true;
 
     return SafeArea(
       child: Scaffold(
@@ -148,6 +149,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     height: screenHeight * 0.015,
                   ),
                   CustomTextField(
+                    isEnable: isEnable,
                     icon: Icons.person,
                     hintText: 'Nombre',
                     isPassword: false,
@@ -159,6 +161,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     controller: controllerName,
                   ),
                   CustomTextField(
+                    isEnable: isEnable,
                     icon: Icons.person,
                     hintText: 'Apellido',
                     isPassword: false,
@@ -170,6 +173,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     controller: controllerLastName,
                   ),
                   CustomTextField(
+                    isEnable: isEnable,
                     icon: Icons.phone,
                     hintText: 'Telefono',
                     isPassword: false,
@@ -181,6 +185,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     controller: controllerPhone,
                   ),
                   CustomTextField(
+                    isEnable: isEnable,
                     icon: Icons.location_on_rounded,
                     hintText: 'Dirección',
                     isPassword: false,
@@ -192,6 +197,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     controller: controllerAddress,
                   ),
                   CustomTextField(
+                    isEnable: isEnable,
                     icon: Icons.mail_rounded,
                     hintText: 'Correo electronico',
                     isPassword: false,
@@ -204,6 +210,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   ),
                   if (userController.role != "super_administrador")
                     CustomTextField(
+                      isEnable: isEnable,
                       icon: Icons.account_circle_rounded,
                       hintText: 'Rol',
                       isPassword: false,
@@ -216,6 +223,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     ),
                   if (userController.role != "super_administrador")
                     CustomTextField(
+                      isEnable: isEnable,
                       icon: Icons.admin_panel_settings_sharp,
                       hintText: 'Cuenta',
                       isPassword: false,

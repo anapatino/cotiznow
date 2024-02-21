@@ -10,15 +10,11 @@ import '../../widgets/components/input.dart';
 class UpdateSectionForm extends StatefulWidget {
   final Function onCancelForm;
   final Section section;
-  final String name;
-  final String description;
 
   const UpdateSectionForm({
     Key? key,
     required this.onCancelForm,
     required this.section,
-    required this.name,
-    required this.description,
   }) : super(key: key);
 
   @override
@@ -49,12 +45,12 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
     _resetForm();
   }
 
-  Future<void> registerSection() async {
+  Future<void> updateSection() async {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String status = "enable";
     Section section = Section(
-        id: "",
+        id: widget.section.id,
         icon: icon,
         name: name,
         description: description,
@@ -67,7 +63,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
           backgroundColor: Palette.accent,
-          icon: const Icon(Icons.supervised_user_circle_sharp),
+          icon: const Icon(Icons.check_circle),
         );
       }).catchError((error) {
         Get.snackbar(
@@ -76,7 +72,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
           backgroundColor: Palette.error,
-          icon: const Icon(Icons.error_outline_rounded),
+          icon: const Icon(Icons.error),
         );
       });
       _onCancelForm();
@@ -87,7 +83,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
         colorText: Colors.white,
         duration: const Duration(seconds: 5),
         backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error_outline_rounded),
+        icon: const Icon(Icons.error),
       );
     }
   }
@@ -100,7 +96,6 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
-        height: screenHeight * 0.58,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(
@@ -204,7 +199,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
                     ),
                     CustomElevatedButton(
                       text: 'Actualizar',
-                      onPressed: () {},
+                      onPressed: updateSection,
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.35,
                       textColor: Colors.white,

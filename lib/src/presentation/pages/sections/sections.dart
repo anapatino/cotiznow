@@ -50,6 +50,9 @@ class _SectionsState extends State<Sections> {
     setState(() {
       isUpdateFormVisible = !isUpdateFormVisible;
       section = selectedSection;
+      if (!isUpdateFormVisible) {
+        activeIndex = -1;
+      }
     });
   }
 
@@ -113,7 +116,7 @@ class _SectionsState extends State<Sections> {
             Visibility(
               visible: isUpdateFormVisible,
               child: Positioned(
-                top: screenHeight * 0.35,
+                top: screenHeight * 0.25,
                 child: Opacity(
                   opacity: isUpdateFormVisible ? 1 : 0.0,
                   child: UpdateSectionForm(
@@ -121,8 +124,6 @@ class _SectionsState extends State<Sections> {
                       toggleUpdateFormVisibility(section);
                     },
                     section: section,
-                    name: section.name,
-                    description: section.description,
                   ),
                 ),
               ),
@@ -130,7 +131,7 @@ class _SectionsState extends State<Sections> {
             Visibility(
               visible: isRegisterFormVisible,
               child: Positioned(
-                top: screenHeight * 0.35,
+                top: screenHeight * 0.25,
                 child: Opacity(
                   opacity: isRegisterFormVisible ? 1 : 0.0,
                   child: RegisterSectionForm(

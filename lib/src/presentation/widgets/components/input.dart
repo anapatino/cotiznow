@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final Color inputColor;
   final Color textColor;
   final double? border;
+  final bool? isEnable;
   final TextEditingController controller;
   final Function(String)? onChanged;
 
@@ -25,6 +26,7 @@ class CustomTextField extends StatefulWidget {
     this.onChanged,
     required this.controller,
     this.border,
+    this.isEnable = true,
   });
 
   @override
@@ -65,6 +67,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   const SizedBox(width: 10.0),
                   Expanded(
                     child: TextField(
+                      enabled: widget.isEnable,
                       controller: widget.controller,
                       obscureText:
                           widget.isPassword ? _obscureText : widget.isPassword,
