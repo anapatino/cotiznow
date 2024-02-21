@@ -1,28 +1,52 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cotiznow/src/domain/models/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class MaterialsRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
+  static final FirebaseStorage storage = FirebaseStorage.instance;
 
-  static Future<String> registerMaterial(
-    Material material,
-  ) async {
+  static Future<String> _uploadImageToFirebase(String filePath) async {
     try {
-      await database.collection('sections').add({
+      final Reference storageReference =
+          storage.ref().child('images').child(filePath);
+      final UploadTask uploadTask = storageReference.putFile(File(filePath));
+
+      await uploadTask.whenComplete(() async {
+        String urlPhoto = await storageReference.getDownloadURL();
+        print('URL de la imagen: $urlPhoto');
+        return urlPhoto;
+      });
+      return '';
+    } catch (e) {
+      throw Future.error('Error al subir la imagen a Firebase Storage');
+    }
+  }
+
+  static Future<String> registerMaterial(Materials material) async {
+    try {
+      final url = await _uploadImageToFirebase(material.urlPhoto);
+
+      material.urlPhoto = url;
+
+      await database.collection('materials').add({
         'url_photo': material.urlPhoto,
         'name': material.name,
-        'unit': material.description,
-        'size': material.status,
-        'purchase_price': material.description,
-        'sale_price': material.status,
-        'section_id': material.description,
-        'quantity': material.status,
+        'unit': material.unit,
+        'size': material.size,
+        'purchase_price': material.purchasePrice,
+        'sale_price': material.salePrice,
+        'section_id': material.sectionId,
+        'quantity': material.quantity,
         'description': material.description,
         'status': material.status,
       });
-      return "Se ha realizado exitosamente el registro de una materiales";
+
+      return "Se ha realizado exitosamente el registro del material";
     } catch (e) {
-      throw Future.error('Error al registrar usuario en la base de datos');
+      throw Future.error('Error al registrar material en la base de datos');
     }
   }
 
@@ -42,7 +66,7 @@ class MaterialsRequest {
     }
   }
 
-  static Future<String> updateMaterial(Material material) async {
+  static Future<String> updateMaterial(Materials material) async {
     try {
       await database.collection('materials').doc(material.id).update({
         'url_photo': material.urlPhoto,
@@ -63,14 +87,14 @@ class MaterialsRequest {
     }
   }
 
-  static Future<List<Material>> getAllMaterials() async {
+  static Future<List<Materials>> getAllMaterials() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await database.collection('materials').get();
 
-      List<Material> materialsList = querySnapshot.docs.map((doc) {
+      List<Materials> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
-        return Material(
+        return Materials(
           urlPhoto: data['url_photo'] ?? '',
           name: data['name'] ?? '',
           unit: data['unit'] ?? '',
@@ -92,7 +116,7 @@ class MaterialsRequest {
     }
   }
 
-  static Future<List<Material>> getMaterialsBySectionId(
+  static Future<List<Materials>> getMaterialsBySectionId(
       String sectionId) async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await database
@@ -100,9 +124,9 @@ class MaterialsRequest {
           .where('section_id', isEqualTo: sectionId)
           .get();
 
-      List<Material> materialsList = querySnapshot.docs.map((doc) {
+      List<Materials> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
-        return Material(
+        return Materials(
           urlPhoto: data['url_photo'] ?? '',
           name: data['name'] ?? '',
           unit: data['unit'] ?? '',

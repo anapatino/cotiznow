@@ -1,9 +1,10 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/materials/materials_board.dart';
 import 'package:cotiznow/src/presentation/pages/profile/profile_details.dart';
-import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
-
+import 'package:cotiznow/src/presentation/pages/sections/sections_board.dart';
 import '../pages/dashboard/administrator.dart';
-import '../pages/customer/customer.dart';
+import '../pages/customer/customer_panel.dart';
+import '../pages/services/services_panel.dart';
 import '../widgets/components/drawer.dart';
 
 class AdministratorRoutes {
@@ -36,11 +37,11 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: materials,
-      page: () => const Main(),
+      page: () => MaterialsBoard(),
     ),
     GetPage(
       name: services,
-      page: () => const Main(),
+      page: () => ServicesPanel(),
     ),
     GetPage(
       name: discounts,

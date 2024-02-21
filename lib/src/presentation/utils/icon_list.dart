@@ -60,8 +60,10 @@ class IconList {
         return Icons.aspect_ratio_rounded;
       case "Icons.bento_outlined":
         return Icons.bento_outlined;
-      case "Icons.carpenter_outlined;":
+      case "Icons.carpenter_outlined":
         return Icons.carpenter_outlined;
+      case "Icons.add":
+        return Icons.add;
 
       default:
         return Icons.category_outlined;

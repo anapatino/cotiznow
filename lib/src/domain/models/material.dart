@@ -1,4 +1,4 @@
-class Material {
+class Materials {
   String urlPhoto;
   String name;
   String unit;
@@ -11,7 +11,7 @@ class Material {
   String status;
   String id;
 
-  Material({
+  Materials({
     required this.urlPhoto,
     required this.name,
     required this.unit,
@@ -25,8 +25,8 @@ class Material {
     required this.id,
   });
 
-  factory Material.fromJson(Map<String, dynamic>? json) {
-    return Material(
+  factory Materials.fromJson(Map<String, dynamic>? json) {
+    return Materials(
       urlPhoto: json?['url_photo'] ?? '',
       name: json?['name'] ?? '',
       unit: json?['unit'] ?? '',

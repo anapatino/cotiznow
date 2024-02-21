@@ -14,6 +14,7 @@ class CustomTextField extends StatefulWidget {
   final bool? isEnable;
   final TextEditingController controller;
   final Function(String)? onChanged;
+  final int? maxLine;
 
   CustomTextField({
     required this.icon,
@@ -27,10 +28,11 @@ class CustomTextField extends StatefulWidget {
     required this.controller,
     this.border,
     this.isEnable = true,
+    this.maxLine = 1,
   });
 
   @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
@@ -67,6 +69,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   const SizedBox(width: 10.0),
                   Expanded(
                     child: TextField(
+                      maxLines: widget.maxLine,
                       enabled: widget.isEnable,
                       controller: widget.controller,
                       obscureText:

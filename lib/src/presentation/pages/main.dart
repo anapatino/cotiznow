@@ -1,6 +1,6 @@
 import 'package:cotiznow/lib.dart';
 
-import '../widgets/components/button/button.dart';
+import '../widgets/components/button/custom_button.dart';
 
 class Main extends StatelessWidget {
   const Main({super.key});

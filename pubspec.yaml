@@ -41,6 +41,8 @@ dependencies:
   get: ^4.6.5
   google_fonts: ^4.0.4
   animate_do: ^3.3.3
+  firebase_storage: ^11.6.6
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:

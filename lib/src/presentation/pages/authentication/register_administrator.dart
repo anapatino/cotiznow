@@ -1,7 +1,7 @@
 import 'package:cotiznow/lib.dart';
 
 import '../../../domain/controllers/user_controller.dart';
-import '../../widgets/components/button/button.dart';
+import '../../widgets/components/button/custom_button.dart';
 import '../../widgets/components/dropdown.dart';
 import '../../widgets/components/input.dart';
 

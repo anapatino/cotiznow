@@ -1,10 +1,10 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/section_controller.dart';
 
-import '../../utils/icon_list.dart';
-import '../../widgets/components/button/button.dart';
-import '../../widgets/components/button/icon_button.dart';
-import '../../widgets/components/input.dart';
+import '../../../utils/icon_list.dart';
+import '../../../widgets/components/button/custom_button.dart';
+import '../../../widgets/components/button/icon_button.dart';
+import '../../../widgets/components/input.dart';
 
 class RegisterSectionForm extends StatefulWidget {
   final Function onCancelForm;
