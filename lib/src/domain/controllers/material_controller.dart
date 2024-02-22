@@ -31,9 +31,9 @@ class MaterialsController extends GetxController {
     }
   }
 
-  Future<String> updateMaterial(Materials material) async {
+  Future<String> updateMaterial(Materials material, String urlOld) async {
     try {
-      return await MaterialsRequest.updateMaterial(material);
+      return await MaterialsRequest.updateMaterial(material, urlOld);
     } catch (e) {
       throw Future.error('Error al actualizar el material');
     }

@@ -53,6 +53,12 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     controllerCode.clear();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _onCancelForm();
+  }
+
   void _onCancelForm() {
     widget.onCancelForm();
     _resetForm();
@@ -79,7 +85,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     String salePrice = controllerSalePrice.text;
     String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
-    String status = "enable";
     if (name.isNotEmpty &&
         description.isNotEmpty &&
         unit.isNotEmpty &&
@@ -99,11 +104,13 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         sectionId: sectionId,
         quantity: quantity,
         description: description,
-        status: status,
-        id: "",
+        status: widget.material.status,
+        id: widget.material.id,
         code: code,
       );
-      materialController.updateMaterial(material).then((value) async {
+      materialController
+          .updateMaterial(material, widget.material.urlPhoto)
+          .then((value) async {
         Get.snackbar(
           'Actualizacion de material exitoso',
           value,

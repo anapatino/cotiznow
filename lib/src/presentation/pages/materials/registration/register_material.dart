@@ -24,8 +24,11 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   TextEditingController controllerSalePrice = TextEditingController();
   TextEditingController controllerPurchasePrice = TextEditingController();
   TextEditingController controllerCode = TextEditingController();
-
+  List<String> optionsSection = [];
+  List<Section> sections = [];
   MaterialsController materialController = Get.find();
+  SectionsController sectionsController = Get.find();
+
   String urlPhoto = "";
   String? selectedOption;
   String? selectedOptionSectionId;
@@ -38,6 +41,29 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     controllerSalePrice.clear();
     controllerPurchasePrice.clear();
     controllerCode.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadSections();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _onCancelForm();
+  }
+
+  Future<void> loadSections() async {
+    try {
+      sections = await sectionsController.getAllSections();
+      setState(() {
+        optionsSection = sections.map((section) => section.name).toList();
+      });
+    } catch (error) {
+      print("Error loading sections: $error");
+    }
   }
 
   void _onCancelForm() {
@@ -76,6 +102,10 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
         purchasePrice.isNotEmpty) {
+      Section sectionFound = sections.firstWhere(
+        (section) => section.name == selectedOptionSectionId,
+        orElse: () => throw "Sección no encontrada",
+      );
       Materials material = Materials(
         urlPhoto: urlPhoto,
         name: name,
@@ -83,7 +113,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         size: size,
         purchasePrice: purchasePrice,
         salePrice: salePrice,
-        sectionId: sectionId,
+        sectionId: sectionFound.id,
         quantity: quantity,
         description: description,
         status: status,
@@ -127,7 +157,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     List<String> options = ['m2', 'm'];
-    List<String> optionsSection = ['m2', 'm'];
 
     return BounceInUp(
       duration: const Duration(microseconds: 10),

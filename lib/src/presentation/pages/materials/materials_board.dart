@@ -1,11 +1,14 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/materials/materials.dart';
+import 'package:cotiznow/src/presentation/widgets/components/card/card_material.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
 
 class MaterialsBoard extends StatefulWidget {
-  final MaterialsController sectionsController = Get.find();
+  final MaterialsController materialController = Get.find();
+  final SectionsController sectionsController = Get.find();
+
   final UserController userController = Get.find();
   MaterialsBoard({super.key});
 
@@ -14,13 +17,15 @@ class MaterialsBoard extends StatefulWidget {
 }
 
 class _MaterialsBoardState extends State<MaterialsBoard> {
-  late final TextEditingController? controllerSearch;
+  late final TextEditingController controllerSearch = TextEditingController();
   int activeIndex = -1;
+  String sectionId = "";
   double screenWidth = 0;
   double screenHeight = 0;
   bool isUpdateFormVisible = false;
+  bool isUpdateStatusVisible = false;
   bool isRegisterFormVisible = false;
-  List<Materials> filteredSections = [];
+  List<Section> listSections = [];
   Materials material = Materials(
       urlPhoto: '',
       name: '',
@@ -38,7 +43,6 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   @override
   void initState() {
     super.initState();
-    controllerSearch = TextEditingController();
     //controllerSearch?.addListener(() {
     // filterSections(controllerSearch!.text);
     //});
@@ -46,7 +50,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
 
   @override
   void dispose() {
-    controllerSearch?.clear();
+    controllerSearch.clear();
+    controllerSearch.dispose();
     super.dispose();
   }
 
@@ -60,10 +65,108 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
     });
   }
 
+  void toggleUpdateStatusVisibility(Materials selectMaterial) {
+    setState(() {
+      isUpdateStatusVisible = !isUpdateStatusVisible;
+      material = selectMaterial;
+      if (!isUpdateStatusVisible) {
+        activeIndex = -1;
+      }
+    });
+  }
+
   void toggleRegisterFormVisibility() {
     setState(() {
       isRegisterFormVisible = !isRegisterFormVisible;
     });
+  }
+
+  Widget _buildSectionsList() {
+    return FutureBuilder<List<Section>>(
+      future: widget.sectionsController.getAllSections(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        final sections = snapshot.data!;
+        List<Section> filteredSections =
+            sections.where((section) => section.status == 'enable').toList();
+        return _buildRoundIconButtons(filteredSections);
+      },
+    );
+  }
+
+  Widget _buildRoundIconButtons(List<Section> sections) {
+    return SizedBox(
+      width: screenWidth * 0.86,
+      height: screenHeight * 0.15,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: sections.length,
+        itemBuilder: (context, index) {
+          Section section = sections[index];
+
+          return RoundIconButton(
+            icon: section.icon,
+            title: section.name,
+            onClick: () {
+              setState(() {
+                handleIconClick(index, section);
+              });
+            },
+            onLongPress: () {},
+            isActive: activeIndex == index,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMaterialsBySectionId(String sectionId) {
+    return FutureBuilder<List<Materials>>(
+      future: widget.materialController.getMaterialsBySectionId(sectionId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        final materials = snapshot.data!;
+        List<Materials> filteredMaterials =
+            materials.where((material) => material.status == 'enable').toList();
+        return _buildCardMaterial(filteredMaterials);
+      },
+    );
+  }
+
+  Widget _buildCardMaterial(List<Materials> materials) {
+    return Expanded(
+      child: SizedBox(
+        width: screenWidth * 0.86,
+        height: screenHeight * 0.8,
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: materials.length,
+          itemBuilder: (context, index) {
+            Materials material = materials[index];
+
+            return CardMaterialSimple(
+                material: material,
+                onClick: () {},
+                onLongPress: () {
+                  toggleUpdateStatusVisibility(material);
+                },
+                onDoubleTap: () {
+                  toggleUpdateFormVisibility(material);
+                });
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -104,7 +207,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                           icon: Icons.search_rounded,
                           hintText: 'Buscar',
                           isPassword: false,
-                          width: screenWidth * 0.73,
+                          width: screenWidth * 0.85,
                           height: screenHeight * 0.06,
                           inputColor: Palette.grey,
                           textColor: Colors.black,
@@ -112,11 +215,13 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                           onChanged: (value) {
                             //filterSections(value);
                           },
-                          controller: controllerSearch!,
+                          controller: controllerSearch,
                         ),
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.01),
+                    _buildSectionsList(),
+                    _buildMaterialsBySectionId(sectionId),
                   ],
                 ),
               ),
@@ -134,9 +239,41 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                   ),
                 ),
               ),
+              Visibility(
+                visible: isUpdateFormVisible,
+                child: Positioned(
+                  top: screenHeight * 0.05,
+                  child: Opacity(
+                    opacity: isUpdateFormVisible ? 1 : 0.0,
+                    child: UpdateFormMaterial(
+                      onCancelForm: () {
+                        toggleUpdateFormVisibility(material);
+                      },
+                      material: material,
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: isUpdateStatusVisible,
+                child: Positioned(
+                  top: screenHeight * 0.05,
+                  child: Opacity(
+                    opacity: isUpdateStatusVisible ? 1 : 0.0,
+                    child: ChangeMaterialStatus(
+                      onCancelForm: () {
+                        toggleUpdateStatusVisibility(material);
+                      },
+                      material: material,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
-          floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
+          floatingActionButton: isRegisterFormVisible ||
+                  isUpdateFormVisible ||
+                  isUpdateStatusVisible
               ? const SizedBox()
               : FloatingActionButton(
                   onPressed: toggleRegisterFormVisibility,
@@ -152,14 +289,14 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
     );
   }
 
-  void handleIconClick(int index, Materials materialNew) {
+  void handleIconClick(int index, Section section) {
     setState(() {
       if (activeIndex == index) {
         activeIndex = -1;
       } else {
         activeIndex = index;
       }
-      toggleUpdateFormVisibility(materialNew);
+      sectionId = section.id;
     });
   }
 }

@@ -19,10 +19,18 @@ class MaterialsRequest {
       await uploadTask;
 
       String urlPhoto = await storageReference.getDownloadURL();
-      print('URL de la imagen: $urlPhoto');
       return urlPhoto;
     } catch (e) {
       throw Future.error('Error al subir la imagen a Firebase Storage');
+    }
+  }
+
+  static Future<void> deleteMaterialPhoto(String url) async {
+    try {
+      Reference storageReference = storage.refFromURL(url);
+      await storageReference.delete();
+    } catch (e) {
+      throw Future.error('Error al eliminar la imagen del Firebase Storage');
     }
   }
 
@@ -66,10 +74,13 @@ class MaterialsRequest {
     }
   }
 
-  static Future<String> updateMaterial(Materials material) async {
+  static Future<String> updateMaterial(
+      Materials material, String urlOld) async {
     try {
+      await deleteMaterialPhoto(urlOld);
+      final urlNew = await _uploadImageToFirebase(material.urlPhoto);
       await database.collection('materials').doc(material.id).update({
-        'url_photo': material.urlPhoto,
+        'url_photo': urlNew,
         'name': material.name,
         'code': material.code,
         'unit': material.unit,

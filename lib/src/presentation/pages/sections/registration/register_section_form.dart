@@ -22,10 +22,6 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
   SectionsController sectionsController = Get.find();
   int activeIndex = -1;
   String icon = "";
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void _resetForm() {
     controllerName.clear();

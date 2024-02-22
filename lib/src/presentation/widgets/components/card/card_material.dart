@@ -1,23 +1,17 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
-class CardUser extends StatelessWidget {
-  final String name;
-  final String lastName;
-  final String phone;
-  final String email;
-  final String address;
-  final String role;
-  final String account;
-
-  const CardUser(
+class CardMaterialSimple extends StatelessWidget {
+  final Materials material;
+  final Function onClick;
+  final Function onLongPress;
+  final Function onDoubleTap;
+  const CardMaterialSimple(
       {super.key,
-      required this.name,
-      required this.email,
-      required this.phone,
-      required this.lastName,
-      required this.address,
-      required this.role,
-      required this.account});
+      required this.material,
+      required this.onClick,
+      required this.onLongPress,
+      required this.onDoubleTap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +21,13 @@ class CardUser extends StatelessWidget {
       padding: EdgeInsets.only(bottom: screenHeight * 0.02),
       child: InkWell(
         onTap: () {
-          Get.toNamed('/profiles', arguments: {
-            'name': name,
-            'lastName': lastName,
-            'phone': phone,
-            'password': lastName,
-            'email': email,
-            'address': address,
-            'role': role,
-            'account': account
-          });
+          onClick();
+        },
+        onLongPress: () {
+          onLongPress();
+        },
+        onDoubleTap: () {
+          onDoubleTap();
         },
         child: Container(
           width: screenWidth * 0.85,
@@ -57,22 +48,27 @@ class CardUser extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: screenWidth * 0.2,
+                width: screenWidth * 0.27,
                 height: screenHeight * 0.15,
                 decoration: const BoxDecoration(
-                  color: Palette.secondary,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25),
                     bottomLeft: Radius.circular(25),
                   ),
                 ),
-                child: const Center(
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: material.urlPhoto.isNotEmpty
+                    ? Image.network(
+                        material.urlPhoto,
+                        fit: BoxFit.cover,
+                      )
+                    : const Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
+                      ),
               ),
               SizedBox(
                 width: screenWidth * 0.03,
@@ -84,22 +80,22 @@ class CardUser extends StatelessWidget {
                   SizedBox(
                     width: screenWidth * 0.55,
                     child: Text(
-                      name,
+                      material.name,
                       style: GoogleFonts.varelaRound(
                           fontSize: screenWidth * 0.045,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
                   Text(
-                    'Correo: $email',
+                    'Codigo: ${material.code}',
                     style: GoogleFonts.varelaRound(
                         fontSize: screenWidth * 0.03,
                         fontWeight: FontWeight.w300),
                   ),
                   Text(
-                    'Teléfono: $phone',
+                    '${material.salePrice} ${material.size}',
                     style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.03,
+                        fontSize: screenWidth * 0.038,
                         fontWeight: FontWeight.w300),
                   ),
                 ],
