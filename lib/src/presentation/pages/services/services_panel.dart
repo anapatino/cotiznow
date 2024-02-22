@@ -1,10 +1,14 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/services/registration/register_service_form.dart';
+import 'package:cotiznow/src/presentation/pages/services/update/update_service_form.dart';
 
 import '../../../domain/controllers/controllers.dart';
+import '../../../domain/models/service.dart';
 import '../../routes/administrator.dart';
 import '../../widgets/components/components.dart';
 
 class ServicesPanel extends StatefulWidget {
+  final ServicesController serviceController = Get.find();
   final UserController userController = Get.find();
 
   ServicesPanel({super.key});
@@ -15,20 +19,44 @@ class ServicesPanel extends StatefulWidget {
 
 class _ServicesPanelState extends State<ServicesPanel> {
   late final TextEditingController? controllerSearch;
-
+  int activeIndex = -1;
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isUpdateFormVisible = false;
+  bool isRegisterFormVisible = false;
+  List<Service> filteredServices = [];
+  Service service = Service(
+      id: "", icon: "", name: "", description: "", status: "", price: '');
 
   @override
   void initState() {
     super.initState();
     controllerSearch = TextEditingController();
+    controllerSearch?.addListener(() {
+      filterService(controllerSearch!.text);
+    });
   }
 
   @override
   void dispose() {
     controllerSearch?.clear();
     super.dispose();
+  }
+
+  void toggleUpdateFormVisibility(Service selectedService) {
+    setState(() {
+      isUpdateFormVisible = !isUpdateFormVisible;
+      service = selectedService;
+      if (!isUpdateFormVisible) {
+        activeIndex = -1;
+      }
+    });
+  }
+
+  void toggleRegisterFormVisibility() {
+    setState(() {
+      isRegisterFormVisible = !isRegisterFormVisible;
+    });
   }
 
   @override
@@ -72,16 +100,199 @@ class _ServicesPanelState extends State<ServicesPanel> {
                     textColor: Colors.black,
                     border: 30,
                     onChanged: (value) {
-                      // filterSections(value);
+                      filterService(value);
                     },
                     controller: controllerSearch!,
                   ),
                   SizedBox(height: screenHeight * 0.01),
+                  _buildServiceList(),
                 ],
               ),
-            )
+            ),
+            Visibility(
+              visible: isUpdateFormVisible,
+              child: Positioned(
+                top: screenHeight * 0.25,
+                child: Opacity(
+                  opacity: isUpdateFormVisible ? 1 : 0.0,
+                  child: UpdateServiceForm(
+                    onCancelForm: () {
+                      toggleUpdateFormVisibility(service);
+                    },
+                    service: service,
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: isRegisterFormVisible,
+              child: Positioned(
+                top: screenHeight * 0.25,
+                child: Opacity(
+                  opacity: isRegisterFormVisible ? 1 : 0.0,
+                  child: RegisterServiceForm(
+                    onCancelForm: () {
+                      toggleRegisterFormVisibility();
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
+        floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
+            ? const SizedBox()
+            : FloatingActionButton(
+                onPressed: toggleRegisterFormVisibility,
+                backgroundColor: Palette.primary,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                shape: const CircleBorder(),
+              ),
+      ),
+    );
+  }
+
+  void filterService(String searchText) {
+    setState(() {
+      if (searchText.isEmpty) {
+        filteredServices = widget.serviceController.servicesList
+                ?.where((service) => service.status == 'enable')
+                .toList() ??
+            [];
+      } else {
+        filteredServices = widget.serviceController.servicesList!
+            .where((service) =>
+                service.name.toLowerCase().contains(searchText.toLowerCase()) &&
+                service.status == 'enable')
+            .toList();
+      }
+    });
+  }
+
+  Widget _buildServiceList() {
+    return FutureBuilder<List<Service>>(
+      future: widget.serviceController.getAllServices(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        final services = snapshot.data!;
+        List<Service> filteredServices =
+            services.where((service) => service.status == 'enable').toList();
+        if (controllerSearch!.text.isNotEmpty) {
+          filteredServices = services
+              .where((service) =>
+                  service.name
+                      .toLowerCase()
+                      .contains(controllerSearch!.text.toLowerCase()) &&
+                  service.status == 'enable')
+              .toList();
+        }
+
+        return _buildRoundIconButtons(filteredServices);
+      },
+    );
+  }
+
+  Widget _buildRoundIconButtons(List<Service> services) {
+    return Expanded(
+      child: SizedBox(
+        width: screenWidth * 0.9,
+        height: screenHeight * 0.7,
+        child: SingleChildScrollView(
+          child: Wrap(
+            spacing: 0.01,
+            runSpacing: 10.0,
+            children: filteredServices.map((service) {
+              int index = filteredServices.indexOf(service);
+              return RoundIconButton(
+                icon: service.icon,
+                title: service.name,
+                onClick: () {
+                  handleIconClick(index, service);
+                },
+                onLongPress: () {
+                  showDisableserviceAlert(service);
+                },
+                isActive: activeIndex == index,
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void handleIconClick(int index, Service serviceNew) {
+    setState(() {
+      if (activeIndex == index) {
+        activeIndex = -1;
+      } else {
+        activeIndex = index;
+      }
+      toggleUpdateFormVisibility(serviceNew);
+    });
+  }
+
+  void showDisableserviceAlert(Service service) {
+    Get.defaultDialog(
+      title: 'Deshabilitar Sección',
+      content: Column(
+        children: [
+          Text(
+            '¿Desea deshabilitar este servicio?',
+            style: GoogleFonts.varelaRound(
+              color: Colors.black,
+              fontSize: screenWidth * 0.035,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                  widget.serviceController
+                      .updateServiceStatus(service.id, 'disable');
+                  Get.snackbar(
+                    'Éxito',
+                    'Sección deshabilitada correctamente',
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 5),
+                    backgroundColor: Palette.accent,
+                    icon: const Icon(Icons.error_outline_rounded),
+                  );
+                },
+                child: Text(
+                  'Aceptar',
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.03,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  'Cancelar',
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.03,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
