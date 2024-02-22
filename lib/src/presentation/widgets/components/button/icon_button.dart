@@ -7,6 +7,7 @@ class RoundIconButton extends StatelessWidget {
   final String title;
   final Function onClick;
   final Function onLongPress;
+  final bool isBackgroundImage;
 
   final bool isActive;
 
@@ -17,6 +18,7 @@ class RoundIconButton extends StatelessWidget {
     required this.onClick,
     this.isActive = false,
     required this.onLongPress,
+    this.isBackgroundImage = false,
   }) : super(key: key);
 
   @override
@@ -38,13 +40,21 @@ class RoundIconButton extends StatelessWidget {
               width: screenWidth * 0.18,
               height: screenWidth * 0.18,
               decoration: BoxDecoration(
-                color: isActive ? Palette.primary : Palette.grey,
+                color: isActive
+                    ? Palette.primary
+                    : isBackgroundImage
+                        ? Palette.backgroundImage
+                        : Palette.grey,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Icon(
                   IconList.getIconDataFromString(icon),
-                  color: isActive ? Colors.white : Palette.textColor,
+                  color: isActive
+                      ? Colors.white
+                      : isBackgroundImage
+                          ? Palette.backgroundImage
+                          : Palette.textColor,
                   size: screenWidth * 0.085,
                 ),
               ),

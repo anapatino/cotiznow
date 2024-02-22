@@ -56,8 +56,11 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         controllerPhone.text = userController.phone;
         controllerAddress.text = userController.address;
         controllerEmail.text = userController.userEmail;
-        controllerRole.text =
-            userController.role == "customer" ? "Cliente" : "Administrador";
+        controllerRole.text = userController.role == "customer"
+            ? "Cliente"
+            : userController.role == "super_administrator"
+                ? "Super Administrador"
+                : "Administrador";
         controllerAccount.text =
             userController.account == "enable" ? "Activa" : "Desactivada";
       }
@@ -175,6 +178,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   CustomTextField(
                     isEnable: isEnable,
                     icon: Icons.phone,
+                    type: TextInputType.phone,
                     hintText: 'Telefono',
                     isPassword: false,
                     width: screenWidth * 0.75,
@@ -186,6 +190,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   ),
                   CustomTextField(
                     isEnable: isEnable,
+                    type: TextInputType.streetAddress,
                     icon: Icons.location_on_rounded,
                     hintText: 'Dirección',
                     isPassword: false,
@@ -199,6 +204,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   CustomTextField(
                     isEnable: isEnable,
                     icon: Icons.mail_rounded,
+                    type: TextInputType.emailAddress,
                     hintText: 'Correo electronico',
                     isPassword: false,
                     width: screenWidth * 0.75,

@@ -36,7 +36,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
       quantity: '',
       description: '',
       status: '',
-      id: '');
+      id: '',
+      code: '');
 
   @override
   void initState() {
@@ -107,7 +108,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                           icon: Icons.search_rounded,
                           hintText: 'Buscar',
                           isPassword: false,
-                          width: screenWidth * 0.5,
+                          width: screenWidth * 0.73,
                           height: screenHeight * 0.06,
                           inputColor: Palette.grey,
                           textColor: Colors.black,
@@ -126,7 +127,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
               Visibility(
                 visible: isRegisterFormVisible,
                 child: Positioned(
-                  top: screenHeight * 0.25,
+                  top: screenHeight * 0.05,
                   child: Opacity(
                     opacity: isRegisterFormVisible ? 1 : 0.0,
                     child: RegisterMaterialForm(
@@ -153,5 +154,16 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         ),
       ),
     );
+  }
+
+  void handleIconClick(int index, Materials materialNew) {
+    setState(() {
+      if (activeIndex == index) {
+        activeIndex = -1;
+      } else {
+        activeIndex = index;
+      }
+      toggleUpdateFormVisibility(materialNew);
+    });
   }
 }

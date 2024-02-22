@@ -1,6 +1,7 @@
 class Materials {
   String urlPhoto;
   String name;
+  String code;
   String unit;
   String size;
   String purchasePrice;
@@ -14,6 +15,7 @@ class Materials {
   Materials({
     required this.urlPhoto,
     required this.name,
+    required this.code,
     required this.unit,
     required this.size,
     required this.purchasePrice,
@@ -29,6 +31,7 @@ class Materials {
     return Materials(
       urlPhoto: json?['url_photo'] ?? '',
       name: json?['name'] ?? '',
+      code: json?['code'] ?? '',
       unit: json?['unit'] ?? '',
       size: json?['size'] ?? '',
       purchasePrice: json?['purchase_price'] ?? '',

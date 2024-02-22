@@ -171,6 +171,7 @@ class Login extends StatelessWidget {
                             height: screenHeight * 0.02,
                           ),
                           CustomTextField(
+                            type: TextInputType.emailAddress,
                             icon: Icons.mail_rounded,
                             hintText: 'Correo electronico',
                             isPassword: false,

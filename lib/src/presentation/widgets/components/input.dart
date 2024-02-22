@@ -15,6 +15,8 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final Function(String)? onChanged;
   final int? maxLine;
+  final TextInputType? type;
+  final bool? showIcon;
 
   CustomTextField({
     required this.icon,
@@ -29,6 +31,8 @@ class CustomTextField extends StatefulWidget {
     this.border,
     this.isEnable = true,
     this.maxLine = 1,
+    this.type = TextInputType.text,
+    this.showIcon = true,
   });
 
   @override
@@ -62,13 +66,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    widget.icon,
-                    color: Palette.textlabel,
-                  ),
+                  if (widget.showIcon == true)
+                    Icon(
+                      widget.icon,
+                      color: Palette.textlabel,
+                    ),
                   const SizedBox(width: 10.0),
                   Expanded(
                     child: TextField(
+                      keyboardType: widget.type,
                       maxLines: widget.maxLine,
                       enabled: widget.isEnable,
                       controller: widget.controller,

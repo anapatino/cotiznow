@@ -26,6 +26,12 @@ class _ServicesPanelState extends State<ServicesPanel> {
   }
 
   @override
+  void dispose() {
+    controllerSearch?.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;

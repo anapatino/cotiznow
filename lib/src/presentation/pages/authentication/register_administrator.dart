@@ -167,6 +167,7 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
               ),
               CustomTextField(
                 icon: Icons.phone,
+                type: TextInputType.phone,
                 hintText: 'Telefono',
                 isPassword: false,
                 width: screenWidth * 0.75,
@@ -178,6 +179,7 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
               ),
               CustomTextField(
                 icon: Icons.location_on_rounded,
+                type: TextInputType.streetAddress,
                 hintText: 'Dirección',
                 isPassword: false,
                 width: screenWidth * 0.75,
@@ -189,6 +191,7 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
               ),
               CustomTextField(
                 icon: Icons.mail_rounded,
+                type: TextInputType.emailAddress,
                 hintText: 'Correo electronico',
                 isPassword: false,
                 width: screenWidth * 0.75,

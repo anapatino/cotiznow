@@ -9,4 +9,5 @@ class Palette {
   static const Color grey = Color.fromRGBO(245, 245, 245, 1);
   static const Color textlabel = Color.fromRGBO(91, 91, 91, 1);
   static const Color textColor = Color.fromRGBO(30, 30, 30, 1);
+  static const Color backgroundImage = Color.fromRGBO(217, 217, 217, 95);
 }

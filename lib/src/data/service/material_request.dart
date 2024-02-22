@@ -10,16 +10,17 @@ class MaterialsRequest {
 
   static Future<String> _uploadImageToFirebase(String filePath) async {
     try {
-      final Reference storageReference =
-          storage.ref().child('images').child(filePath);
-      final UploadTask uploadTask = storageReference.putFile(File(filePath));
+      final File file = File(filePath);
+      final String fileName = file.path.split('/').last;
 
-      await uploadTask.whenComplete(() async {
-        String urlPhoto = await storageReference.getDownloadURL();
-        print('URL de la imagen: $urlPhoto');
-        return urlPhoto;
-      });
-      return '';
+      final Reference storageReference =
+          storage.ref().child('images').child(fileName);
+      final UploadTask uploadTask = storageReference.putFile(file);
+      await uploadTask;
+
+      String urlPhoto = await storageReference.getDownloadURL();
+      print('URL de la imagen: $urlPhoto');
+      return urlPhoto;
     } catch (e) {
       throw Future.error('Error al subir la imagen a Firebase Storage');
     }
@@ -29,11 +30,10 @@ class MaterialsRequest {
     try {
       final url = await _uploadImageToFirebase(material.urlPhoto);
 
-      material.urlPhoto = url;
-
       await database.collection('materials').add({
-        'url_photo': material.urlPhoto,
+        'url_photo': url,
         'name': material.name,
+        'code': material.code,
         'unit': material.unit,
         'size': material.size,
         'purchase_price': material.purchasePrice,
@@ -71,6 +71,7 @@ class MaterialsRequest {
       await database.collection('materials').doc(material.id).update({
         'url_photo': material.urlPhoto,
         'name': material.name,
+        'code': material.code,
         'unit': material.unit,
         'size': material.size,
         'purchase_price': material.purchasePrice,
@@ -97,6 +98,7 @@ class MaterialsRequest {
         return Materials(
           urlPhoto: data['url_photo'] ?? '',
           name: data['name'] ?? '',
+          code: data['code'] ?? '',
           unit: data['unit'] ?? '',
           size: data['size'] ?? '',
           purchasePrice: data['purchase_price'] ?? '',
@@ -129,6 +131,7 @@ class MaterialsRequest {
         return Materials(
           urlPhoto: data['url_photo'] ?? '',
           name: data['name'] ?? '',
+          code: data['code'] ?? '',
           unit: data['unit'] ?? '',
           size: data['size'] ?? '',
           purchasePrice: data['purchase_price'] ?? '',

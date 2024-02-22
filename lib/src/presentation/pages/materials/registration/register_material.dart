@@ -19,18 +19,25 @@ class RegisterMaterialForm extends StatefulWidget {
 class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerUnit = TextEditingController();
-  TextEditingController controllerSize = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
   TextEditingController controllerQuantity = TextEditingController();
-  TextEditingController controllerSectionId = TextEditingController();
   TextEditingController controllerSalePrice = TextEditingController();
   TextEditingController controllerPurchasePrice = TextEditingController();
+  TextEditingController controllerCode = TextEditingController();
+
   MaterialsController materialController = Get.find();
   String urlPhoto = "";
+  String? selectedOption;
+  String? selectedOptionSectionId;
 
   void _resetForm() {
     controllerName.clear();
+    controllerUnit.clear();
     controllerDescription.clear();
+    controllerQuantity.clear();
+    controllerSalePrice.clear();
+    controllerPurchasePrice.clear();
+    controllerCode.clear();
   }
 
   void _onCancelForm() {
@@ -45,6 +52,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     if (pickedFile != null) {
       setState(() {
         urlPhoto = pickedFile.path;
+        print(urlPhoto);
       });
     }
   }
@@ -53,11 +61,12 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String unit = controllerUnit.text;
-    String size = controllerSize.text;
+    String size = selectedOption!;
     String quantity = controllerQuantity.text;
-    String sectionId = controllerSectionId.text;
+    String sectionId = selectedOptionSectionId!;
     String salePrice = controllerSalePrice.text;
     String purchasePrice = controllerPurchasePrice.text;
+    String code = controllerCode.text;
     String status = "enable";
     if (name.isNotEmpty &&
         description.isNotEmpty &&
@@ -66,9 +75,10 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         quantity.isNotEmpty &&
         sectionId.isNotEmpty &&
         salePrice.isNotEmpty &&
+        code.isNotEmpty &&
         purchasePrice.isNotEmpty) {
       Materials material = Materials(
-        urlPhoto: "",
+        urlPhoto: urlPhoto,
         name: name,
         unit: unit,
         size: size,
@@ -79,6 +89,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         description: description,
         status: status,
         id: "",
+        code: code,
       );
       materialController.registerMaterial(material).then((value) async {
         Get.snackbar(
@@ -116,10 +127,14 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    List<String> options = ['m2', 'm'];
+    List<String> optionsSection = ['m2', 'm'];
+
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
+        height: screenHeight * 0.9,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(
@@ -145,26 +160,42 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
               SizedBox(
                 height: screenHeight * 0.02,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Agregar imagen ",
-                    style: GoogleFonts.varelaRound(
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.03,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Agregar imagen ",
+                      style: GoogleFonts.varelaRound(
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.03,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                      ),
                     ),
-                  ),
-                  RoundIconButton(
-                    icon: "Icons.add",
-                    title: "",
-                    onClick: _pickImage,
-                    onLongPress: () {},
-                  )
-                ],
+                    RoundIconButton(
+                      icon: "Icons.add",
+                      title: "",
+                      onClick: _pickImage,
+                      onLongPress: () {},
+                      isBackgroundImage: true,
+                    )
+                  ],
+                ),
+              ),
+              CustomTextField(
+                icon: Icons.dehaze_rounded,
+                hintText: 'Codigo',
+                type: TextInputType.number,
+                isPassword: false,
+                width: screenWidth * 0.75,
+                height: screenHeight * 0.075,
+                inputColor: Colors.white,
+                textColor: Colors.black,
+                onChanged: (value) {},
+                controller: controllerCode,
               ),
               CustomTextField(
                 icon: Icons.dehaze_rounded,
@@ -177,45 +208,115 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                 onChanged: (value) {},
                 controller: controllerName,
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Unidad',
+                        isPassword: false,
+                        width: screenWidth * 0.34,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerUnit,
+                        showIcon: false,
+                        type: TextInputType.number,
+                      ),
+                    ),
+                    CustomDropdown(
+                      padding: 0,
+                      border: 10,
+                      options: options,
+                      width: 0.39,
+                      height: 0.075,
+                      widthItems: 0.18,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedOption = newValue;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
               CustomTextField(
                 icon: Icons.dehaze_rounded,
                 hintText: 'Precio compra',
+                type: TextInputType.number,
                 isPassword: false,
                 width: screenWidth * 0.75,
-                height: screenHeight * 0.15,
+                height: screenHeight * 0.075,
                 inputColor: Colors.white,
                 textColor: Colors.black,
                 onChanged: (value) {},
-                controller: controllerDescription,
+                controller: controllerPurchasePrice,
               ),
               CustomTextField(
                 icon: Icons.dehaze_rounded,
+                type: TextInputType.number,
                 hintText: 'Precio venta',
                 isPassword: false,
                 width: screenWidth * 0.75,
-                height: screenHeight * 0.15,
+                height: screenHeight * 0.075,
                 inputColor: Colors.white,
                 textColor: Colors.black,
                 onChanged: (value) {},
-                controller: controllerDescription,
+                controller: controllerSalePrice,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("  Seccion",
+                      style: GoogleFonts.varelaRound(
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.035,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 1,
+                      )),
+                  CustomDropdown(
+                    padding: 0,
+                    border: 10,
+                    options: optionsSection,
+                    width: 0.75,
+                    height: 0.075,
+                    widthItems: 0.55,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedOptionSectionId = newValue;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: screenHeight * 0.04,
               ),
               CustomTextField(
                 icon: Icons.dehaze_rounded,
-                hintText: 'cantidad',
+                hintText: 'Cantidad',
+                type: TextInputType.number,
                 isPassword: false,
                 width: screenWidth * 0.75,
-                height: screenHeight * 0.15,
+                height: screenHeight * 0.075,
                 inputColor: Colors.white,
                 textColor: Colors.black,
                 onChanged: (value) {},
-                controller: controllerDescription,
+                controller: controllerQuantity,
               ),
               CustomTextField(
                 icon: Icons.dehaze_rounded,
                 hintText: 'Descripcion',
                 isPassword: false,
                 width: screenWidth * 0.75,
-                height: screenHeight * 0.15,
+                height: screenHeight * 0.17,
+                maxLine: 8,
                 inputColor: Colors.white,
                 textColor: Colors.black,
                 onChanged: (value) {},
@@ -253,7 +354,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.06,
+                height: screenHeight * 0.1,
               ),
             ],
           ),
