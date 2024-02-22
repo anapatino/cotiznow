@@ -1,12 +1,8 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/controllers/material_controller.dart';
-import 'package:cotiznow/src/domain/models/material.dart';
-import 'package:cotiznow/src/presentation/pages/materials/registration/register_material.dart';
-
-import '../../../domain/controllers/user_controller.dart';
-import '../../routes/administrator.dart';
-import '../../widgets/components/drawer.dart';
-import '../../widgets/components/input.dart';
+import 'package:cotiznow/src/presentation/pages/materials/materials.dart';
+import '../../../domain/domain.dart';
+import '../../routes/routes.dart';
+import '../../widgets/components/components.dart';
 
 class MaterialsBoard extends StatefulWidget {
   final MaterialsController sectionsController = Get.find();

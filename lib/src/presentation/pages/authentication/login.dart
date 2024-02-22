@@ -1,10 +1,8 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/dashboard/administrator.dart';
 
-import '../../../domain/controllers/user_controller.dart';
-import '../../widgets/components/button/custom_button.dart';
-import '../../widgets/components/input.dart';
-import '../dashboard/customer.dart';
+import '../../../domain/controllers/controllers.dart';
+import '../../widgets/components/components.dart';
+import '../dashboard/dashboard.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController controllerEmail = TextEditingController();

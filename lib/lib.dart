@@ -7,3 +7,4 @@ export 'package:google_fonts/google_fonts.dart';
 export 'package:cotiznow/src/presentation/utils/colors.dart';
 export 'package:get/get.dart';
 export 'package:animate_do/animate_do.dart';
+export 'package:image_picker/image_picker.dart';

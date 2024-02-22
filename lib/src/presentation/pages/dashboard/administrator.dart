@@ -1,8 +1,8 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/routes/administrator.dart';
 
-import '../../../domain/controllers/user_controller.dart';
-import '../../widgets/components/drawer.dart';
+import '../../../domain/controllers/controllers.dart';
+import '../../routes/routes.dart';
+import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
 class Administrator extends StatelessWidget {

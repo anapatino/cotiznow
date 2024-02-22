@@ -1,12 +1,10 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/models/user.dart';
-import 'package:cotiznow/src/presentation/pages/authentication/register_administrator.dart';
-import 'package:cotiznow/src/presentation/widgets/components/card/card_user.dart';
 
-import '../../../domain/controllers/user_controller.dart';
-import '../../routes/administrator.dart';
-import '../../widgets/components/drawer.dart';
-import '../../widgets/components/dropdown.dart';
+import '../../../domain/controllers/controllers.dart';
+import '../../../domain/domain.dart';
+import '../../routes/routes.dart';
+import '../../widgets/components/components.dart';
+import '../authentication/authentication.dart';
 
 /// ignore: must_be_immutable
 class Customer extends StatefulWidget {

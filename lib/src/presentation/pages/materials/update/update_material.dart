@@ -1,22 +1,23 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/controllers/controllers.dart';
-import 'package:cotiznow/src/presentation/widgets/components/components.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
-import '../../../../domain/models/models.dart';
+import '../../../widgets/components/components.dart';
 
-class RegisterMaterialForm extends StatefulWidget {
+class UpdateFormMaterial extends StatefulWidget {
   final Function onCancelForm;
+  final Materials material;
 
-  const RegisterMaterialForm({
+  const UpdateFormMaterial({
     Key? key,
     required this.onCancelForm,
+    required this.material,
   }) : super(key: key);
 
   @override
-  State<RegisterMaterialForm> createState() => _RegisterMaterialFormState();
+  State<UpdateFormMaterial> createState() => _UpdateFormMaterialState();
 }
 
-class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
+class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerUnit = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
@@ -29,6 +30,18 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   String urlPhoto = "";
   String? selectedOption;
   String? selectedOptionSectionId;
+
+  @override
+  void initState() {
+    super.initState();
+    controllerName.text = widget.material.name;
+    controllerUnit.text = widget.material.unit;
+    controllerDescription.text = widget.material.description;
+    controllerQuantity.text = widget.material.quantity;
+    controllerSalePrice.text = widget.material.salePrice;
+    controllerPurchasePrice.text = widget.material.purchasePrice;
+    controllerCode.text = widget.material.code;
+  }
 
   void _resetForm() {
     controllerName.clear();
@@ -56,7 +69,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     }
   }
 
-  Future<void> registerMaterial() async {
+  Future<void> updateMaterial() async {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String unit = controllerUnit.text;
@@ -90,9 +103,9 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         id: "",
         code: code,
       );
-      materialController.registerMaterial(material).then((value) async {
+      materialController.updateMaterial(material).then((value) async {
         Get.snackbar(
-          'Registro de material exitoso',
+          'Actualizacion de material exitoso',
           value,
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
@@ -148,7 +161,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                 height: screenHeight * 0.04,
               ),
               Text(
-                "Registrar material",
+                "Actualizar material",
                 style: GoogleFonts.varelaRound(
                   color: Colors.white,
                   fontSize: screenWidth * 0.05,
@@ -341,7 +354,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                     ),
                     CustomElevatedButton(
                       text: 'Registrar',
-                      onPressed: registerMaterial,
+                      onPressed: updateMaterial,
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.35,
                       textColor: Colors.white,

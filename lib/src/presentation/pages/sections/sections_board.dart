@@ -1,13 +1,8 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/controllers/section_controller.dart';
-import 'package:cotiznow/src/domain/controllers/user_controller.dart';
-import 'package:cotiznow/src/presentation/pages/sections/registration/register_section_form.dart';
-import 'package:cotiznow/src/presentation/pages/sections/update/update_section_form.dart';
-import '../../../domain/models/section.dart';
-import '../../routes/administrator.dart';
-import '../../widgets/components/button/icon_button.dart';
-import '../../widgets/components/drawer.dart';
-import '../../widgets/components/input.dart';
+import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
+import '../../../domain/domain.dart';
+import '../../routes/routes.dart';
+import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
 class Sections extends StatefulWidget {
