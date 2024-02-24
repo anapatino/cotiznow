@@ -1,23 +1,23 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/services/registration/register_service_form.dart';
-import 'package:cotiznow/src/presentation/pages/services/update/update_service_form.dart';
-
-import '../../../domain/controllers/controllers.dart';
+import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
+import 'package:cotiznow/src/presentation/pages/services/services.dart';
+import '../../../domain/domain.dart';
 import '../../../domain/models/service.dart';
-import '../../routes/administrator.dart';
+import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
 
+// ignore: must_be_immutable
 class ServicesPanel extends StatefulWidget {
   final ServicesController serviceController = Get.find();
   final UserController userController = Get.find();
 
-  ServicesPanel({super.key});
+  ServicesPanel({Key? key}) : super(key: key);
 
   @override
-  State<ServicesPanel> createState() => _ServicesPanelState();
+  State<ServicesPanel> createState() => _ServicesPanel();
 }
 
-class _ServicesPanelState extends State<ServicesPanel> {
+class _ServicesPanel extends State<ServicesPanel> {
   late final TextEditingController? controllerSearch;
   int activeIndex = -1;
   double screenWidth = 0;
@@ -63,20 +63,21 @@ class _ServicesPanelState extends State<ServicesPanel> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: AdministratorRoutes().itemConfigs,
-          context: context,
-        ),
-        body: Stack(
-          children: [
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            actions: const [],
+          ),
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: AdministratorRoutes().itemConfigs,
+            context: context,
+          ),
+          body: Stack(children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
               child: Column(
@@ -112,7 +113,7 @@ class _ServicesPanelState extends State<ServicesPanel> {
             Visibility(
               visible: isUpdateFormVisible,
               child: Positioned(
-                top: screenHeight * 0.25,
+                top: screenHeight * 0.17,
                 child: Opacity(
                   opacity: isUpdateFormVisible ? 1 : 0.0,
                   child: UpdateServiceForm(
@@ -127,7 +128,7 @@ class _ServicesPanelState extends State<ServicesPanel> {
             Visibility(
               visible: isRegisterFormVisible,
               child: Positioned(
-                top: screenHeight * 0.25,
+                top: screenHeight * 0.17,
                 child: Opacity(
                   opacity: isRegisterFormVisible ? 1 : 0.0,
                   child: RegisterServiceForm(
@@ -138,38 +139,42 @@ class _ServicesPanelState extends State<ServicesPanel> {
                 ),
               ),
             ),
-          ],
-        ),
-        floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: toggleRegisterFormVisibility,
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          ]),
+          floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: toggleRegisterFormVisibility,
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
                 ),
-                shape: const CircleBorder(),
-              ),
+        ),
       ),
     );
   }
 
   void filterService(String searchText) {
-    setState(() {
-      if (searchText.isEmpty) {
-        filteredServices = widget.serviceController.servicesList
-                ?.where((service) => service.status == 'enable')
-                .toList() ??
-            [];
-      } else {
-        filteredServices = widget.serviceController.servicesList!
-            .where((service) =>
-                service.name.toLowerCase().contains(searchText.toLowerCase()) &&
-                service.status == 'enable')
-            .toList();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        if (searchText.isEmpty) {
+          filteredServices = widget.serviceController.servicesList
+                  ?.where((service) => service.status == 'enable')
+                  .toList() ??
+              [];
+        } else {
+          filteredServices = widget.serviceController.servicesList!
+              .where((service) =>
+                  service.name
+                      .toLowerCase()
+                      .contains(searchText.toLowerCase()) &&
+                  service.status == 'enable')
+              .toList();
+        }
+      });
+    }
   }
 
   Widget _buildServiceList() {
@@ -218,7 +223,7 @@ class _ServicesPanelState extends State<ServicesPanel> {
                   handleIconClick(index, service);
                 },
                 onLongPress: () {
-                  showDisableserviceAlert(service);
+                  showDisableServiceAlert(service);
                 },
                 isActive: activeIndex == index,
               );
@@ -230,23 +235,25 @@ class _ServicesPanelState extends State<ServicesPanel> {
   }
 
   void handleIconClick(int index, Service serviceNew) {
-    setState(() {
-      if (activeIndex == index) {
-        activeIndex = -1;
-      } else {
-        activeIndex = index;
-      }
-      toggleUpdateFormVisibility(serviceNew);
-    });
+    if (mounted) {
+      setState(() {
+        if (activeIndex == index) {
+          activeIndex = -1;
+        } else {
+          activeIndex = index;
+        }
+        toggleUpdateFormVisibility(serviceNew);
+      });
+    }
   }
 
-  void showDisableserviceAlert(Service service) {
+  void showDisableServiceAlert(Service service) {
     Get.defaultDialog(
-      title: 'Deshabilitar Sección',
+      title: 'Deshabilitar Servicio',
       content: Column(
         children: [
           Text(
-            '¿Desea deshabilitar este servicio?',
+            '¿Desea deshabilitar esta servicio?',
             style: GoogleFonts.varelaRound(
               color: Colors.black,
               fontSize: screenWidth * 0.035,
@@ -263,7 +270,7 @@ class _ServicesPanelState extends State<ServicesPanel> {
                       .updateServiceStatus(service.id, 'disable');
                   Get.snackbar(
                     'Éxito',
-                    'Sección deshabilitada correctamente',
+                    'Servicio deshabilitada correctamente',
                     colorText: Colors.white,
                     duration: const Duration(seconds: 5),
                     backgroundColor: Palette.accent,

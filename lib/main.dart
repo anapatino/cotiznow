@@ -1,10 +1,7 @@
 import 'dart:developer';
-
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/controllers/material_controller.dart';
-import 'package:cotiznow/src/domain/controllers/section_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'src/domain/controllers/user_controller.dart';
+import 'src/domain/controllers/controllers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +11,7 @@ void main() async {
     Get.put(UserController());
     Get.put(SectionsController());
     Get.put(MaterialsController());
+    Get.put(ServicesController());
 
     runApp(const App());
   } catch (e) {

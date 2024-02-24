@@ -64,7 +64,7 @@ class ServicesRequest {
           name: data['name'] ?? '',
           description: data['description'] ?? '',
           status: data['status'] ?? '',
-          price: data['price'] ?? 0.0,
+          price: data['price'] ?? '',
         );
       }).toList();
 

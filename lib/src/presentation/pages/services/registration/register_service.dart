@@ -1,8 +1,8 @@
 import 'package:cotiznow/lib.dart';
-import '../../../../domain/controllers/controllers.dart';
-import '../../../../domain/models/service.dart';
-import '../../../utils/utils.dart';
-import '../../../widgets/components/components.dart';
+import 'package:cotiznow/src/domain/controllers/controllers.dart';
+import 'package:cotiznow/src/domain/models/service.dart';
+import 'package:cotiznow/src/presentation/utils/utils.dart';
+import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 
 class RegisterServiceForm extends StatefulWidget {
   final Function onCancelForm;
@@ -28,7 +28,12 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
   void _resetForm() {
     controllerName.clear();
     controllerDescription.clear();
-    controllerPrice.clear();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _onCancelForm();
   }
 
   void _onCancelForm() {
@@ -88,10 +93,12 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
+        height: screenHeight * 0.9,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(
@@ -106,7 +113,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
                 height: screenHeight * 0.04,
               ),
               Text(
-                "Registrar Servicio",
+                "Registrar servicio",
                 style: GoogleFonts.varelaRound(
                   color: Colors.white,
                   fontSize: screenWidth * 0.05,
@@ -219,7 +226,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.06,
+                height: screenHeight * 0.22,
               ),
             ],
           ),

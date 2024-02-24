@@ -1,9 +1,8 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/service.dart';
-
-import '../../../../domain/domain.dart';
-import '../../../utils/utils.dart';
-import '../../../widgets/components/components.dart';
+import 'package:cotiznow/src/presentation/utils/utils.dart';
+import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 
 class UpdateServiceForm extends StatefulWidget {
   final Function onCancelForm;
@@ -39,7 +38,12 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
   void _resetForm() {
     controllerName.clear();
     controllerDescription.clear();
-    controllerPrice.clear();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _onCancelForm();
   }
 
   void _onCancelForm() {
@@ -99,10 +103,12 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
+        height: screenHeight * 0.9,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(
@@ -155,8 +161,8 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                               handleIconClick(
                                   index, "${IconList.icons[index]["icon"]}");
                             },
-                            isActive: activeIndex == index,
                             onLongPress: () {},
+                            isActive: activeIndex == index,
                           );
                         },
                       ),
@@ -217,7 +223,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                       hasBorder: true,
                     ),
                     CustomElevatedButton(
-                      text: 'Actualizar',
+                      text: 'Registrar',
                       onPressed: updateService,
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.35,
@@ -230,7 +236,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.06,
+                height: screenHeight * 0.22,
               ),
             ],
           ),
