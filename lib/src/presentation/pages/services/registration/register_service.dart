@@ -24,21 +24,21 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
   ServicesController serviceController = Get.find();
   int activeIndex = -1;
   String icon = "";
+  @override
+  void dispose() {
+    super.dispose();
+    _resetForm();
+  }
 
   void _resetForm() {
     controllerName.clear();
     controllerDescription.clear();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _onCancelForm();
+    icon = "";
   }
 
   void _onCancelForm() {
-    widget.onCancelForm();
     _resetForm();
+    widget.onCancelForm();
   }
 
   Future<void> registerService() async {

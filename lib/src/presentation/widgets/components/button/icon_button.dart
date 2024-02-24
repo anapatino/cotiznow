@@ -26,8 +26,10 @@ class RoundIconButton extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Padding(
-      padding: EdgeInsets.all(screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.009, vertical: screenHeight * 0.003),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
             onTap: () {
@@ -61,12 +63,15 @@ class RoundIconButton extends StatelessWidget {
             ),
           ),
           SizedBox(height: screenHeight * 0.012),
-          Text(
-            title,
-            style: GoogleFonts.varelaRound(
-              color: Palette.textColor,
-              fontSize: screenWidth * 0.03,
-              fontWeight: FontWeight.w500,
+          SizedBox(
+            width: screenWidth * 0.2,
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.varelaRound(
+                  color: Palette.textColor,
+                  fontSize: screenWidth * 0.03,
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ],

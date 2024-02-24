@@ -42,19 +42,19 @@ class _SectionsState extends State<Sections> {
   }
 
   void toggleUpdateFormVisibility(Section selectedSection) {
-    setState(() {
-      isUpdateFormVisible = !isUpdateFormVisible;
-      section = selectedSection;
-      if (!isUpdateFormVisible) {
-        activeIndex = -1;
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isUpdateFormVisible = !isUpdateFormVisible;
+          section = selectedSection;
+          if (!isUpdateFormVisible) {
+            activeIndex = -1;
+          }
+        }));
   }
 
   void toggleRegisterFormVisibility() {
-    setState(() {
-      isRegisterFormVisible = !isRegisterFormVisible;
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isRegisterFormVisible = !isRegisterFormVisible;
+        }));
   }
 
   @override
@@ -155,20 +155,22 @@ class _SectionsState extends State<Sections> {
   }
 
   void filterSections(String searchText) {
-    setState(() {
-      if (searchText.isEmpty) {
-        filteredSections = widget.sectionsController.sectionsList
-                ?.where((section) => section.status == 'enable')
-                .toList() ??
-            [];
-      } else {
-        filteredSections = widget.sectionsController.sectionsList!
-            .where((section) =>
-                section.name.toLowerCase().contains(searchText.toLowerCase()) &&
-                section.status == 'enable')
-            .toList();
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          if (searchText.isEmpty) {
+            filteredSections = widget.sectionsController.sectionsList
+                    ?.where((section) => section.status == 'enable')
+                    .toList() ??
+                [];
+          } else {
+            filteredSections = widget.sectionsController.sectionsList!
+                .where((section) =>
+                    section.name
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase()) &&
+                    section.status == 'enable')
+                .toList();
+          }
+        }));
   }
 
   Widget _buildSectionsList() {
@@ -235,8 +237,8 @@ class _SectionsState extends State<Sections> {
       } else {
         activeIndex = index;
       }
-      toggleUpdateFormVisibility(sectionNew);
     });
+    toggleUpdateFormVisibility(sectionNew);
   }
 
   void showDisableSectionAlert(Section section) {

@@ -17,7 +17,7 @@ class MaterialsBoard extends StatefulWidget {
 }
 
 class _MaterialsBoardState extends State<MaterialsBoard> {
-  late final TextEditingController controllerSearch = TextEditingController();
+  late final TextEditingController? controllerSearch;
   int activeIndex = -1;
   String sectionId = "";
   double screenWidth = 0;
@@ -43,6 +43,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   @override
   void initState() {
     super.initState();
+    controllerSearch = TextEditingController();
+
     //controllerSearch?.addListener(() {
     // filterSections(controllerSearch!.text);
     //});
@@ -50,35 +52,34 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
 
   @override
   void dispose() {
-    controllerSearch.clear();
-    controllerSearch.dispose();
+    controllerSearch?.clear();
     super.dispose();
   }
 
   void toggleUpdateFormVisibility(Materials selectMaterial) {
-    setState(() {
-      isUpdateFormVisible = !isUpdateFormVisible;
-      material = selectMaterial;
-      if (!isUpdateFormVisible) {
-        activeIndex = -1;
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isUpdateFormVisible = !isUpdateFormVisible;
+          material = selectMaterial;
+          if (!isUpdateFormVisible) {
+            activeIndex = -1;
+          }
+        }));
   }
 
   void toggleUpdateStatusVisibility(Materials selectMaterial) {
-    setState(() {
-      isUpdateStatusVisible = !isUpdateStatusVisible;
-      material = selectMaterial;
-      if (!isUpdateStatusVisible) {
-        activeIndex = -1;
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isUpdateStatusVisible = !isUpdateStatusVisible;
+          material = selectMaterial;
+          if (!isUpdateStatusVisible) {
+            activeIndex = -1;
+          }
+        }));
   }
 
   void toggleRegisterFormVisibility() {
-    setState(() {
-      isRegisterFormVisible = !isRegisterFormVisible;
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isRegisterFormVisible = !isRegisterFormVisible;
+        }));
   }
 
   Widget _buildSectionsList() {
@@ -102,7 +103,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   Widget _buildRoundIconButtons(List<Section> sections) {
     return SizedBox(
       width: screenWidth * 0.86,
-      height: screenHeight * 0.15,
+      height: screenHeight * 0.13,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: sections.length,
@@ -215,12 +216,14 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                           onChanged: (value) {
                             //filterSections(value);
                           },
-                          controller: controllerSearch,
+                          controller: controllerSearch!,
                         ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * 0.01),
                     _buildSectionsList(),
+                    SizedBox(
+                      height: screenHeight * 0.03,
+                    ),
                     _buildMaterialsBySectionId(sectionId),
                   ],
                 ),
@@ -229,13 +232,10 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                 visible: isRegisterFormVisible,
                 child: Positioned(
                   top: screenHeight * 0.05,
-                  child: Opacity(
-                    opacity: isRegisterFormVisible ? 1 : 0.0,
-                    child: RegisterMaterialForm(
-                      onCancelForm: () {
-                        toggleRegisterFormVisibility();
-                      },
-                    ),
+                  child: RegisterMaterialForm(
+                    onCancelForm: () {
+                      toggleRegisterFormVisibility();
+                    },
                   ),
                 ),
               ),
@@ -243,29 +243,23 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                 visible: isUpdateFormVisible,
                 child: Positioned(
                   top: screenHeight * 0.05,
-                  child: Opacity(
-                    opacity: isUpdateFormVisible ? 1 : 0.0,
-                    child: UpdateFormMaterial(
-                      onCancelForm: () {
-                        toggleUpdateFormVisibility(material);
-                      },
-                      material: material,
-                    ),
+                  child: UpdateFormMaterial(
+                    onCancelForm: () {
+                      toggleUpdateFormVisibility(material);
+                    },
+                    material: material,
                   ),
                 ),
               ),
               Visibility(
                 visible: isUpdateStatusVisible,
                 child: Positioned(
-                  top: screenHeight * 0.05,
-                  child: Opacity(
-                    opacity: isUpdateStatusVisible ? 1 : 0.0,
-                    child: ChangeMaterialStatus(
-                      onCancelForm: () {
-                        toggleUpdateStatusVisibility(material);
-                      },
-                      material: material,
-                    ),
+                  top: screenHeight * 0.57,
+                  child: ChangeMaterialStatus(
+                    onCancelForm: () {
+                      toggleUpdateStatusVisibility(material);
+                    },
+                    material: material,
                   ),
                 ),
               ),

@@ -35,20 +35,21 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
     controllerPrice.text = widget.service.price;
   }
 
-  void _resetForm() {
-    controllerName.clear();
-    controllerDescription.clear();
-  }
-
   @override
   void dispose() {
     super.dispose();
-    _onCancelForm();
+    _resetForm();
+  }
+
+  void _resetForm() {
+    controllerName.clear();
+    controllerDescription.clear();
+    icon = "";
   }
 
   void _onCancelForm() {
-    widget.onCancelForm();
     _resetForm();
+    widget.onCancelForm();
   }
 
   Future<void> updateService() async {

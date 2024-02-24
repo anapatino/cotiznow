@@ -20,6 +20,16 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
   @override
   void dispose() {
     super.dispose();
+    _resetForm();
+  }
+
+  void _resetForm() {
+    selectedOption = "";
+  }
+
+  void _onCancelForm() {
+    _resetForm();
+    widget.onCancelForm();
   }
 
   Future<void> changeMaterialStatus() async {
@@ -37,6 +47,7 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
           backgroundColor: Palette.accent,
           icon: const Icon(Icons.check_circle),
         );
+        _onCancelForm();
       }).catchError((error) {
         Get.snackbar(
           'Error al actualizar estado material',
@@ -121,14 +132,14 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.07,
-                ),
+                    horizontal: screenWidth * 0.095,
+                    vertical: screenHeight * 0.028),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomElevatedButton(
                       text: 'Cancelar',
-                      onPressed: widget.onCancelForm(),
+                      onPressed: _onCancelForm,
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.35,
                       textColor: Colors.white,

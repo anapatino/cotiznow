@@ -1,5 +1,4 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
 import 'package:cotiznow/src/presentation/pages/services/services.dart';
 import '../../../domain/domain.dart';
 import '../../../domain/models/service.dart';
@@ -44,19 +43,19 @@ class _ServicesPanel extends State<ServicesPanel> {
   }
 
   void toggleUpdateFormVisibility(Service selectedService) {
-    setState(() {
-      isUpdateFormVisible = !isUpdateFormVisible;
-      service = selectedService;
-      if (!isUpdateFormVisible) {
-        activeIndex = -1;
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isUpdateFormVisible = !isUpdateFormVisible;
+          service = selectedService;
+          if (!isUpdateFormVisible) {
+            activeIndex = -1;
+          }
+        }));
   }
 
   void toggleRegisterFormVisibility() {
-    setState(() {
-      isRegisterFormVisible = !isRegisterFormVisible;
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isRegisterFormVisible = !isRegisterFormVisible;
+        }));
   }
 
   @override
@@ -157,24 +156,24 @@ class _ServicesPanel extends State<ServicesPanel> {
   }
 
   void filterService(String searchText) {
-    if (mounted) {
-      setState(() {
-        if (searchText.isEmpty) {
-          filteredServices = widget.serviceController.servicesList
-                  ?.where((service) => service.status == 'enable')
-                  .toList() ??
-              [];
-        } else {
-          filteredServices = widget.serviceController.servicesList!
-              .where((service) =>
-                  service.name
-                      .toLowerCase()
-                      .contains(searchText.toLowerCase()) &&
-                  service.status == 'enable')
-              .toList();
-        }
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          setState(() {
+            if (searchText.isEmpty) {
+              filteredServices = widget.serviceController.servicesList
+                      ?.where((service) => service.status == 'enable')
+                      .toList() ??
+                  [];
+            } else {
+              filteredServices = widget.serviceController.servicesList!
+                  .where((service) =>
+                      service.name
+                          .toLowerCase()
+                          .contains(searchText.toLowerCase()) &&
+                      service.status == 'enable')
+                  .toList();
+            }
+          });
+        }));
   }
 
   Widget _buildServiceList() {
@@ -235,16 +234,14 @@ class _ServicesPanel extends State<ServicesPanel> {
   }
 
   void handleIconClick(int index, Service serviceNew) {
-    if (mounted) {
-      setState(() {
-        if (activeIndex == index) {
-          activeIndex = -1;
-        } else {
-          activeIndex = index;
-        }
-        toggleUpdateFormVisibility(serviceNew);
-      });
-    }
+    setState(() {
+      if (activeIndex == index) {
+        activeIndex = -1;
+      } else {
+        activeIndex = index;
+      }
+    });
+    toggleUpdateFormVisibility(serviceNew);
   }
 
   void showDisableServiceAlert(Service service) {
