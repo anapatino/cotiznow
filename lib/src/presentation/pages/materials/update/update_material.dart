@@ -57,15 +57,9 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     urlPhoto = "";
   }
 
-  @override
-  void dispose() {
-    _resetForm();
-    super.dispose();
-  }
-
   void _onCancelForm() {
-    _resetForm();
     widget.onCancelForm();
+    _resetForm();
   }
 
   Future<void> loadSections() async {
@@ -177,20 +171,17 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: screenHeight * 0.04,
-            ),
-            Text(
-              "Actualizar material",
-              style: GoogleFonts.varelaRound(
-                color: Colors.white,
-                fontSize: screenWidth * 0.05,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1,
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+              child: Text(
+                "Actualizar material",
+                style: GoogleFonts.varelaRound(
+                  color: Colors.white,
+                  fontSize: screenWidth * 0.05,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),
               ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.02,
             ),
             SizedBox(
               height: screenHeight * 0.75,

@@ -161,4 +161,15 @@ class MaterialsRequest {
           'Error al obtener los materiales desde la base de datos');
     }
   }
+
+  static Future<String> deleteMaterial(
+      String materialId, String urlMaterial) async {
+    try {
+      await deleteMaterialPhoto(urlMaterial);
+      await database.collection('materials').doc(materialId).delete();
+      return "Se ha eliminado con exito el material";
+    } catch (e) {
+      throw Future.error('Error al eliminar el material: $e');
+    }
+  }
 }

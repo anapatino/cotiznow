@@ -49,9 +49,8 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     loadSections();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _onCancelForm() {
+    widget.onCancelForm();
     _resetForm();
   }
 
@@ -64,12 +63,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     } catch (error) {
       print("Error loading sections: $error");
     }
-  }
-
-  void _onCancelForm() {
-    _resetForm();
-
-    widget.onCancelForm();
   }
 
   Future<void> _pickImage() async {
@@ -173,20 +166,17 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: screenHeight * 0.04,
-            ),
-            Text(
-              "Registrar material",
-              style: GoogleFonts.varelaRound(
-                color: Colors.white,
-                fontSize: screenWidth * 0.05,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1,
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+              child: Text(
+                "Registrar material",
+                style: GoogleFonts.varelaRound(
+                  color: Colors.white,
+                  fontSize: screenWidth * 0.05,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),
               ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.02,
             ),
             SizedBox(
               height: screenHeight * 0.75,

@@ -74,4 +74,13 @@ class ServicesRequest {
           'Error al obtener los servicios desde la base de datos');
     }
   }
+
+  static Future<String> deleteService(String sectionId) async {
+    try {
+      await database.collection('services').doc(sectionId).delete();
+      return "Se ha eliminado con exito el servicio";
+    } catch (e) {
+      throw Future.error('Error al eliminar el servicio: $e');
+    }
+  }
 }

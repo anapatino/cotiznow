@@ -127,4 +127,15 @@ class UserRequest {
       throw Future.error('Error al obtener la lista de usuarios: $e');
     }
   }
+
+  static Future<String> deleteUser(String userId) async {
+    try {
+      await authentication.currentUser?.delete();
+
+      await database.collection('users').doc(userId).delete();
+      return "Se ha eliminado con exito el usuario";
+    } catch (e) {
+      throw Future.error('Error al eliminar el usuario: $e');
+    }
+  }
 }

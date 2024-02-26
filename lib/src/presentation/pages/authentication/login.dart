@@ -28,8 +28,9 @@ class Login extends StatelessWidget {
                 userController.account == "enable") {
               Get.offAll(() => Customer());
             }
-            if (userController.role == "administrator" &&
-                userController.account == "enable") {
+            if (userController.role == "administrator" ||
+                userController.role == "super_administrator" &&
+                    userController.account == "enable") {
               Get.offAll(() => Administrator());
             }
           }

@@ -85,4 +85,12 @@ class UserController extends GetxController {
       return Future.error(e);
     }
   }
+
+  Future<String> deleteUser(String userId) async {
+    try {
+      return await UserRequest.deleteUser(userId);
+    } on FirebaseAuthException catch (e) {
+      return Future.error(e);
+    }
+  }
 }

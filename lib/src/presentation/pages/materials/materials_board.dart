@@ -18,6 +18,7 @@ class MaterialsBoard extends StatefulWidget {
 
 class _MaterialsBoardState extends State<MaterialsBoard> {
   late final TextEditingController? controllerSearch;
+
   int activeIndex = -1;
   String sectionId = "";
   double screenWidth = 0;
@@ -26,6 +27,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   bool isUpdateStatusVisible = false;
   bool isRegisterFormVisible = false;
   List<Section> listSections = [];
+  List<Materials> filteredMaterials = [];
+
   Materials material = Materials(
       urlPhoto: '',
       name: '',
@@ -44,16 +47,9 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   void initState() {
     super.initState();
     controllerSearch = TextEditingController();
-
-    //controllerSearch?.addListener(() {
-    // filterSections(controllerSearch!.text);
-    //});
-  }
-
-  @override
-  void dispose() {
-    controllerSearch?.clear();
-    super.dispose();
+    controllerSearch?.addListener(() {
+      filterMaterials(controllerSearch!.text);
+    });
   }
 
   void toggleUpdateFormVisibility(Materials selectMaterial) {
@@ -157,7 +153,22 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
 
             return CardMaterialSimple(
                 material: material,
-                onClick: () {},
+                onClick: () {
+                  /*Get.toNamed('/details-material', arguments: {
+                    'urlPhoto': material.urlPhoto,
+                    'name': material.name,
+                    'code': material.code,
+                    'unit': material.unit,
+                    'size': material.size,
+                    'purchasePrice': material.purchasePrice,
+                    'salePrice': material.salePrice,
+                    'sectionId': material.sectionId,
+                    'quantity': material.quantity,
+                    'description': material.description,
+                    'id': material.id,
+                    'status': material.status,
+                  });*/
+                },
                 onLongPress: () {
                   toggleUpdateStatusVisibility(material);
                 },
@@ -168,6 +179,25 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         ),
       ),
     );
+  }
+
+  void filterMaterials(String searchText) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          if (searchText.isEmpty) {
+            filteredMaterials = widget.materialController.materialsList
+                    ?.where((material) => material.status == 'enable')
+                    .toList() ??
+                [];
+          } else {
+            filteredMaterials = widget.materialController.materialsList!
+                .where((material) =>
+                    material.name
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase()) &&
+                    material.status == 'enable')
+                .toList();
+          }
+        }));
   }
 
   @override
@@ -214,7 +244,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                           textColor: Colors.black,
                           border: 30,
                           onChanged: (value) {
-                            //filterSections(value);
+                            filterMaterials(value);
                           },
                           controller: controllerSearch!,
                         ),

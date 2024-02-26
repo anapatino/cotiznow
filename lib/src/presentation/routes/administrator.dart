@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/pages/materials/details/details_material.dart';
 import 'package:cotiznow/src/presentation/pages/materials/materials_board.dart';
 import 'package:cotiznow/src/presentation/pages/profile/profile_details.dart';
 import 'package:cotiznow/src/presentation/pages/sections/sections_board.dart';
@@ -13,6 +14,8 @@ class AdministratorRoutes {
   static const String customers = '/customers';
   static const String sections = '/sections';
   static const String materials = '/materials';
+  static const String details = '/details-material';
+
   static const String services = '/services';
   static const String quotes = '/quotes';
   static const String discounts = '/discounts';
@@ -38,6 +41,10 @@ class AdministratorRoutes {
     GetPage(
       name: materials,
       page: () => MaterialsBoard(),
+    ),
+    GetPage(
+      name: details,
+      page: () => const MaterialDetails(),
     ),
     GetPage(
       name: services,

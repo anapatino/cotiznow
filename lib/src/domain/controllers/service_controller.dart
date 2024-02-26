@@ -45,4 +45,12 @@ class ServicesController extends GetxController {
           'Error al obtener los servicios desde la base de datos');
     }
   }
+
+  Future<String> deleteService(String serviceId) async {
+    try {
+      return await ServicesRequest.deleteService(serviceId);
+    } catch (e) {
+      throw Future.error('Error al eliminar servicio');
+    }
+  }
 }

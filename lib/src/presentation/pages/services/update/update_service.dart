@@ -117,13 +117,13 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
             topRight: Radius.circular(25),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: screenHeight * 0.04,
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.04,
               ),
-              Text(
+              child: Text(
                 "Actualizar servicio",
                 style: GoogleFonts.varelaRound(
                   color: Colors.white,
@@ -132,115 +132,122 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                   letterSpacing: 1,
                 ),
               ),
-              SizedBox(
-                height: screenHeight * 0.02,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
+            ),
+            SizedBox(
+              height: screenHeight * 0.75,
+              child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Elige un icono",
-                      style: GoogleFonts.varelaRound(
-                        color: Colors.white,
-                        fontSize: screenWidth * 0.03,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Elige un icono",
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.white,
+                              fontSize: screenWidth * 0.03,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                          SizedBox(
+                            height: screenHeight * 0.15,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: IconList.icons.length,
+                              itemBuilder: (context, index) {
+                                return RoundIconButton(
+                                  icon: "${IconList.icons[index]["icon"]}",
+                                  title: "${IconList.icons[index]["title"]}",
+                                  onClick: () {
+                                    handleIconClick(index,
+                                        "${IconList.icons[index]["icon"]}");
+                                  },
+                                  onLongPress: () {},
+                                  isActive: activeIndex == index,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CustomTextField(
+                      icon: Icons.dehaze_rounded,
+                      hintText: 'Nombre',
+                      isPassword: false,
+                      width: screenWidth * 0.75,
+                      height: screenHeight * 0.075,
+                      inputColor: Colors.white,
+                      textColor: Colors.black,
+                      onChanged: (value) {},
+                      controller: controllerName,
+                    ),
+                    CustomTextField(
+                      icon: Icons.dehaze_rounded,
+                      hintText: 'Descripcion',
+                      isPassword: false,
+                      width: screenWidth * 0.75,
+                      height: screenHeight * 0.15,
+                      inputColor: Colors.white,
+                      textColor: Colors.black,
+                      onChanged: (value) {},
+                      controller: controllerDescription,
+                    ),
+                    CustomTextField(
+                      type: TextInputType.number,
+                      icon: Icons.money,
+                      hintText: 'Precio',
+                      isPassword: false,
+                      width: screenWidth * 0.75,
+                      height: screenHeight * 0.15,
+                      inputColor: Colors.white,
+                      textColor: Colors.black,
+                      onChanged: (value) {},
+                      controller: controllerPrice,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.07,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomElevatedButton(
+                            text: 'Cancelar',
+                            onPressed: _onCancelForm,
+                            height: screenHeight * 0.065,
+                            width: screenWidth * 0.35,
+                            textColor: Colors.white,
+                            textSize: screenWidth * 0.04,
+                            borderColor: Palette.accent,
+                            backgroundColor: Palette.accent,
+                            hasBorder: true,
+                          ),
+                          CustomElevatedButton(
+                            text: 'Registrar',
+                            onPressed: updateService,
+                            height: screenHeight * 0.065,
+                            width: screenWidth * 0.35,
+                            textColor: Colors.white,
+                            textSize: screenWidth * 0.04,
+                            backgroundColor: Palette.primary,
+                            hasBorder: false,
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
-                      height: screenHeight * 0.15,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: IconList.icons.length,
-                        itemBuilder: (context, index) {
-                          return RoundIconButton(
-                            icon: "${IconList.icons[index]["icon"]}",
-                            title: "${IconList.icons[index]["title"]}",
-                            onClick: () {
-                              handleIconClick(
-                                  index, "${IconList.icons[index]["icon"]}");
-                            },
-                            onLongPress: () {},
-                            isActive: activeIndex == index,
-                          );
-                        },
-                      ),
+                      height: screenHeight * 0.22,
                     ),
                   ],
                 ),
               ),
-              CustomTextField(
-                icon: Icons.dehaze_rounded,
-                hintText: 'Nombre',
-                isPassword: false,
-                width: screenWidth * 0.75,
-                height: screenHeight * 0.075,
-                inputColor: Colors.white,
-                textColor: Colors.black,
-                onChanged: (value) {},
-                controller: controllerName,
-              ),
-              CustomTextField(
-                icon: Icons.dehaze_rounded,
-                hintText: 'Descripcion',
-                isPassword: false,
-                width: screenWidth * 0.75,
-                height: screenHeight * 0.15,
-                inputColor: Colors.white,
-                textColor: Colors.black,
-                onChanged: (value) {},
-                controller: controllerDescription,
-              ),
-              CustomTextField(
-                type: TextInputType.number,
-                icon: Icons.money,
-                hintText: 'Precio',
-                isPassword: false,
-                width: screenWidth * 0.75,
-                height: screenHeight * 0.15,
-                inputColor: Colors.white,
-                textColor: Colors.black,
-                onChanged: (value) {},
-                controller: controllerPrice,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.07,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomElevatedButton(
-                      text: 'Cancelar',
-                      onPressed: _onCancelForm,
-                      height: screenHeight * 0.065,
-                      width: screenWidth * 0.35,
-                      textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
-                      borderColor: Palette.accent,
-                      backgroundColor: Palette.accent,
-                      hasBorder: true,
-                    ),
-                    CustomElevatedButton(
-                      text: 'Registrar',
-                      onPressed: updateService,
-                      height: screenHeight * 0.065,
-                      width: screenWidth * 0.35,
-                      textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
-                      backgroundColor: Palette.primary,
-                      hasBorder: false,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: screenHeight * 0.22,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

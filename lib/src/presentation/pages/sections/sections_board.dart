@@ -111,29 +111,23 @@ class _SectionsState extends State<Sections> {
             Visibility(
               visible: isUpdateFormVisible,
               child: Positioned(
-                top: screenHeight * 0.25,
-                child: Opacity(
-                  opacity: isUpdateFormVisible ? 1 : 0.0,
-                  child: UpdateSectionForm(
-                    onCancelForm: () {
-                      toggleUpdateFormVisibility(section);
-                    },
-                    section: section,
-                  ),
+                top: screenHeight * 0.22,
+                child: UpdateSectionForm(
+                  onCancelForm: () {
+                    toggleUpdateFormVisibility(section);
+                  },
+                  section: section,
                 ),
               ),
             ),
             Visibility(
               visible: isRegisterFormVisible,
               child: Positioned(
-                top: screenHeight * 0.25,
-                child: Opacity(
-                  opacity: isRegisterFormVisible ? 1 : 0.0,
-                  child: RegisterSectionForm(
-                    onCancelForm: () {
-                      toggleRegisterFormVisibility();
-                    },
-                  ),
+                top: screenHeight * 0.22,
+                child: RegisterSectionForm(
+                  onCancelForm: () {
+                    toggleRegisterFormVisibility();
+                  },
                 ),
               ),
             ),
@@ -268,7 +262,7 @@ class _SectionsState extends State<Sections> {
                     colorText: Colors.white,
                     duration: const Duration(seconds: 5),
                     backgroundColor: Palette.accent,
-                    icon: const Icon(Icons.error_outline_rounded),
+                    icon: const Icon(Icons.check_circle),
                   );
                 },
                 child: Text(

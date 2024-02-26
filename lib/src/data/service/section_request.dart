@@ -77,4 +77,13 @@ class SectionsRequest {
           'Error al obtener las secciones desde la base de datos');
     }
   }
+
+  static Future<String> deleteSection(String sectionId) async {
+    try {
+      await database.collection('sections').doc(sectionId).delete();
+      return "Se ha eliminado con exito la sección";
+    } catch (e) {
+      throw Future.error('Error al eliminar el sección: $e');
+    }
+  }
 }

@@ -59,4 +59,12 @@ class MaterialsController extends GetxController {
       throw Future.error('Error al obtener los materiales por sectionId');
     }
   }
+
+  Future<String> deleteMaterial(String materialId, String urlPhoto) async {
+    try {
+      return await MaterialsRequest.deleteMaterial(materialId, urlPhoto);
+    } catch (e) {
+      throw Future.error('Error al eliminar los materiales');
+    }
+  }
 }

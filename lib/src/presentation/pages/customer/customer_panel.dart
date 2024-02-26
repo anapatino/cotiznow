@@ -175,4 +175,80 @@ class _CustomerState extends State<Customer> {
       ),
     );
   }
+
+  Future<void> showDeleteAlert(Users user) async {
+    Get.defaultDialog(
+      title: 'Eliminar usuario',
+      backgroundColor: Palette.error,
+      content: Column(
+        children: [
+          Text(
+            '¿Desea eliminar este usuario?',
+            style: GoogleFonts.varelaRound(
+              color: Colors.black,
+              fontSize: screenWidth * 0.035,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.error,
+                ),
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  'Cancelar',
+                  style: GoogleFonts.varelaRound(
+                      color: Colors.white,
+                      fontSize: screenWidth * 0.03,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.errorBackground,
+                ),
+                onPressed: () {
+                  Get.back();
+                  widget.userController
+                      .deleteUser(user.id)
+                      .then((value) => {
+                            Get.snackbar(
+                              'Éxito',
+                              'Sección deshabilitada correctamente',
+                              colorText: Colors.white,
+                              duration: const Duration(seconds: 5),
+                              backgroundColor: Palette.accent,
+                              icon: const Icon(Icons.check_circle),
+                            )
+                          })
+                      .catchError((error) {
+                    Get.snackbar(
+                      'Error al eliminar usuario',
+                      '$error',
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 5),
+                      backgroundColor: Palette.error,
+                      icon: const Icon(Icons.error),
+                    );
+                  });
+                },
+                child: Text(
+                  'Aceptar',
+                  style: GoogleFonts.varelaRound(
+                      color: Colors.white,
+                      fontSize: screenWidth * 0.03,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

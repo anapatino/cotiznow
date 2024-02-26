@@ -17,19 +17,13 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
   String? selectedOption;
   MaterialsController materialController = Get.find();
 
-  @override
-  void dispose() {
-    super.dispose();
-    _resetForm();
-  }
-
   void _resetForm() {
     selectedOption = "";
   }
 
   void _onCancelForm() {
-    _resetForm();
     widget.onCancelForm();
+    _resetForm();
   }
 
   Future<void> changeMaterialStatus() async {
@@ -90,20 +84,17 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: screenHeight * 0.04,
-              ),
-              Text(
-                "Actualizar material",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.white,
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+                child: Text(
+                  "Actualizar material",
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: screenHeight * 0.02,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

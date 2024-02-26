@@ -52,4 +52,12 @@ class SectionsController extends GetxController {
           'Error al obtener las secciones desde la base de datos');
     }
   }
+
+  Future<String> deleteSection(String sectionId) async {
+    try {
+      return await SectionsRequest.deleteSection(sectionId);
+    } catch (e) {
+      throw Future.error('Error al eliminar la sección');
+    }
+  }
 }
