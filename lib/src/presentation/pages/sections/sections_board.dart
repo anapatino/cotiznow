@@ -73,7 +73,6 @@ class _SectionsState extends State<Sections> {
             name: widget.userController.name,
             email: widget.userController.userEmail,
             itemConfigs: AdministratorRoutes().itemConfigs,
-            context: context,
           ),
           body: Stack(children: [
             Padding(

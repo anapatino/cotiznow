@@ -34,21 +34,13 @@ class UserRequest {
     }
   }
 
-  static Future<UserCredential> register(
-      String name,
-      String lastName,
-      String email,
-      String password,
-      String phone,
-      String address,
-      String role,
-      String account) async {
+  static Future<UserCredential> register(Users user, String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      await saveUserData(userCredential.user!.uid, name, lastName, email, phone,
-          address, role, account);
+          .createUserWithEmailAndPassword(
+              email: user.email, password: password);
+      user.authId = userCredential.user!.uid;
+      await saveUserData(user);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -60,24 +52,17 @@ class UserRequest {
     return Future.error('Error al autenticar el usuario');
   }
 
-  static Future<void> saveUserData(
-      String userId,
-      String name,
-      String lastName,
-      String email,
-      String phone,
-      String address,
-      String role,
-      String account) async {
+  static Future<void> saveUserData(Users user) async {
     try {
-      await FirebaseFirestore.instance.collection('users').doc(userId).set({
-        'name': name,
-        'lastName': lastName,
-        'email': email,
-        'phone': phone,
-        'address': address,
-        'account': account,
-        'role': role,
+      await FirebaseFirestore.instance.collection('users').add({
+        'name': user.name,
+        'lastName': user.lastName,
+        'email': user.email,
+        'phone': user.phone,
+        'address': user.address,
+        'account': user.account,
+        'role': user.role,
+        'authId': user.authId
       });
     } catch (e) {
       throw Future.error('Error al registrar usuario en la base de datos');
@@ -85,7 +70,10 @@ class UserRequest {
   }
 
   static Future<String> updateUserData(Users user) async {
+    //final User? newUser = authentication.currentUser;
+
     try {
+      //await newUser?.updateEmail(user.email);
       await database.collection('users').doc(user.id).update({
         'name': user.name,
         'lastName': user.lastName,
@@ -94,6 +82,7 @@ class UserRequest {
         'address': user.address,
         'account': user.account,
         'role': user.role,
+        'authId': user.authId
       });
 
       return "Se ha actualizado exitosamente el usuario";
@@ -102,11 +91,11 @@ class UserRequest {
     }
   }
 
-  static Future<Users> findUser(String email) async {
+  static Future<Users> findUser(String authId) async {
     Users? user;
     await database.collection('users').get().then((value) {
       for (var doc in value.docs) {
-        if (doc.data()['email'] == email) {
+        if (doc.data()['authId'] == authId) {
           user = Users.fromJson(doc.data());
           user!.id = doc.id;
         }

@@ -56,14 +56,25 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         controllerPhone.text = userController.phone;
         controllerAddress.text = userController.address;
         controllerEmail.text = userController.userEmail;
-        controllerRole.text = userController.role == "customer"
-            ? "Cliente"
-            : userController.role == "super_administrator"
-                ? "Super Administrador"
-                : "Administrador";
-        controllerAccount.text =
-            userController.account == "enable" ? "Activa" : "Desactivada";
+        controllerRole.text = userController.role;
+        controllerAccount.text = userController.account;
       }
+    }
+  }
+
+  void checkAccessAndUpdateUser() {
+    if (userController.role == "administrador" &&
+        controllerRole.text == "super administrador") {
+      Get.snackbar(
+        'Acceso denegado',
+        'No tiene acceso para modificar a otro administrador.',
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+        backgroundColor: Palette.warning,
+        icon: const Icon(Icons.error_rounded),
+      );
+    } else {
+      updateUser();
     }
   }
 
@@ -71,12 +82,14 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     String role = "";
     String account = "";
     if (selectedOptionRole != null) {
-      role = selectedOptionRole == "Cliente" ? "customer" : "administrator";
+      role = selectedOptionRole!;
     } else {
       role = userController.role;
     }
     if (selectedOption != null) {
-      account = selectedOption == "habilitar" ? "enable" : "disable";
+      account = selectedOption == "activar" ? "activa" : "desactivada";
+    } else {
+      account = userController.account;
     }
 
     Users updatedUser = Users(
@@ -88,20 +101,19 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       role: role,
       account: account,
       id: userController.idUser,
+      authId: userController.authId,
     );
 
     try {
       String message = await userController.updateUser(updatedUser);
-      userController.role == "customer"
-          ? Get.offAllNamed("/administrator-dashboard")
-          : Get.offAllNamed("/customer-dashboard");
+
       Get.snackbar(
         'Usuario actualizado correctamente',
         message,
         colorText: Colors.white,
         duration: const Duration(seconds: 5),
         backgroundColor: Palette.accent,
-        icon: const Icon(Icons.check_circle_outline_rounded),
+        icon: const Icon(Icons.check_circle),
       );
     } catch (error) {
       Get.snackbar(
@@ -110,18 +122,20 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         colorText: Colors.white,
         duration: const Duration(seconds: 5),
         backgroundColor: Palette.error,
-        icon: const Icon(Icons.error_outline_rounded),
+        icon: const Icon(Icons.error_rounded),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> options = ['habilitar', 'deshabilitar'];
-    List<String> optionsRole = ['Cliente', 'Administrador'];
+    List<String> options = ['activar', 'desactivar'];
+    List<String> optionsRole = userController.role == "super administrador"
+        ? ['cliente', 'administrador', 'super administrador']
+        : ['cliente', 'administrador'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    bool isEnable = userController.role != "super_administrador" ? false : true;
+    bool isEnable = userController.role == "cliente" ? false : true;
 
     return SafeArea(
       child: Scaffold(
@@ -131,10 +145,9 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           drawer: CustomDrawer(
             name: userController.name,
             email: userController.userEmail,
-            itemConfigs: userController.role == "customer"
+            itemConfigs: userController.role == "cliente"
                 ? CustomerRoutes().itemConfigs
                 : AdministratorRoutes().itemConfigs,
-            context: context,
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -214,37 +227,35 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     onChanged: (value) {},
                     controller: controllerEmail,
                   ),
-                  if (userController.role != "super_administrador")
-                    CustomTextField(
-                      isEnable: isEnable,
-                      icon: Icons.account_circle_rounded,
-                      hintText: 'Rol',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.073,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerRole,
-                    ),
-                  if (userController.role != "super_administrador")
-                    CustomTextField(
-                      isEnable: isEnable,
-                      icon: Icons.admin_panel_settings_sharp,
-                      hintText: 'Cuenta',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.073,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerAccount,
-                    ),
-                  if (userController.role == "super_administrator")
+                  CustomTextField(
+                    isEnable: false,
+                    icon: Icons.account_circle_rounded,
+                    hintText: 'Rol',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerRole,
+                  ),
+                  CustomTextField(
+                    isEnable: false,
+                    icon: Icons.admin_panel_settings_sharp,
+                    hintText: 'Cuenta',
+                    isPassword: false,
+                    width: screenWidth * 0.75,
+                    height: screenHeight * 0.073,
+                    inputColor: Palette.grey,
+                    textColor: Colors.black,
+                    onChanged: (value) {},
+                    controller: controllerAccount,
+                  ),
+                  if (userController.role == "super administrador")
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("  Estado",
+                        Text("  Cambiar estado",
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
                               fontSize: screenWidth * 0.035,
@@ -266,7 +277,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         SizedBox(
                           height: screenHeight * 0.02,
                         ),
-                        Text("  Rol",
+                        Text("  Cambiar rol",
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
                               fontSize: screenWidth * 0.035,
@@ -285,21 +296,22 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             });
                           },
                         ),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        CustomElevatedButton(
-                          text: 'Actualizar',
-                          onPressed: updateUser,
-                          height: screenHeight * 0.065,
-                          width: screenWidth * 0.75,
-                          textColor: Colors.white,
-                          textSize: screenWidth * 0.04,
-                          backgroundColor: Palette.primary,
-                          hasBorder: false,
-                        )
                       ],
                     ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: screenHeight * 0.02, bottom: screenHeight * 0.03),
+                    child: CustomElevatedButton(
+                      text: 'Actualizar',
+                      onPressed: checkAccessAndUpdateUser,
+                      height: screenHeight * 0.065,
+                      width: screenWidth * 0.75,
+                      textColor: Colors.white,
+                      textSize: screenWidth * 0.04,
+                      backgroundColor: Palette.primary,
+                      hasBorder: false,
+                    ),
+                  )
                 ]),
               ),
             ),

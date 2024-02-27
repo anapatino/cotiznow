@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
 import '../../../domain/controllers/controllers.dart';
 import '../../widgets/components/components.dart';
@@ -27,18 +28,25 @@ class Register extends StatelessWidget {
       String email = controllerEmail.text;
       String password = controllerPassword.text;
       String address = controllerAddress.text;
-      String role = "customer";
-      String account = "enable";
+      String role = "cliente";
+      String account = "activa";
       if (name.isNotEmpty &&
           lastName.isNotEmpty &&
           phone.isNotEmpty &&
           email.isNotEmpty &&
           password.isNotEmpty &&
           address.isNotEmpty) {
-        userController
-            .register(
-                name, lastName, email, password, phone, address, role, account)
-            .then((value) async {
+        Users user = Users(
+            name: name,
+            lastName: lastName,
+            phone: phone,
+            address: address,
+            email: email,
+            role: role,
+            account: account,
+            id: '',
+            authId: '');
+        userController.register(user, password).then((value) async {
           if (userController.userEmail.isNotEmpty) {
             //await publicityController.viewPublicity();
             Get.offAll(() => Customer());

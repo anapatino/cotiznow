@@ -215,7 +215,6 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
             name: widget.userController.name,
             email: widget.userController.userEmail,
             itemConfigs: AdministratorRoutes().itemConfigs,
-            context: context,
           ),
           body: Stack(
             children: [

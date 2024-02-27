@@ -35,7 +35,6 @@ class Customer extends StatelessWidget {
             name: userController.name,
             email: userController.userEmail,
             itemConfigs: CustomerRoutes().itemConfigs,
-            context: context,
           ),
           body: const Center(
             child: Text("Este es el dashboard clientes"),

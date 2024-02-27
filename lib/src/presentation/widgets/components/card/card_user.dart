@@ -8,6 +8,7 @@ class CardUser extends StatelessWidget {
   final String address;
   final String role;
   final String account;
+  final Function onLongPress;
 
   const CardUser(
       {super.key,
@@ -17,7 +18,8 @@ class CardUser extends StatelessWidget {
       required this.lastName,
       required this.address,
       required this.role,
-      required this.account});
+      required this.account,
+      required this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,9 @@ class CardUser extends StatelessWidget {
             'role': role,
             'account': account
           });
+        },
+        onLongPress: () {
+          onLongPress();
         },
         child: Container(
           width: screenWidth * 0.85,

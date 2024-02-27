@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
 import '../../../domain/controllers/controllers.dart';
 import '../../widgets/components/components.dart';
@@ -39,22 +40,25 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
     String email = controllerEmail.text;
     String password = controllerPassword.text;
     String address = controllerAddress.text;
-    String role = selectedOption == "Cliente"
-        ? "customer"
-        : selectedOption == "Administrador"
-            ? "administrator"
-            : "super_administrator";
-    String account = "enable";
+    String? role = selectedOption;
+    String account = "activa";
     if (name.isNotEmpty &&
         lastName.isNotEmpty &&
         phone.isNotEmpty &&
         email.isNotEmpty &&
         password.isNotEmpty &&
         address.isNotEmpty) {
-      userController
-          .register(
-              name, lastName, email, password, phone, address, role, account)
-          .then((value) async {
+      Users user = Users(
+          name: name,
+          lastName: lastName,
+          phone: phone,
+          address: address,
+          email: email,
+          role: role!,
+          account: account,
+          id: '',
+          authId: '');
+      userController.register(user, password).then((value) async {
         if (userController.userEmail.isNotEmpty) {
           Get.snackbar(
             'Registro de cliente exitoso',
@@ -106,9 +110,9 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = userController.role == "administrator"
-        ? ['Cliente', 'Administrador']
-        : ['Cliente', 'Administrador', 'Super Administrador'];
+    List<String> options = userController.role == "administrador"
+        ? ['cliente', 'administrador']
+        : ['cliente', 'administrador', 'super administrador'];
 
     return BounceInUp(
       duration: const Duration(microseconds: 10),

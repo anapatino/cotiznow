@@ -1,18 +1,29 @@
 import 'package:cotiznow/lib.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   final String name;
   final String email;
   final List<DrawerItemConfig> itemConfigs;
-  final BuildContext context;
 
   const CustomDrawer({
-    super.key,
+    Key? key,
     required this.name,
     required this.email,
     required this.itemConfigs,
-    required this.context,
-  });
+  }) : super(key: key);
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  late IconData drawerIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    drawerIcon = Icons.close;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +37,20 @@ class CustomDrawer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DrawerHeader(
-                name: name,
-                email: email,
+                name: widget.name,
+                email: widget.email,
+                drawerIcon: drawerIcon,
+                onDrawerIconPressed: () {
+                  setState(() {
+                    drawerIcon =
+                        (drawerIcon == Icons.menu) ? Icons.close : Icons.menu;
+                  });
+                  Navigator.pop(context);
+                },
               ),
               Expanded(
                 child: ListView(
-                  children: itemConfigs
+                  children: widget.itemConfigs
                       .map((config) => config.build(context))
                       .toList(),
                 ),
@@ -47,8 +66,16 @@ class CustomDrawer extends StatelessWidget {
 class DrawerHeader extends StatelessWidget {
   final String name;
   final String email;
+  final IconData drawerIcon;
+  final VoidCallback onDrawerIconPressed;
 
-  const DrawerHeader({super.key, required this.name, required this.email});
+  DrawerHeader({
+    Key? key,
+    required this.name,
+    required this.email,
+    required this.drawerIcon,
+    required this.onDrawerIconPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +89,11 @@ class DrawerHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: const Icon(
-                  Icons.menu,
+                icon: Icon(
+                  drawerIcon,
                   color: Colors.white,
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: onDrawerIconPressed,
               ),
             ],
           ),

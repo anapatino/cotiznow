@@ -1,6 +1,4 @@
 import 'package:cotiznow/lib.dart';
-
-import '../../../domain/controllers/controllers.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
@@ -62,6 +60,9 @@ class _CustomerState extends State<Customer> {
                   address: user.address,
                   role: user.role,
                   account: user.account,
+                  onLongPress: () {
+                    showDeleteAlert(user);
+                  },
                 );
               },
             ),
@@ -72,13 +73,17 @@ class _CustomerState extends State<Customer> {
   }
 
   List<Users> _filterListByOption(List<Users> userList) {
-    if (widget.userController.role == "administrator") {
-      return userList.where((user) => user.role == 'customer').toList();
+    if (widget.userController.role == "administrador") {
+      return userList.where((user) => user.role == 'cliente').toList();
     } else {
-      if (selectedOption == 'Clientes') {
-        return userList.where((user) => user.role == 'customer').toList();
-      } else if (selectedOption == 'Administrador') {
-        return userList.where((user) => user.role == 'administrator').toList();
+      if (selectedOption == 'clientes') {
+        return userList.where((user) => user.role == 'cliente').toList();
+      } else if (selectedOption == 'administradores') {
+        return userList.where((user) => user.role == 'administrador').toList();
+      } else if (selectedOption == 'super administrador') {
+        return userList
+            .where((user) => user.role == 'super administrador')
+            .toList();
       } else {
         return userList;
       }
@@ -95,9 +100,9 @@ class _CustomerState extends State<Customer> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = widget.userController.role == "administrator"
-        ? ['Clientes']
-        : ['Todos', 'Clientes', 'Administrador'];
+    List<String> options = widget.userController.role == "administrador"
+        ? ['clientes']
+        : ['todos', 'clientes', 'administradores', 'super administrador'];
 
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
@@ -110,7 +115,6 @@ class _CustomerState extends State<Customer> {
             name: widget.userController.name,
             email: widget.userController.userEmail,
             itemConfigs: AdministratorRoutes().itemConfigs,
-            context: context,
           ),
           body: Stack(
             children: [
@@ -179,17 +183,26 @@ class _CustomerState extends State<Customer> {
   Future<void> showDeleteAlert(Users user) async {
     Get.defaultDialog(
       title: 'Eliminar usuario',
+      titleStyle: GoogleFonts.varelaRound(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: screenWidth * 0.055,
+      ),
+      confirmTextColor: Colors.white,
       backgroundColor: Palette.error,
       content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            '¿Desea eliminar este usuario?',
-            style: GoogleFonts.varelaRound(
-              color: Colors.black,
-              fontSize: screenWidth * 0.035,
+          Padding(
+            padding: EdgeInsets.only(bottom: screenHeight * 0.015),
+            child: Text(
+              '¿Desea eliminar este usuario?',
+              style: GoogleFonts.varelaRound(
+                color: Colors.white,
+                fontSize: screenWidth * 0.035,
+              ),
             ),
           ),
-          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -214,6 +227,7 @@ class _CustomerState extends State<Customer> {
                 ),
                 onPressed: () {
                   Get.back();
+                  if (widget.userController.role == "super administrador") {}
                   widget.userController
                       .deleteUser(user.id)
                       .then((value) => {

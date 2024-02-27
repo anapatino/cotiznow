@@ -24,13 +24,13 @@ class Login extends StatelessWidget {
         userController.login(email, password).then((value) async {
           if (userController.userEmail.isNotEmpty) {
             //await publicityController.viewPublicity();
-            if (userController.role == "customer" &&
-                userController.account == "enable") {
+            if (userController.role == "cliente" &&
+                userController.account == "activa") {
               Get.offAll(() => Customer());
             }
-            if (userController.role == "administrator" ||
-                userController.role == "super_administrator" &&
-                    userController.account == "enable") {
+            if (userController.role == "administrador" ||
+                userController.role == "super administrador" &&
+                    userController.account == "activa") {
               Get.offAll(() => Administrator());
             }
           }

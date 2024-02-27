@@ -12,6 +12,7 @@ class UserController extends GetxController {
   final Rx<dynamic> _address = "".obs;
   final Rx<dynamic> _lastName = "".obs;
   final Rx<dynamic> _id = "".obs;
+  final Rx<dynamic> _authId = "".obs;
   final Rxn<List<Users>> _listUsers = Rxn<List<Users>>();
 
   String get userEmail => _email.value;
@@ -22,6 +23,8 @@ class UserController extends GetxController {
   String get address => _address.value;
   String get lastName => _lastName.value;
   String get idUser => _id.value;
+  String get authId => _authId.value;
+
   List<Users>? get listUsers => _listUsers.value;
 
   Future<List<Users>> getUsersList() async {
@@ -37,7 +40,7 @@ class UserController extends GetxController {
   Future<void> login(String email, String password) async {
     try {
       UserCredential user = await UserRequest.login(email, password);
-      Users foundUser = await UserRequest.findUser(email);
+      Users foundUser = await UserRequest.findUser(user.user!.uid);
       updateController(foundUser);
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
@@ -53,21 +56,13 @@ class UserController extends GetxController {
     _account.value = user.account;
     _phone.value = user.phone;
     _id.value = user.id;
+    _authId.value = user.authId;
   }
 
-  Future<void> register(
-      String name,
-      String lastName,
-      String email,
-      String password,
-      String phone,
-      String address,
-      String role,
-      String account) async {
+  Future<void> register(Users user, String password) async {
     try {
-      UserCredential user = await UserRequest.register(
-          name, lastName, email, password, phone, address, role, account);
-      Users foundUser = await UserRequest.findUser(email);
+      UserCredential newUser = await UserRequest.register(user, password);
+      Users foundUser = await UserRequest.findUser(user.authId);
       updateController(foundUser);
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
@@ -78,7 +73,7 @@ class UserController extends GetxController {
     try {
       String message = await UserRequest.updateUserData(user);
 
-      Users foundUser = await UserRequest.findUser(user.email);
+      Users foundUser = await UserRequest.findUser(user.authId);
       updateController(foundUser);
       return message;
     } on FirebaseAuthException catch (e) {
