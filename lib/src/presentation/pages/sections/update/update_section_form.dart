@@ -45,7 +45,7 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
   Future<void> updateSection() async {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String status = "enable";
+    String status = "activa";
     Section section = Section(
         id: widget.section.id,
         icon: icon,

@@ -105,12 +105,13 @@ class UserRequest {
   }
 
   static Future<List<Users>> getUsersList() async {
-    List<Users> userList = [];
     try {
-      await database.collection('users').get().then((value) => {
-            for (var doc in value.docs)
-              {userList.add(Users.fromJson(doc.data()))}
-          });
+      var querySnapshot = await database.collection('users').get();
+      List<Users> userList = querySnapshot.docs.map((doc) {
+        Users user = Users.fromJson(doc.data());
+        user.id = doc.id;
+        return user;
+      }).toList();
       return userList;
     } catch (e) {
       throw Future.error('Error al obtener la lista de usuarios: $e');
@@ -119,10 +120,11 @@ class UserRequest {
 
   static Future<String> deleteUser(String userId) async {
     try {
-      await authentication.currentUser?.delete();
+      //User? user = await FirebaseAuth.instance.getUser(uid:userId);
 
+      //await user.delete();
       await database.collection('users').doc(userId).delete();
-      return "Se ha eliminado con exito el usuario";
+      return "Se ha eliminado con éxito el usuario";
     } catch (e) {
       throw Future.error('Error al eliminar el usuario: $e');
     }

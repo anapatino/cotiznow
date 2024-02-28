@@ -216,31 +216,30 @@ class _CustomerState extends State<Customer> {
                 child: Text(
                   'Cancelar',
                   style: GoogleFonts.varelaRound(
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.03,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.03,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Palette.errorBackground,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   Get.back();
-                  if (widget.userController.role == "super administrador") {}
-                  widget.userController
-                      .deleteUser(user.id)
-                      .then((value) => {
-                            Get.snackbar(
-                              'Éxito',
-                              'Sección deshabilitada correctamente',
-                              colorText: Colors.white,
-                              duration: const Duration(seconds: 5),
-                              backgroundColor: Palette.accent,
-                              icon: const Icon(Icons.check_circle),
-                            )
-                          })
-                      .catchError((error) {
+                  try {
+                    String result =
+                        await widget.userController.deleteUser(user.id);
+                    Get.snackbar(
+                      'Éxito',
+                      result,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 5),
+                      backgroundColor: Palette.accent,
+                      icon: const Icon(Icons.check_circle),
+                    );
+                  } catch (error) {
                     Get.snackbar(
                       'Error al eliminar usuario',
                       '$error',
@@ -249,14 +248,15 @@ class _CustomerState extends State<Customer> {
                       backgroundColor: Palette.error,
                       icon: const Icon(Icons.error),
                     );
-                  });
+                  }
                 },
                 child: Text(
                   'Aceptar',
                   style: GoogleFonts.varelaRound(
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.03,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.03,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

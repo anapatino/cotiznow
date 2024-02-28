@@ -38,6 +38,7 @@ class _SectionsState extends State<Sections> {
   @override
   void dispose() {
     controllerSearch?.clear();
+
     super.dispose();
   }
 
@@ -100,7 +101,7 @@ class _SectionsState extends State<Sections> {
                     onChanged: (value) {
                       filterSections(value);
                     },
-                    controller: controllerSearch!,
+                    controller: controllerSearch ?? TextEditingController(),
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   _buildSectionsList(),
@@ -151,7 +152,7 @@ class _SectionsState extends State<Sections> {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
           if (searchText.isEmpty) {
             filteredSections = widget.sectionsController.sectionsList
-                    ?.where((section) => section.status == 'enable')
+                    ?.where((section) => section.status == 'activa')
                     .toList() ??
                 [];
           } else {
@@ -160,7 +161,7 @@ class _SectionsState extends State<Sections> {
                     section.name
                         .toLowerCase()
                         .contains(searchText.toLowerCase()) &&
-                    section.status == 'enable')
+                    section.status == 'activa')
                 .toList();
           }
         }));
@@ -178,14 +179,14 @@ class _SectionsState extends State<Sections> {
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
-            sections.where((section) => section.status == 'enable').toList();
+            sections.where((section) => section.status == 'activa').toList();
         if (controllerSearch!.text.isNotEmpty) {
           filteredSections = sections
               .where((section) =>
                   section.name
                       .toLowerCase()
                       .contains(controllerSearch!.text.toLowerCase()) &&
-                  section.status == 'enable')
+                  section.status == 'activa')
               .toList();
         }
 
@@ -203,8 +204,8 @@ class _SectionsState extends State<Sections> {
           child: Wrap(
             spacing: 0.01,
             runSpacing: 10.0,
-            children: filteredSections.map((section) {
-              int index = filteredSections.indexOf(section);
+            children: sections.map((section) {
+              int index = sections.indexOf(section);
               return RoundIconButton(
                 icon: section.icon,
                 title: section.name,
@@ -254,7 +255,7 @@ class _SectionsState extends State<Sections> {
                 onPressed: () {
                   Get.back();
                   widget.sectionsController
-                      .updateSectionStatus(section.id, 'disable');
+                      .updateSectionStatus(section.id, 'desactivada');
                   Get.snackbar(
                     'Éxito',
                     'Sección deshabilitada correctamente',

@@ -58,10 +58,10 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
           account: account,
           id: '',
           authId: '');
-      userController.register(user, password).then((value) async {
+      userController.register(user, password, false).then((value) async {
         if (userController.userEmail.isNotEmpty) {
           Get.snackbar(
-            'Registro de cliente exitoso',
+            'Registro de usuario exitoso',
             'Se ha registrado correctamente en el sistema',
             colorText: Colors.white,
             duration: const Duration(seconds: 5),
@@ -76,13 +76,13 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
           backgroundColor: Palette.error,
-          icon: const Icon(Icons.error_outline_rounded),
+          icon: const Icon(Icons.error_rounded),
         );
       });
       _onCancelRegistration();
     } else {
       Get.snackbar(
-        'Error al registrar',
+        'Error al registrar usuario',
         'Ingrese los campos requeridos para poder registrar',
         colorText: Colors.white,
         duration: const Duration(seconds: 5),

@@ -59,11 +59,12 @@ class UserController extends GetxController {
     _authId.value = user.authId;
   }
 
-  Future<void> register(Users user, String password) async {
+  Future<void> register(
+      Users user, String password, bool updateControllers) async {
     try {
-      UserCredential newUser = await UserRequest.register(user, password);
+      await UserRequest.register(user, password);
       Users foundUser = await UserRequest.findUser(user.authId);
-      updateController(foundUser);
+      if (updateControllers) updateController(foundUser);
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
     }
