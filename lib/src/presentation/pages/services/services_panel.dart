@@ -1,9 +1,9 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/services/services.dart';
 import '../../../domain/domain.dart';
-import '../../../domain/models/service.dart';
 import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
+import '../../widgets/widgets.dart';
 
 // ignore: must_be_immutable
 class ServicesPanel extends StatefulWidget {
@@ -17,7 +17,7 @@ class ServicesPanel extends StatefulWidget {
 }
 
 class _ServicesPanel extends State<ServicesPanel> {
-  late final TextEditingController? controllerSearch;
+  TextEditingController controllerSearch = TextEditingController();
   int activeIndex = -1;
   double screenWidth = 0;
   double screenHeight = 0;
@@ -30,16 +30,6 @@ class _ServicesPanel extends State<ServicesPanel> {
   @override
   void initState() {
     super.initState();
-    controllerSearch = TextEditingController();
-    controllerSearch?.addListener(() {
-      filterService(controllerSearch!.text);
-    });
-  }
-
-  @override
-  void dispose() {
-    controllerSearch?.clear();
-    super.dispose();
   }
 
   void toggleUpdateFormVisibility(Service selectedService) {
@@ -101,7 +91,7 @@ class _ServicesPanel extends State<ServicesPanel> {
                     onChanged: (value) {
                       filterService(value);
                     },
-                    controller: controllerSearch!,
+                    controller: controllerSearch,
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   _buildServiceList(),
@@ -159,7 +149,7 @@ class _ServicesPanel extends State<ServicesPanel> {
           setState(() {
             if (searchText.isEmpty) {
               filteredServices = widget.serviceController.servicesList
-                      ?.where((service) => service.status == 'enable')
+                      ?.where((service) => service.status == 'activa')
                       .toList() ??
                   [];
             } else {
@@ -168,7 +158,7 @@ class _ServicesPanel extends State<ServicesPanel> {
                       service.name
                           .toLowerCase()
                           .contains(searchText.toLowerCase()) &&
-                      service.status == 'enable')
+                      service.status == 'activa')
                   .toList();
             }
           });
@@ -187,14 +177,14 @@ class _ServicesPanel extends State<ServicesPanel> {
         }
         final services = snapshot.data!;
         List<Service> filteredServices =
-            services.where((service) => service.status == 'enable').toList();
-        if (controllerSearch!.text.isNotEmpty) {
+            services.where((service) => service.status == 'activa').toList();
+        if (controllerSearch.text.isNotEmpty) {
           filteredServices = services
               .where((service) =>
                   service.name
                       .toLowerCase()
-                      .contains(controllerSearch!.text.toLowerCase()) &&
-                  service.status == 'enable')
+                      .contains(controllerSearch.text.toLowerCase()) &&
+                  service.status == 'activa')
               .toList();
         }
 
@@ -212,8 +202,8 @@ class _ServicesPanel extends State<ServicesPanel> {
           child: Wrap(
             spacing: 0.01,
             runSpacing: 10.0,
-            children: filteredServices.map((service) {
-              int index = filteredServices.indexOf(service);
+            children: services.map((service) {
+              int index = services.indexOf(service);
               return RoundIconButton(
                 icon: service.icon,
                 title: service.name,
@@ -244,59 +234,26 @@ class _ServicesPanel extends State<ServicesPanel> {
   }
 
   void showDisableServiceAlert(Service service) {
-    Get.defaultDialog(
+    DialogUtil.showConfirmationDialog(
       title: 'Deshabilitar Servicio',
-      content: Column(
-        children: [
-          Text(
-            '¿Desea deshabilitar esta servicio?',
-            style: GoogleFonts.varelaRound(
-              color: Colors.black,
-              fontSize: screenWidth * 0.035,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                  widget.serviceController
-                      .updateServiceStatus(service.id, 'disable');
-                  Get.snackbar(
-                    'Éxito',
-                    'Servicio deshabilitada correctamente',
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 5),
-                    backgroundColor: Palette.accent,
-                    icon: const Icon(Icons.error_outline_rounded),
-                  );
-                },
-                child: Text(
-                  'Aceptar',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.03,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text(
-                  'Cancelar',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.03,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      message: '¿Desea eliminar este usuario?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onConfirm: () async {
+        String message = await widget.serviceController
+            .updateServiceStatus(service.id, 'inactiva');
+        Get.snackbar(
+          'Éxito',
+          message,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.check_circle),
+        );
+      },
+      backgroundConfirmButton: Palette.accentBackground,
+      backgroundCancelButton: Palette.accent,
+      backgroundColor: Palette.accent,
     );
   }
 }

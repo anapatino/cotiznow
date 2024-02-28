@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
+import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
@@ -16,7 +17,7 @@ class Sections extends StatefulWidget {
 }
 
 class _SectionsState extends State<Sections> {
-  final TextEditingController controllerSearch = TextEditingController();
+  TextEditingController controllerSearch = TextEditingController();
   int activeIndex = -1;
   double screenWidth = 0;
   double screenHeight = 0;
@@ -29,15 +30,6 @@ class _SectionsState extends State<Sections> {
   @override
   void initState() {
     super.initState();
-    controllerSearch.addListener(() {
-      filterSections(controllerSearch.text);
-    });
-  }
-
-  @override
-  void dispose() {
-    controllerSearch.dispose();
-    super.dispose();
   }
 
   void toggleUpdateFormVisibility(Section selectedSection) {
@@ -99,7 +91,7 @@ class _SectionsState extends State<Sections> {
                     onChanged: (value) {
                       filterSections(value);
                     },
-                    controller: controllerSearch ?? TextEditingController(),
+                    controller: controllerSearch,
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   _buildSectionsList(),
@@ -178,12 +170,12 @@ class _SectionsState extends State<Sections> {
         final sections = snapshot.data!;
         List<Section> filteredSections =
             sections.where((section) => section.status == 'activa').toList();
-        if (controllerSearch!.text.isNotEmpty) {
+        if (controllerSearch.text.isNotEmpty) {
           filteredSections = sections
               .where((section) =>
                   section.name
                       .toLowerCase()
-                      .contains(controllerSearch!.text.toLowerCase()) &&
+                      .contains(controllerSearch.text.toLowerCase()) &&
                   section.status == 'activa')
               .toList();
         }
@@ -234,59 +226,26 @@ class _SectionsState extends State<Sections> {
   }
 
   void showDisableSectionAlert(Section section) {
-    Get.defaultDialog(
+    DialogUtil.showConfirmationDialog(
       title: 'Deshabilitar Sección',
-      content: Column(
-        children: [
-          Text(
-            '¿Desea deshabilitar esta sección?',
-            style: GoogleFonts.varelaRound(
-              color: Colors.black,
-              fontSize: screenWidth * 0.035,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                  widget.sectionsController
-                      .updateSectionStatus(section.id, 'desactivada');
-                  Get.snackbar(
-                    'Éxito',
-                    'Sección deshabilitada correctamente',
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 5),
-                    backgroundColor: Palette.accent,
-                    icon: const Icon(Icons.check_circle),
-                  );
-                },
-                child: Text(
-                  'Aceptar',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.03,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text(
-                  'Cancelar',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.03,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      message: '¿Desea deshabilitar esta sección?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onConfirm: () async {
+        String message = await widget.sectionsController
+            .updateSectionStatus(section.id, 'inactiva');
+        Get.snackbar(
+          'Éxito',
+          message,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.check_circle),
+        );
+      },
+      backgroundConfirmButton: Palette.accentBackground,
+      backgroundCancelButton: Palette.accent,
+      backgroundColor: Palette.accent,
     );
   }
 }

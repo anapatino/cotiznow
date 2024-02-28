@@ -87,8 +87,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       role = userController.role;
     }
     if (selectedOption != null) {
-      account = selectedOption == "activar" ? "activa" : "desactivada";
-    } else {
       account = userController.account;
     }
 
@@ -130,7 +128,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> options = ['activar', 'desactivar'];
+    List<String> options = ['activa', 'inactiva'];
     List<String> optionsRole = userController.role == "super administrador"
         ? ['cliente', 'administrador', 'super administrador']
         : ['cliente', 'administrador'];
