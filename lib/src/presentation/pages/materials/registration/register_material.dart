@@ -29,7 +29,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   MaterialsController materialController = Get.find();
   SectionsController sectionsController = Get.find();
 
-  String urlPhoto = "";
+  String url_photo = "";
   String? selectedOption;
   String? selectedOptionSectionId;
 
@@ -71,7 +71,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
 
     if (pickedFile != null) {
       setState(() {
-        urlPhoto = pickedFile.path;
+        url_photo = pickedFile.path;
       });
     }
   }
@@ -101,7 +101,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         orElse: () => throw "Sección no encontrada",
       );
       Materials material = Materials(
-        urlPhoto: urlPhoto,
+        url_photo: url_photo,
         name: name,
         unit: unit,
         size: size,
@@ -113,6 +113,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         status: status,
         id: "",
         code: code,
+        discount: '',
       );
       materialController.registerMaterial(material).then((value) async {
         Get.snackbar(

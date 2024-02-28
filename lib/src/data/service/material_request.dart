@@ -18,8 +18,8 @@ class MaterialsRequest {
       final UploadTask uploadTask = storageReference.putFile(file);
       await uploadTask;
 
-      String urlPhoto = await storageReference.getDownloadURL();
-      return urlPhoto;
+      String url_photo = await storageReference.getDownloadURL();
+      return url_photo;
     } catch (e) {
       throw Future.error('Error al subir la imagen a Firebase Storage');
     }
@@ -36,7 +36,7 @@ class MaterialsRequest {
 
   static Future<String> registerMaterial(Materials material) async {
     try {
-      final url = await _uploadImageToFirebase(material.urlPhoto);
+      final url = await _uploadImageToFirebase(material.url_photo);
 
       await database.collection('materials').add({
         'url_photo': url,
@@ -50,6 +50,7 @@ class MaterialsRequest {
         'quantity': material.quantity,
         'description': material.description,
         'status': material.status,
+        'discount': material.discount,
       });
 
       return "Se ha realizado exitosamente el registro del material";
@@ -78,7 +79,7 @@ class MaterialsRequest {
       Materials material, String urlOld) async {
     try {
       await deleteMaterialPhoto(urlOld);
-      final urlNew = await _uploadImageToFirebase(material.urlPhoto);
+      final urlNew = await _uploadImageToFirebase(material.url_photo);
       await database.collection('materials').doc(material.id).update({
         'url_photo': urlNew,
         'name': material.name,
@@ -91,6 +92,7 @@ class MaterialsRequest {
         'quantity': material.quantity,
         'description': material.description,
         'status': material.status,
+        'discount': material.discount,
       });
 
       return "Se ha actualizado exitosamente el material";
@@ -107,7 +109,7 @@ class MaterialsRequest {
       List<Materials> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
         return Materials(
-          urlPhoto: data['url_photo'] ?? '',
+          url_photo: data['url_photo'] ?? '',
           name: data['name'] ?? '',
           code: data['code'] ?? '',
           unit: data['unit'] ?? '',
@@ -118,6 +120,7 @@ class MaterialsRequest {
           quantity: data['quantity'] ?? '',
           description: data['description'] ?? '',
           status: data['status'] ?? '',
+          discount: data['discount'] ?? '',
           id: doc.id,
         );
       }).toList();
@@ -140,7 +143,7 @@ class MaterialsRequest {
       List<Materials> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
         return Materials(
-          urlPhoto: data['url_photo'] ?? '',
+          url_photo: data['url_photo'] ?? '',
           name: data['name'] ?? '',
           code: data['code'] ?? '',
           unit: data['unit'] ?? '',
@@ -151,6 +154,7 @@ class MaterialsRequest {
           quantity: data['quantity'] ?? '',
           description: data['description'] ?? '',
           status: data['status'] ?? '',
+          discount: data['discount'] ?? '',
           id: doc.id,
         );
       }).toList();

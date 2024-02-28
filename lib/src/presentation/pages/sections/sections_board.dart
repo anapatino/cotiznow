@@ -16,7 +16,7 @@ class Sections extends StatefulWidget {
 }
 
 class _SectionsState extends State<Sections> {
-  late final TextEditingController? controllerSearch;
+  final TextEditingController controllerSearch = TextEditingController();
   int activeIndex = -1;
   double screenWidth = 0;
   double screenHeight = 0;
@@ -29,16 +29,14 @@ class _SectionsState extends State<Sections> {
   @override
   void initState() {
     super.initState();
-    controllerSearch = TextEditingController();
-    controllerSearch?.addListener(() {
-      filterSections(controllerSearch!.text);
+    controllerSearch.addListener(() {
+      filterSections(controllerSearch.text);
     });
   }
 
   @override
   void dispose() {
-    controllerSearch?.clear();
-
+    controllerSearch.dispose();
     super.dispose();
   }
 

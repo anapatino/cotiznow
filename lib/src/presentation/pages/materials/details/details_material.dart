@@ -16,7 +16,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
   void initState() {
     super.initState();
     material = Materials(
-        urlPhoto: parameters?['urlPhoto'],
+        url_photo: parameters?['url_photo'],
         name: parameters?['name'],
         code: parameters?['code'],
         unit: parameters?['unit'],
@@ -27,7 +27,8 @@ class _MaterialDetailsState extends State<MaterialDetails> {
         quantity: parameters?['quantity'],
         description: parameters?['description'],
         id: parameters?['id'],
-        status: parameters?['status']);
+        status: parameters?['status'],
+        discount: '');
   }
 
   @override

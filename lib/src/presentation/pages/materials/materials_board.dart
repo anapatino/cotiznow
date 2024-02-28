@@ -30,7 +30,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   List<Materials> filteredMaterials = [];
 
   Materials material = Materials(
-      urlPhoto: '',
+      url_photo: '',
       name: '',
       unit: '',
       size: '',
@@ -41,7 +41,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
       description: '',
       status: '',
       id: '',
-      code: '');
+      code: '',
+      discount: '');
 
   @override
   void initState() {

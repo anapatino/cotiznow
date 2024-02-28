@@ -29,7 +29,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   List<Section> sections = [];
   MaterialsController materialController = Get.find();
   SectionsController sectionsController = Get.find();
-  String urlPhoto = "";
+  String url_photo = "";
   String? selectedOption;
   String? selectedOptionSectionId;
 
@@ -54,7 +54,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     controllerSalePrice.clear();
     controllerPurchasePrice.clear();
     controllerCode.clear();
-    urlPhoto = "";
+    url_photo = "";
   }
 
   void _onCancelForm() {
@@ -79,7 +79,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
 
     if (pickedFile != null) {
       setState(() {
-        urlPhoto = pickedFile.path;
+        url_photo = pickedFile.path;
       });
     }
   }
@@ -104,7 +104,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         code.isNotEmpty &&
         purchasePrice.isNotEmpty) {
       Materials material = Materials(
-        urlPhoto: urlPhoto,
+        url_photo: url_photo,
         name: name,
         unit: unit,
         size: size,
@@ -116,9 +116,10 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         status: widget.material.status,
         id: widget.material.id,
         code: code,
+        discount: '',
       );
       materialController
-          .updateMaterial(material, widget.material.urlPhoto)
+          .updateMaterial(material, widget.material.url_photo)
           .then((value) async {
         Get.snackbar(
           'Actualizacion de material exitoso',

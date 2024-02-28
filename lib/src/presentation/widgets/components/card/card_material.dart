@@ -57,9 +57,9 @@ class CardMaterialSimple extends StatelessWidget {
                   ),
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: material.urlPhoto.isNotEmpty
+                child: material.url_photo.isNotEmpty
                     ? Image.network(
-                        material.urlPhoto,
+                        material.url_photo,
                         fit: BoxFit.cover,
                       )
                     : const Center(
