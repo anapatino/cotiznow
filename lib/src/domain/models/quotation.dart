@@ -45,4 +45,20 @@ class Quotation {
       width: json?['width'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'id_section': idSection,
+      'id_service': idService,
+      'length': length,
+      'materials':
+          materials.values.map((material) => material.toJson()).toList(),
+      'status': status,
+      'total': total,
+      'width': width,
+      'id': id,
+    };
+  }
 }

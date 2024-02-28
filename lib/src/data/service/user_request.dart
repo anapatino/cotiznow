@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/models/user.dart';
@@ -62,7 +63,8 @@ class UserRequest {
         'address': user.address,
         'account': user.account,
         'role': user.role,
-        'authId': user.authId
+        'authId': user.authId,
+        'quotationIds': user.quotationIds,
       });
     } catch (e) {
       throw Future.error('Error al registrar usuario en la base de datos');
@@ -70,10 +72,7 @@ class UserRequest {
   }
 
   static Future<String> updateUserData(Users user) async {
-    //final User? newUser = authentication.currentUser;
-
     try {
-      //await newUser?.updateEmail(user.email);
       await database.collection('users').doc(user.id).update({
         'name': user.name,
         'lastName': user.lastName,
@@ -82,7 +81,8 @@ class UserRequest {
         'address': user.address,
         'account': user.account,
         'role': user.role,
-        'authId': user.authId
+        'authId': user.authId,
+        'quotationIds': user.quotationIds,
       });
 
       return "Se ha actualizado exitosamente el usuario";
@@ -96,8 +96,15 @@ class UserRequest {
     await database.collection('users').get().then((value) {
       for (var doc in value.docs) {
         if (doc.data()['authId'] == authId) {
+          List<String> quotationIds =
+              (doc.data()['quotationIds'] as List<dynamic>?)
+                      ?.map((id) => id as String)
+                      .toList() ??
+                  [];
+
           user = Users.fromJson(doc.data());
           user!.id = doc.id;
+          user!.quotationIds = quotationIds;
         }
       }
     });

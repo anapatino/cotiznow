@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../domain/domain.dart';
 
-class QuotesRequest {
+class QuotationRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
 
   static Future<String> quoteRegistration(Quotation quotation) async {
@@ -48,6 +48,7 @@ class QuotesRequest {
 
       List<Quotation> quotations = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id;
         return Quotation.fromJson(data);
       }).toList();
 

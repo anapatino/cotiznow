@@ -45,7 +45,8 @@ class Register extends StatelessWidget {
             role: role,
             account: account,
             id: '',
-            authId: '');
+            authId: '',
+            quotationIds: []);
         userController.register(user, password, true).then((value) async {
           if (userController.userEmail.isNotEmpty) {
             //await publicityController.viewPublicity();
