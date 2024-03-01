@@ -26,12 +26,12 @@ class Login extends StatelessWidget {
             //await publicityController.viewPublicity();
             if (userController.role == "cliente" &&
                 userController.account == "activa") {
-              Get.offAll(() => Customer());
+              Get.offAll(() => CustomerDashboard());
             }
             if (userController.role == "administrador" ||
                 userController.role == "super administrador" &&
                     userController.account == "activa") {
-              Get.offAll(() => Administrator());
+              Get.offAll(() => AdministratorDashboard());
             }
           }
         }).catchError((error) {
@@ -140,7 +140,7 @@ class Login extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                      top: screenHeight * 0.1,
+                      top: screenHeight * 0.18,
                       left: screenWidth * 0.14,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,5 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/pages.dart';
-import '../pages/dashboard/administrator.dart';
 import '../widgets/components/drawer.dart';
 
 class AdministratorRoutes {
@@ -13,13 +12,16 @@ class AdministratorRoutes {
 
   static const String services = '/services';
   static const String quotations = '/quotations';
+  static const String quotationsDetails = '/details-quotation';
+  static const String quotationsRegistration = '/registration-quotation';
+
   static const String discounts = '/discounts';
   static const String exit = '/principal';
 
   static final routes = [
     GetPage(
       name: administrator,
-      page: () => Administrator(),
+      page: () => AdministratorDashboard(),
     ),
     GetPage(
       name: profiles,
@@ -47,11 +49,19 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: discounts,
-      page: () => const Main(),
+      page: () => Discount(),
     ),
     GetPage(
       name: quotations,
       page: () => QuotationPanel(),
+    ),
+    GetPage(
+      name: quotationsRegistration,
+      page: () => const RegisterQuotation(),
+    ),
+    GetPage(
+      name: quotationsDetails,
+      page: () => const RegisterQuotation(),
     ),
     GetPage(
       name: exit,

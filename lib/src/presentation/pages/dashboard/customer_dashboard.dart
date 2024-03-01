@@ -5,10 +5,10 @@ import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
-class Customer extends StatelessWidget {
+class CustomerDashboard extends StatelessWidget {
   UserController userController = Get.find();
 
-  Customer({super.key});
+  CustomerDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {

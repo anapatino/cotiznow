@@ -128,10 +128,10 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
           return Center(child: Text(snapshot.error.toString()));
         }
         final materials = snapshot.data!;
-        List<Materials> filteredMaterials =
+        filteredMaterials =
             materials.where((material) => material.status == 'activo').toList();
         if (controllerSearch.text.isNotEmpty) {
-          filteredMaterials = materials
+          filteredMaterials = filteredMaterials
               .where((material) =>
                   material.name
                       .toLowerCase()
@@ -140,7 +140,6 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                   material.status == 'activo')
               .toList();
         }
-
         return _buildCardMaterial(filteredMaterials);
       },
     );

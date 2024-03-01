@@ -1,2 +1,2 @@
-export 'administrator.dart';
-export 'customer.dart';
+export 'administrator_dashboard.dart';
+export 'customer_dashboard.dart';

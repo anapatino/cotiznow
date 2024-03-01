@@ -13,7 +13,7 @@ class CustomerRoutes {
   static final routes = [
     GetPage(
       name: customer,
-      page: () => Customer(),
+      page: () => CustomerDashboard(),
     ),
     GetPage(
       name: profiles,

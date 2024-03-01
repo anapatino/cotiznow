@@ -149,7 +149,7 @@ class _ServicesPanel extends State<ServicesPanel> {
           setState(() {
             if (searchText.isEmpty) {
               filteredServices = widget.serviceController.servicesList
-                      ?.where((service) => service.status == 'activa')
+                      ?.where((service) => service.status == 'activo')
                       .toList() ??
                   [];
             } else {
@@ -158,7 +158,7 @@ class _ServicesPanel extends State<ServicesPanel> {
                       service.name
                           .toLowerCase()
                           .contains(searchText.toLowerCase()) &&
-                      service.status == 'activa')
+                      service.status == 'activo')
                   .toList();
             }
           });
@@ -177,14 +177,14 @@ class _ServicesPanel extends State<ServicesPanel> {
         }
         final services = snapshot.data!;
         List<Service> filteredServices =
-            services.where((service) => service.status == 'activa').toList();
+            services.where((service) => service.status == 'activo').toList();
         if (controllerSearch.text.isNotEmpty) {
           filteredServices = services
               .where((service) =>
                   service.name
                       .toLowerCase()
                       .contains(controllerSearch.text.toLowerCase()) &&
-                  service.status == 'activa')
+                  service.status == 'activo')
               .toList();
         }
 

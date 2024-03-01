@@ -5,10 +5,10 @@ import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
-class Administrator extends StatelessWidget {
+class AdministratorDashboard extends StatelessWidget {
   UserController userController = Get.find();
 
-  Administrator({Key? key}) : super(key: key);
+  AdministratorDashboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,89 +1,110 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/domain.dart';
 
 class CardQuotation extends StatelessWidget {
-  final Quotation quotation;
+  final Color backgroundColor;
+  final String title;
+  final String description;
+  final String status;
+  final String total;
+  final Function onTap;
   final Function onLongPress;
+  final bool showDescription;
+  final bool showIcon;
 
   const CardQuotation(
-      {super.key, required this.onLongPress, required this.quotation});
+      {super.key,
+      required this.onLongPress,
+      required this.backgroundColor,
+      this.showDescription = false,
+      this.showIcon = false,
+      required this.title,
+      required this.description,
+      required this.status,
+      required this.total,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.only(bottom: screenHeight * 0.02),
-      child: InkWell(
-        onTap: () {
-          Get.toNamed('/details-quotation', arguments: {
-            'name': quotation.name,
-            'description': quotation.description,
-            'id_section': quotation.idSection,
-            'id_service': quotation.idService,
-            'length': quotation.length,
-            'materials': quotation.materials.values
-                .map((material) => material.toJson())
-                .toList(),
-            'status': quotation.status,
-            'total': quotation.total,
-            'width': quotation.width,
-          });
-        },
-        onLongPress: () {
-          onLongPress();
-        },
-        child: Expanded(
-          child: Container(
-            width: screenWidth * 0.85,
-            height: screenHeight * 0.138,
-            decoration: BoxDecoration(
-              color: Palette.accent,
-              borderRadius: BorderRadius.circular(25),
+    return InkWell(
+      onTap: () {
+        onTap();
+      },
+      onLongPress: () {
+        onLongPress();
+      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+        child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.02,
+              horizontal: screenWidth * 0.08,
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.02,
-                  horizontal: screenWidth * 0.03),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: screenWidth * 0.55,
-                    child: Text(
-                      quotation.name,
-                      style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child: Text(
+                    title,
+                    style: GoogleFonts.varelaRound(
+                      fontSize: screenWidth * 0.049,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
                     ),
                   ),
-                  Text(
-                    'Estado: ${quotation.status}',
-                    style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.03,
+                ),
+                Text(
+                  'Estado: $status',
+                  style: GoogleFonts.varelaRound(
+                    fontSize: screenWidth * 0.04,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+                if (showDescription)
+                  SizedBox(
+                    width: screenWidth * 0.7,
+                    child: Text(
+                      description,
+                      style: GoogleFonts.varelaRound(
+                        fontSize: screenWidth * 0.033,
                         fontWeight: FontWeight.w300,
-                        color: Colors.white),
-                  ),
-                  SizedBox(
-                    width: screenWidth * 0.55,
-                    child: Text(
-                      quotation.description,
-                      style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.025,
-                          fontWeight: FontWeight.w300),
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  Text(
-                    'Total: ${quotation.total}',
-                    style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.03,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  ),
-                ],
-              ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Total: $total',
+                      style: GoogleFonts.varelaRound(
+                        fontSize: screenWidth * 0.047,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    if (showIcon)
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.download_for_offline_rounded,
+                          color: Colors.white,
+                          size: screenWidth * 0.098,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

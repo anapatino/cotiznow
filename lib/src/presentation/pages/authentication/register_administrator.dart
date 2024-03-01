@@ -49,16 +49,16 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
         password.isNotEmpty &&
         address.isNotEmpty) {
       Users user = Users(
-          name: name,
-          lastName: lastName,
-          phone: phone,
-          address: address,
-          email: email,
-          role: role!,
-          account: account,
-          id: '',
-          authId: '',
-          quotationIds: []);
+        name: name,
+        lastName: lastName,
+        phone: phone,
+        address: address,
+        email: email,
+        role: role!,
+        account: account,
+        id: '',
+        authId: '',
+      );
       userController.register(user, password, false).then((value) async {
         if (userController.userEmail.isNotEmpty) {
           Get.snackbar(

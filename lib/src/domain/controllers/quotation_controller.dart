@@ -38,9 +38,10 @@ class QuotationController extends GetxController {
     }
   }
 
-  Future<List<Quotation>> getAllQuotationsByUser(String userId) async {
+  Future<List<Quotation>> getQuotationsByUserId(String userId) async {
     try {
-      List<Quotation> list = await QuotationRequest.getQuotationsByUser(userId);
+      List<Quotation> list =
+          await QuotationRequest.getQuotationsByUserId(userId);
       _quotationsListByUser.value = list;
       return list;
     } catch (e) {

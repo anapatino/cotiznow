@@ -7,10 +7,11 @@ class Quotation {
   String idSection;
   String idService;
   String length;
-  Map<String, Materials> materials;
+  List<Materials> materials;
   String status;
   String total;
   String width;
+  String userId;
 
   Quotation({
     required this.id,
@@ -23,6 +24,7 @@ class Quotation {
     required this.status,
     required this.total,
     required this.width,
+    required this.userId,
   });
 
   factory Quotation.fromJson(Map<String, dynamic>? json) {
@@ -33,16 +35,14 @@ class Quotation {
       idSection: json?['id_section'] ?? '',
       idService: json?['id_service'] ?? '',
       length: json?['length'] ?? '',
-      materials: (json?['materials'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(
-              key,
-              Materials.fromJson(value as Map<String, dynamic>?),
-            ),
-          ) ??
-          {},
+      materials: (json?['materials'] as List<dynamic>?)
+              ?.map((materialJson) => Materials.fromJson(materialJson))
+              .toList() ??
+          [],
       status: json?['status'] ?? '',
       total: json?['total'] ?? '',
       width: json?['width'] ?? '',
+      userId: json?['userId'] ?? '',
     );
   }
 
@@ -53,12 +53,12 @@ class Quotation {
       'id_section': idSection,
       'id_service': idService,
       'length': length,
-      'materials':
-          materials.values.map((material) => material.toJson()).toList(),
+      'materials': materials.map((material) => material.toJson()).toList(),
       'status': status,
       'total': total,
       'width': width,
       'id': id,
+      'userId': userId,
     };
   }
 }

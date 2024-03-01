@@ -1,7 +1,5 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
-
-import '../../../domain/controllers/controllers.dart';
 import '../../widgets/components/components.dart';
 import '../dashboard/dashboard.dart';
 
@@ -37,20 +35,20 @@ class Register extends StatelessWidget {
           password.isNotEmpty &&
           address.isNotEmpty) {
         Users user = Users(
-            name: name,
-            lastName: lastName,
-            phone: phone,
-            address: address,
-            email: email,
-            role: role,
-            account: account,
-            id: '',
-            authId: '',
-            quotationIds: []);
+          name: name,
+          lastName: lastName,
+          phone: phone,
+          address: address,
+          email: email,
+          role: role,
+          account: account,
+          id: '',
+          authId: '',
+        );
         userController.register(user, password, true).then((value) async {
           if (userController.userEmail.isNotEmpty) {
             //await publicityController.viewPublicity();
-            Get.offAll(() => Customer());
+            Get.offAll(() => CustomerDashboard());
           }
         }).catchError((error) {
           Get.snackbar(

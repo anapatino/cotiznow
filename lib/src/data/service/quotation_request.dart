@@ -8,53 +8,24 @@ class QuotationRequest {
   static Future<String> quoteRegistration(
       Quotation quotation, String userId) async {
     try {
-      DocumentReference quotationRef =
-          await database.collection('quotations').add({
+      await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
         'id_section': quotation.idSection,
         'id_service': quotation.idService,
         'length': quotation.length,
-        'materials': quotation.materials.values
-            .map((material) => material.toJson())
-            .toList(),
+        'materials':
+            quotation.materials.map((material) => material.toJson()).toList(),
         'status': quotation.status,
         'total': quotation.total,
         'width': quotation.width,
+        'userId': quotation.userId,
       });
-
-      String quotationId = quotationRef.id;
-
-      await updateQuotationIdInUser(userId, quotationId);
 
       return "Se ha realizado exitosamente el registro de una cotización";
     } catch (e) {
       throw Future.error(
           'Error al registrar la cotización en la base de datos: $e');
-    }
-  }
-
-  static Future<void> updateQuotationIdInUser(
-      String userId, String quotationId) async {
-    try {
-      DocumentSnapshot userSnapshot =
-          await database.collection('users').doc(userId).get();
-
-      if (userSnapshot.exists && userSnapshot.data() != null) {
-        List<String> quotationIds =
-            (userSnapshot.data() as Map<String, dynamic>)['quotationIds'] ?? [];
-
-        quotationIds.add(quotationId);
-
-        await database.collection('users').doc(userId).update({
-          'quotationIds': quotationIds,
-        });
-      } else {
-        throw Future.error('Usuario no encontrado o sin quotationIds');
-      }
-    } catch (e) {
-      throw Future.error(
-          'Error al actualizar el ID de cotización en la colección de usuarios: $e');
     }
   }
 
@@ -89,34 +60,22 @@ class QuotationRequest {
     }
   }
 
-  static Future<List<Quotation>> getQuotationsByUser(String userId) async {
+  static Future<List<Quotation>> getQuotationsByUserId(String userId) async {
     try {
-      DocumentSnapshot userSnapshot =
-          await database.collection('users').doc(userId).get();
+      QuerySnapshot querySnapshot = await database
+          .collection('quotations')
+          .where('userId', isEqualTo: userId)
+          .get();
 
-      if (userSnapshot.exists && userSnapshot.data() != null) {
-        List<dynamic> quotationIds =
-            (userSnapshot.data() as Map<String, dynamic>)['quotationIds'] ?? [];
+      List<Quotation> quotations = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id;
+        return Quotation.fromJson(data);
+      }).toList();
 
-        List<Quotation> quotations = [];
-        for (String quotationId in quotationIds) {
-          DocumentSnapshot quotationSnapshot =
-              await database.collection('quotations').doc(quotationId).get();
-
-          if (quotationSnapshot.exists) {
-            Map<String, dynamic> data =
-                quotationSnapshot.data() as Map<String, dynamic>;
-            data['id'] = quotationSnapshot.id;
-            quotations.add(Quotation.fromJson(data));
-          }
-        }
-
-        return quotations;
-      } else {
-        throw Future.error('Usuario no encontrado o sin quotationIds');
-      }
+      return quotations;
     } catch (e) {
-      throw Future.error('Error al obtener cotizaciones por usuario: $e');
+      throw Future.error('Error al obtener las cotizaciones por userId: $e');
     }
   }
 

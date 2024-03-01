@@ -1,6 +1,8 @@
 export 'app.dart';
 export 'authentication/authentication.dart';
 export 'customer/customer.dart';
+export 'dashboard/dashboard.dart';
+export 'discount/discount.dart';
 export 'main.dart';
 export 'materials/materials.dart';
 export 'profile/profile.dart';

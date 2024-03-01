@@ -100,7 +100,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       account: account,
       id: userController.idUser,
       authId: userController.authId,
-      quotationIds: [],
     );
 
     try {

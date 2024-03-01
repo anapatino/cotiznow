@@ -64,7 +64,6 @@ class UserRequest {
         'account': user.account,
         'role': user.role,
         'authId': user.authId,
-        'quotationIds': user.quotationIds,
       });
     } catch (e) {
       throw Future.error('Error al registrar usuario en la base de datos');
@@ -82,7 +81,6 @@ class UserRequest {
         'account': user.account,
         'role': user.role,
         'authId': user.authId,
-        'quotationIds': user.quotationIds,
       });
 
       return "Se ha actualizado exitosamente el usuario";
@@ -96,15 +94,8 @@ class UserRequest {
     await database.collection('users').get().then((value) {
       for (var doc in value.docs) {
         if (doc.data()['authId'] == authId) {
-          List<String> quotationIds =
-              (doc.data()['quotationIds'] as List<dynamic>?)
-                      ?.map((id) => id as String)
-                      .toList() ??
-                  [];
-
           user = Users.fromJson(doc.data());
           user!.id = doc.id;
-          user!.quotationIds = quotationIds;
         }
       }
     });

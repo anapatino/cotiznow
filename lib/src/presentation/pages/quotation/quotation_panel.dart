@@ -19,16 +19,25 @@ class _QuotationPanelState extends State<QuotationPanel> {
   double screenHeight = 0;
   bool isContainerVisible = false;
   String? selectedOption;
+  Materials material = Materials(
+      url_photo:
+          'https://firebasestorage.googleapis.com/v0/b/cotiznow-a609d.appspot.com/o/images%2F1000050874.jpg?alt=media&token=47b1929d-2c38-4471-abac-76032edbd671',
+      name: 'Arena de peña 40kg',
+      code: '00001',
+      unit: '',
+      size: '',
+      purchasePrice: '16000',
+      salePrice: '22000',
+      sectionId: 'pklvjcLwk0CV3D8NidRY',
+      quantity: '26',
+      description: 'tipo Arenapanete pega ensacado',
+      status: 'activo',
+      id: '5bWSF13kkBlIg2RFVl7a',
+      discount: '');
 
   @override
   void initState() {
     super.initState();
-  }
-
-  void _toggleContainerVisibility() {
-    setState(() {
-      isContainerVisible = !isContainerVisible;
-    });
   }
 
   Widget _buildQuotationList() {
@@ -36,7 +45,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
       future: widget.userController.role == "cliente"
           ? widget.quotationController.getAllQuotations()
           : widget.quotationController
-              .getAllQuotationsByUser(widget.userController.idUser),
+              .getQuotationsByUserId(widget.userController.idUser),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -86,6 +95,19 @@ class _QuotationPanelState extends State<QuotationPanel> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     List<String> options = ['pendiente', 'terminada', 'rechazada'];
+    Quotation quotation = Quotation(
+        id: 'ASDFGHJKLQWERTYUIOP',
+        name: 'Instalacion de baño con materiales',
+        description:
+            'Quisiera cotizar la instalación completa de un baño moderno',
+        idSection: 'isqsvCxniHwm3Fitg0Pk',
+        idService: 'h2x42Mwb5u1IS9arelTU',
+        length: '24 m',
+        status: 'pendiente',
+        total: '38000',
+        width: '34 m',
+        materials: [material],
+        userId: '');
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: SafeArea(
@@ -100,43 +122,54 @@ class _QuotationPanelState extends State<QuotationPanel> {
               ? CustomerRoutes().itemConfigs
               : AdministratorRoutes().itemConfigs,
         ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Cotizaciones",
-                    style: GoogleFonts.varelaRound(
-                      color: Colors.black,
-                      fontSize: screenWidth * 0.06,
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  //_buildQuotationList(),
-                ],
-              ),
-            ),
-            /*Positioned(
-                top: isContainerVisible
-                    ? screenHeight * 0.02
-                    : screenHeight * 0.97,
-                child: SingleChildScrollView(
-                  child: AdministratorRegistration(
-                    onCancelRegistration: () {
-                      _toggleContainerVisibility();
-                    },
-                  ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Cotizaciones",
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.06,
                 ),
-              ),*/
-          ],
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              //_buildQuotationList(),
+              CardQuotation(
+                onLongPress: () {
+                  showDeleteAlert(quotation);
+                },
+                backgroundColor: Palette.accent,
+                title: quotation.name,
+                description: quotation.description,
+                status: quotation.status,
+                total: quotation.total,
+                onTap: () {
+                  /*Get.toNamed('/details-quotation', arguments: {
+                    'name': quotation.name,
+                    'description': quotation.description,
+                    'id_section': quotation.idSection,
+                    'id_service': quotation.idService,
+                    'length': quotation.length,
+                    'materials': quotation.materials
+                        .map((material) => material.toJson())
+                        .toList(),
+                    'status': quotation.status,
+                    'total': quotation.total,
+                    'width': quotation.width,
+                  });*/
+                },
+              ),
+            ],
+          ),
         ),
         floatingActionButton: isContainerVisible
             ? const SizedBox()
             : FloatingActionButton(
-                onPressed: _toggleContainerVisibility,
+                onPressed: () {
+                  Get.toNamed('/registration-quotation');
+                },
                 backgroundColor: Palette.primary,
                 child: Icon(
                   Icons.add,

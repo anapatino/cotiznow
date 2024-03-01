@@ -176,6 +176,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
                       controller: controllerName,
                     ),
                     CustomTextField(
+                      maxLine: 8,
                       icon: Icons.dehaze_rounded,
                       hintText: 'Descripcion',
                       isPassword: false,

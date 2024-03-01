@@ -14,8 +14,6 @@ class UserController extends GetxController {
   final Rx<dynamic> _id = "".obs;
   final Rx<dynamic> _authId = "".obs;
   final Rxn<List<Users>> _listUsers = Rxn<List<Users>>();
-  final Rxn<List<String>> _listQuotation = Rxn<List<String>>();
-  final Rxn<List<Quotation>> _listAllQuotation = Rxn<List<Quotation>>();
 
   String get userEmail => _email.value;
   String get name => _name.value;
@@ -28,8 +26,6 @@ class UserController extends GetxController {
   String get authId => _authId.value;
 
   List<Users>? get listUsers => _listUsers.value;
-  List<String>? get listQuotation => _listQuotation.value;
-  List<Quotation>? get listAllQuotation => _listAllQuotation.value;
 
   Future<List<Users>> getUsersList() async {
     try {
@@ -61,7 +57,6 @@ class UserController extends GetxController {
     _phone.value = user.phone;
     _id.value = user.id;
     _authId.value = user.authId;
-    _listQuotation.value = user.quotationIds;
   }
 
   Future<void> register(
