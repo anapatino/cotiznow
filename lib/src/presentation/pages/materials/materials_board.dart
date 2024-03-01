@@ -1,6 +1,5 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/materials/materials.dart';
-import 'package:cotiznow/src/presentation/widgets/components/card/card_material.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
@@ -8,7 +7,6 @@ import '../../widgets/components/components.dart';
 class MaterialsBoard extends StatefulWidget {
   final MaterialsController materialController = Get.find();
   final SectionsController sectionsController = Get.find();
-
   final UserController userController = Get.find();
   MaterialsBoard({super.key});
 
@@ -17,7 +15,7 @@ class MaterialsBoard extends StatefulWidget {
 }
 
 class _MaterialsBoardState extends State<MaterialsBoard> {
-  late final TextEditingController? controllerSearch;
+  TextEditingController controllerSearch = TextEditingController();
 
   int activeIndex = -1;
   String sectionId = "";
@@ -47,10 +45,6 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   @override
   void initState() {
     super.initState();
-    controllerSearch = TextEditingController();
-    controllerSearch?.addListener(() {
-      filterMaterials(controllerSearch!.text);
-    });
   }
 
   void toggleUpdateFormVisibility(Materials selectMaterial) {
@@ -91,7 +85,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
-            sections.where((section) => section.status == 'enable').toList();
+            sections.where((section) => section.status == 'activo').toList();
         return _buildRoundIconButtons(filteredSections);
       },
     );
@@ -100,7 +94,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   Widget _buildRoundIconButtons(List<Section> sections) {
     return SizedBox(
       width: screenWidth * 0.86,
-      height: screenHeight * 0.13,
+      height: screenHeight * 0.15,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: sections.length,
@@ -135,7 +129,18 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         }
         final materials = snapshot.data!;
         List<Materials> filteredMaterials =
-            materials.where((material) => material.status == 'enable').toList();
+            materials.where((material) => material.status == 'activo').toList();
+        if (controllerSearch.text.isNotEmpty) {
+          filteredMaterials = materials
+              .where((material) =>
+                  material.name
+                      .toLowerCase()
+                      .contains(controllerSearch.text.toLowerCase()) &&
+                  material.sectionId == sectionId &&
+                  material.status == 'activo')
+              .toList();
+        }
+
         return _buildCardMaterial(filteredMaterials);
       },
     );
@@ -155,8 +160,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
             return CardMaterialSimple(
                 material: material,
                 onClick: () {
-                  /*Get.toNamed('/details-material', arguments: {
-                    'urlPhoto': material.urlPhoto,
+                  Get.toNamed('/details-material', arguments: {
+                    'urlPhoto': material.url_photo,
                     'name': material.name,
                     'code': material.code,
                     'unit': material.unit,
@@ -168,7 +173,8 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                     'description': material.description,
                     'id': material.id,
                     'status': material.status,
-                  });*/
+                    'discount': material.discount,
+                  });
                 },
                 onLongPress: () {
                   toggleUpdateStatusVisibility(material);
@@ -185,17 +191,19 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   void filterMaterials(String searchText) {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
           if (searchText.isEmpty) {
-            filteredMaterials = widget.materialController.materialsList
-                    ?.where((material) => material.status == 'enable')
-                    .toList() ??
-                [];
+            filteredMaterials = (widget.materialController.materialsList ?? [])
+                .where((material) =>
+                    material.status == 'activo' &&
+                    material.sectionId == sectionId)
+                .toList();
           } else {
-            filteredMaterials = widget.materialController.materialsList!
+            filteredMaterials = (widget.materialController.materialsList ?? [])
                 .where((material) =>
                     material.name
                         .toLowerCase()
                         .contains(searchText.toLowerCase()) &&
-                    material.status == 'enable')
+                    material.sectionId == sectionId &&
+                    material.status == 'activo')
                 .toList();
           }
         }));
@@ -246,7 +254,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                           onChanged: (value) {
                             filterMaterials(value);
                           },
-                          controller: controllerSearch!,
+                          controller: controllerSearch,
                         ),
                       ],
                     ),

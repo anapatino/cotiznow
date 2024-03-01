@@ -241,7 +241,7 @@ class _ServicesPanel extends State<ServicesPanel> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         String message = await widget.serviceController
-            .updateServiceStatus(service.id, 'inactiva');
+            .updateServiceStatus(service.id, 'inactivo');
         Get.snackbar(
           'Éxito',
           message,

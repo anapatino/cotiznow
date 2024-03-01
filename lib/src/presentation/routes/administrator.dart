@@ -1,11 +1,6 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/materials/details/details_material.dart';
-import 'package:cotiznow/src/presentation/pages/materials/materials_board.dart';
-import 'package:cotiznow/src/presentation/pages/profile/profile_details.dart';
-import 'package:cotiznow/src/presentation/pages/sections/sections_board.dart';
+import 'package:cotiznow/src/presentation/pages/pages.dart';
 import '../pages/dashboard/administrator.dart';
-import '../pages/customer/customer_panel.dart';
-import '../pages/services/services_panel.dart';
 import '../widgets/components/drawer.dart';
 
 class AdministratorRoutes {
@@ -17,7 +12,7 @@ class AdministratorRoutes {
   static const String details = '/details-material';
 
   static const String services = '/services';
-  static const String quotes = '/quotes';
+  static const String quotations = '/quotations';
   static const String discounts = '/discounts';
   static const String exit = '/principal';
 
@@ -55,6 +50,10 @@ class AdministratorRoutes {
       page: () => const Main(),
     ),
     GetPage(
+      name: quotations,
+      page: () => QuotationPanel(),
+    ),
+    GetPage(
       name: exit,
       page: () => const Main(),
     ),
@@ -89,7 +88,7 @@ class AdministratorRoutes {
     DrawerItemConfig(
       icon: Icons.request_quote,
       title: 'Cotizaciones',
-      routeName: quotes,
+      routeName: quotations,
     ),
     DrawerItemConfig(
       icon: Icons.percent,

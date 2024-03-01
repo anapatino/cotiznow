@@ -80,17 +80,20 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String unit = controllerUnit.text;
-    String size = selectedOption!;
+    String size = "";
     String quantity = controllerQuantity.text;
     String sectionId = selectedOptionSectionId!;
     String salePrice = controllerSalePrice.text;
     String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
-    String status = "enable";
+    String status = "activo";
+    if (selectedOption != null) {
+      size = selectedOption!;
+    } else {
+      size = "";
+    }
     if (name.isNotEmpty &&
         description.isNotEmpty &&
-        unit.isNotEmpty &&
-        size.isNotEmpty &&
         quantity.isNotEmpty &&
         sectionId.isNotEmpty &&
         salePrice.isNotEmpty &&

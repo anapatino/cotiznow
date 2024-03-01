@@ -56,7 +56,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String price = controllerPrice.text;
-    String status = "enable";
+    String status = "activo";
     Service service = Service(
         id: widget.service.id,
         icon: icon,

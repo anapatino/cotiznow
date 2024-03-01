@@ -5,9 +5,11 @@ import '../../domain/domain.dart';
 class QuotationRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
 
-  static Future<String> quoteRegistration(Quotation quotation) async {
+  static Future<String> quoteRegistration(
+      Quotation quotation, String userId) async {
     try {
-      await database.collection('quotations').add({
+      DocumentReference quotationRef =
+          await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
         'id_section': quotation.idSection,
@@ -21,10 +23,38 @@ class QuotationRequest {
         'width': quotation.width,
       });
 
+      String quotationId = quotationRef.id;
+
+      await updateQuotationIdInUser(userId, quotationId);
+
       return "Se ha realizado exitosamente el registro de una cotización";
     } catch (e) {
       throw Future.error(
-          'Error al registrar la cotización en la base de datos');
+          'Error al registrar la cotización en la base de datos: $e');
+    }
+  }
+
+  static Future<void> updateQuotationIdInUser(
+      String userId, String quotationId) async {
+    try {
+      DocumentSnapshot userSnapshot =
+          await database.collection('users').doc(userId).get();
+
+      if (userSnapshot.exists && userSnapshot.data() != null) {
+        List<String> quotationIds =
+            (userSnapshot.data() as Map<String, dynamic>)['quotationIds'] ?? [];
+
+        quotationIds.add(quotationId);
+
+        await database.collection('users').doc(userId).update({
+          'quotationIds': quotationIds,
+        });
+      } else {
+        throw Future.error('Usuario no encontrado o sin quotationIds');
+      }
+    } catch (e) {
+      throw Future.error(
+          'Error al actualizar el ID de cotización en la colección de usuarios: $e');
     }
   }
 
@@ -56,6 +86,37 @@ class QuotationRequest {
     } catch (e) {
       throw Future.error(
           'Error al obtener todas las cotizaciones de la base de datos');
+    }
+  }
+
+  static Future<List<Quotation>> getQuotationsByUser(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot =
+          await database.collection('users').doc(userId).get();
+
+      if (userSnapshot.exists && userSnapshot.data() != null) {
+        List<dynamic> quotationIds =
+            (userSnapshot.data() as Map<String, dynamic>)['quotationIds'] ?? [];
+
+        List<Quotation> quotations = [];
+        for (String quotationId in quotationIds) {
+          DocumentSnapshot quotationSnapshot =
+              await database.collection('quotations').doc(quotationId).get();
+
+          if (quotationSnapshot.exists) {
+            Map<String, dynamic> data =
+                quotationSnapshot.data() as Map<String, dynamic>;
+            data['id'] = quotationSnapshot.id;
+            quotations.add(Quotation.fromJson(data));
+          }
+        }
+
+        return quotations;
+      } else {
+        throw Future.error('Usuario no encontrado o sin quotationIds');
+      }
+    } catch (e) {
+      throw Future.error('Error al obtener cotizaciones por usuario: $e');
     }
   }
 

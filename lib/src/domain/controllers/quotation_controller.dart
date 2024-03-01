@@ -2,14 +2,16 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/data/data.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 
-class QuotesController extends GetxController {
+class QuotationController extends GetxController {
   final Rxn<List<Quotation>> _quotationsList = Rxn<List<Quotation>>();
+  final Rxn<List<Quotation>> _quotationsListByUser = Rxn<List<Quotation>>();
 
   List<Quotation>? get quotationsList => _quotationsList.value;
+  List<Quotation>? get quotationsListByUser => _quotationsListByUser.value;
 
-  Future<String> registerQuotation(Quotation quotation) async {
+  Future<String> registerQuotation(Quotation quotation, String userId) async {
     try {
-      return await QuotationRequest.quoteRegistration(quotation);
+      return await QuotationRequest.quoteRegistration(quotation, userId);
     } catch (e) {
       throw Future.error('Error al registrar cotización en la base de datos');
     }
@@ -25,13 +27,25 @@ class QuotesController extends GetxController {
     }
   }
 
-  Future<void> getAllQuotations() async {
+  Future<List<Quotation>> getAllQuotations() async {
     try {
       List<Quotation> list = await QuotationRequest.getAllQuotations();
       _quotationsList.value = list;
+      return list;
     } catch (e) {
       throw Future.error(
           'Error al obtener todas las cotizaciones desde la base de datos');
+    }
+  }
+
+  Future<List<Quotation>> getAllQuotationsByUser(String userId) async {
+    try {
+      List<Quotation> list = await QuotationRequest.getQuotationsByUser(userId);
+      _quotationsListByUser.value = list;
+      return list;
+    } catch (e) {
+      throw Future.error(
+          'Error al obtener todas las cotizaciones de un usuario desde la base de datos');
     }
   }
 

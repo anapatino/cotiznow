@@ -1,6 +1,5 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/dashboard/customer.dart';
-import '../pages/profile/profile_details.dart';
+import 'package:cotiznow/src/presentation/pages/pages.dart';
 import '../widgets/components/drawer.dart';
 
 class CustomerRoutes {
@@ -8,6 +7,7 @@ class CustomerRoutes {
   static const String profiles = '/profiles';
   static const String sections = '/sections';
   static const String requestVisit = '/request-visit';
+  static const String quotations = '/quotations';
   static const String whatsapp = '/whatsapp';
   static const String exit = '/principal';
   static final routes = [
@@ -26,6 +26,10 @@ class CustomerRoutes {
     GetPage(
       name: requestVisit,
       page: () => const Main(),
+    ),
+    GetPage(
+      name: quotations,
+      page: () => QuotationPanel(),
     ),
     GetPage(
       name: whatsapp,
@@ -52,6 +56,11 @@ class CustomerRoutes {
       icon: Icons.person_pin_rounded,
       title: 'Solicitar visita',
       routeName: requestVisit,
+    ),
+    DrawerItemConfig(
+      icon: Icons.request_quote,
+      title: 'Cotizaciones',
+      routeName: quotations,
     ),
     DrawerItemConfig(
       icon: Icons.phone_rounded,

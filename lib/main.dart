@@ -12,6 +12,7 @@ void main() async {
     Get.put(SectionsController());
     Get.put(MaterialsController());
     Get.put(ServicesController());
+    Get.put(QuotationController());
 
     runApp(const App());
   } catch (e) {

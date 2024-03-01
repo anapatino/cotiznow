@@ -64,4 +64,25 @@ class Materials {
       'discount': discount,
     };
   }
+
+  static Materials createMaterialFromParameters(
+      Map<String, dynamic>? parameters) {
+    String? getValue(String key) => parameters?[key]?.toString();
+
+    return Materials(
+      url_photo: getValue('url_photo') ?? '',
+      name: getValue('name') ?? '',
+      code: getValue('code') ?? '',
+      unit: getValue('unit') ?? '',
+      size: getValue('size') ?? '',
+      purchasePrice: getValue('purchasePrice') ?? '',
+      salePrice: getValue('salePrice') ?? '',
+      sectionId: getValue('sectionId') ?? '',
+      quantity: getValue('quantity') ?? '',
+      description: getValue('description') ?? '',
+      id: getValue('id') ?? '',
+      status: getValue('status') ?? '',
+      discount: getValue('discount') ?? '',
+    );
+  }
 }

@@ -45,7 +45,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String price = controllerPrice.text;
-    String status = "enable";
+    String status = "activo";
     if (name.isNotEmpty &&
         description.isNotEmpty &&
         icon.isNotEmpty &&

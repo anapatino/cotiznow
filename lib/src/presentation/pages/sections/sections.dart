@@ -1,3 +1,3 @@
-export 'registration/register_section_form.dart';
+export 'registration/registration.dart';
 export 'sections_board.dart';
-export 'update/update_section_form.dart';
+export 'update/update.dart';

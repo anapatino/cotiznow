@@ -15,20 +15,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
   @override
   void initState() {
     super.initState();
-    material = Materials(
-        url_photo: parameters?['url_photo'],
-        name: parameters?['name'],
-        code: parameters?['code'],
-        unit: parameters?['unit'],
-        size: parameters?['size'],
-        purchasePrice: parameters?['purchasePrice'],
-        salePrice: parameters?['salePrice'],
-        sectionId: parameters?['sectionId'],
-        quantity: parameters?['quantity'],
-        description: parameters?['description'],
-        id: parameters?['id'],
-        status: parameters?['status'],
-        discount: '');
+    material = Materials.createMaterialFromParameters(parameters);
   }
 
   @override
@@ -55,18 +42,126 @@ class _MaterialDetailsState extends State<MaterialDetails> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-              child: Text(
-                "Detalles material",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.black,
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
+            Container(
+              width: screenWidth * 1,
+              height: screenHeight * 0.3,
+              decoration: const BoxDecoration(),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              child: material!.url_photo.isNotEmpty
+                  ? Image.network(
+                      material!.url_photo,
+                      fit: BoxFit.cover,
+                    )
+                  : const Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Colors.white,
+                        size: 40.0,
+                      ),
+                    ),
+            ),
+            Container(
+              width: screenWidth * 1,
+              height: screenHeight * 0.59,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
                 ),
               ),
-            ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.15,
+                    vertical: screenHeight * 0.06),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        material!.name,
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.064,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      Text(
+                        'Codigo: ${material!.code}',
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.045,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      Text(
+                        'Cantidad disponible: ${material!.quantity}',
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.045,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      Text(
+                        'Descripción',
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.045,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      Text(
+                        material!.description,
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.045,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Precio: ${material!.salePrice}',
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.black,
+                                fontSize: screenWidth * 0.055,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                            Text(
+                              material!.size,
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.black,
+                                fontSize: screenWidth * 0.055,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        material!.discount,
+                        style: GoogleFonts.varelaRound(
+                          color: Palette.accent,
+                          fontSize: screenWidth * 0.055,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

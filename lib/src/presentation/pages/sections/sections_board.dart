@@ -3,7 +3,6 @@ import 'package:cotiznow/src/presentation/pages/sections/sections.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
-import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
 class Sections extends StatefulWidget {
@@ -142,7 +141,7 @@ class _SectionsState extends State<Sections> {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
           if (searchText.isEmpty) {
             filteredSections = widget.sectionsController.sectionsList
-                    ?.where((section) => section.status == 'activa')
+                    ?.where((section) => section.status == 'activo')
                     .toList() ??
                 [];
           } else {
@@ -151,7 +150,7 @@ class _SectionsState extends State<Sections> {
                     section.name
                         .toLowerCase()
                         .contains(searchText.toLowerCase()) &&
-                    section.status == 'activa')
+                    section.status == 'activo')
                 .toList();
           }
         }));
@@ -169,14 +168,14 @@ class _SectionsState extends State<Sections> {
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
-            sections.where((section) => section.status == 'activa').toList();
+            sections.where((section) => section.status == 'activo').toList();
         if (controllerSearch.text.isNotEmpty) {
           filteredSections = sections
               .where((section) =>
                   section.name
                       .toLowerCase()
                       .contains(controllerSearch.text.toLowerCase()) &&
-                  section.status == 'activa')
+                  section.status == 'activo')
               .toList();
         }
 
@@ -233,7 +232,7 @@ class _SectionsState extends State<Sections> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         String message = await widget.sectionsController
-            .updateSectionStatus(section.id, 'inactiva');
+            .updateSectionStatus(section.id, 'inactivo');
         Get.snackbar(
           'Éxito',
           message,

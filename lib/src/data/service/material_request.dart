@@ -75,6 +75,22 @@ class MaterialsRequest {
     }
   }
 
+  static Future<String> changeDiscount(
+    String materialId,
+    String discount,
+  ) async {
+    try {
+      await database
+          .collection('materials')
+          .doc(materialId)
+          .update({'discount': discount});
+
+      return "Se ha actualizado correctamente el descuento al material";
+    } catch (e) {
+      throw Future.error('Error al modificar descuento en el material');
+    }
+  }
+
   static Future<String> updateMaterial(
       Materials material, String urlOld) async {
     try {

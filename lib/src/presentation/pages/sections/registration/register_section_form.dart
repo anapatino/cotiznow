@@ -37,7 +37,7 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
     String name = controllerName.text;
     String description = controllerDescription.text;
 
-    String status = "activa";
+    String status = "activo";
     if (name.isNotEmpty && description.isNotEmpty && icon.isNotEmpty) {
       sectionsController
           .registerSection(icon, name, description, status)

@@ -2,5 +2,8 @@ export 'app.dart';
 export 'authentication/authentication.dart';
 export 'customer/customer.dart';
 export 'main.dart';
+export 'materials/materials.dart';
 export 'profile/profile.dart';
+export 'quotation/quotation.dart';
 export 'sections/sections.dart';
+export 'services/services.dart';

@@ -1,7 +1,7 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
-import '../../widgets/components/components.dart';
 import '../authentication/authentication.dart';
 
 /// ignore: must_be_immutable
@@ -151,14 +151,11 @@ class _CustomerState extends State<Customer> {
                 top: isContainerVisible
                     ? screenHeight * 0.02
                     : screenHeight * 0.97,
-                child: Opacity(
-                  opacity: isContainerVisible ? 1 : 0.0,
-                  child: SingleChildScrollView(
-                    child: AdministratorRegistration(
-                      onCancelRegistration: () {
-                        _toggleContainerVisibility();
-                      },
-                    ),
+                child: SingleChildScrollView(
+                  child: AdministratorRegistration(
+                    onCancelRegistration: () {
+                      _toggleContainerVisibility();
+                    },
                   ),
                 ),
               ),
@@ -181,88 +178,25 @@ class _CustomerState extends State<Customer> {
   }
 
   Future<void> showDeleteAlert(Users user) async {
-    Get.defaultDialog(
+    DialogUtil.showConfirmationDialog(
       title: 'Eliminar usuario',
-      titleStyle: GoogleFonts.varelaRound(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: screenWidth * 0.055,
-      ),
-      confirmTextColor: Colors.white,
+      message: '¿Desea eliminar este usuario?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onConfirm: () async {
+        String message = await widget.userController.deleteUser(user.id);
+        Get.snackbar(
+          'Éxito',
+          message,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.check_circle),
+        );
+      },
+      backgroundConfirmButton: Palette.errorBackground,
+      backgroundCancelButton: Palette.error,
       backgroundColor: Palette.error,
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: screenHeight * 0.015),
-            child: Text(
-              '¿Desea eliminar este usuario?',
-              style: GoogleFonts.varelaRound(
-                color: Colors.white,
-                fontSize: screenWidth * 0.035,
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Palette.error,
-                ),
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text(
-                  'Cancelar',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.white,
-                    fontSize: screenWidth * 0.03,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Palette.errorBackground,
-                ),
-                onPressed: () async {
-                  Get.back();
-                  try {
-                    String result =
-                        await widget.userController.deleteUser(user.id);
-                    Get.snackbar(
-                      'Éxito',
-                      result,
-                      colorText: Colors.white,
-                      duration: const Duration(seconds: 5),
-                      backgroundColor: Palette.accent,
-                      icon: const Icon(Icons.check_circle),
-                    );
-                  } catch (error) {
-                    Get.snackbar(
-                      'Error al eliminar usuario',
-                      '$error',
-                      colorText: Colors.white,
-                      duration: const Duration(seconds: 5),
-                      backgroundColor: Palette.error,
-                      icon: const Icon(Icons.error),
-                    );
-                  }
-                },
-                child: Text(
-                  'Aceptar',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.white,
-                    fontSize: screenWidth * 0.03,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

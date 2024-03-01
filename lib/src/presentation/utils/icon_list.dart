@@ -140,6 +140,8 @@ class IconList {
         return Icons.handyman_outlined;
       case "Icons.hardware_outlined":
         return Icons.hardware_outlined;
+      case "Icons.add":
+        return Icons.add;
 
       default:
         return Icons.category_outlined;

@@ -27,7 +27,7 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
   }
 
   Future<void> changeMaterialStatus() async {
-    String status = selectedOption! == "Habilitar" ? "enable" : "disable";
+    String status = selectedOption! == "activo" ? "activo" : "inactivo";
 
     if (status.isNotEmpty) {
       materialController
@@ -68,7 +68,7 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = ['Habilitar', 'Desahabilitar'];
+    List<String> options = ['activo', 'inactivo'];
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(
