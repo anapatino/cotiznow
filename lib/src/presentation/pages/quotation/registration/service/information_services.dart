@@ -21,6 +21,7 @@ class InformationServices extends StatefulWidget {
 }
 
 class _InformationServicesState extends State<InformationServices> {
+  TextEditingController controllerPrice = TextEditingController();
   SectionsController sectionsController = Get.find();
   ServicesController servicesController = Get.find();
   MaterialsController materialController = Get.find();
@@ -127,11 +128,11 @@ class _InformationServicesState extends State<InformationServices> {
         .price;
 
     double total = materialsTotal + double.parse(servicePrice);
-    print(total);
-    print(selectedMaterials.map((e) => e.name));
+
+    int roundedTotal = total.round();
 
     widget.onSelected(
-        selectedOptionService!, total.toString(), filteredMaterials);
+        selectedOptionService!, roundedTotal.toString(), selectedMaterials);
   }
 
   @override
@@ -159,9 +160,31 @@ class _InformationServicesState extends State<InformationServices> {
           onChanged: (String? newValue) {
             setState(() {
               selectedOptionService = newValue;
+              if (selectedOptionService != null) {
+                Service service = services.firstWhere(
+                    (service) => service.name == selectedOptionService);
+                controllerPrice.text = service.price;
+              }
             });
           },
         ),
+        if (controllerPrice.text.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(top: screenHeight * 0.02),
+            child: CustomTextField(
+              isEnable: false,
+              icon: Icons.money,
+              hintText: 'Precio',
+              maxLine: 1,
+              isPassword: false,
+              width: screenWidth * 0.75,
+              height: screenHeight * 0.075,
+              inputColor: Palette.grey,
+              textColor: Palette.textColor,
+              onChanged: (value) {},
+              controller: controllerPrice,
+            ),
+          ),
         SizedBox(
           height: screenHeight * 0.02,
         ),
@@ -217,7 +240,7 @@ class _InformationServicesState extends State<InformationServices> {
               ),
               child: CompactTextField(
                 hintText: '',
-                width: screenWidth * 0.22,
+                width: screenWidth * 0.23,
                 height: 0.075,
                 inputColor: Palette.grey,
                 textColor: Palette.textColor,
@@ -238,7 +261,7 @@ class _InformationServicesState extends State<InformationServices> {
               ),
               child: CompactTextField(
                 hintText: '',
-                width: screenWidth * 0.22,
+                width: screenWidth * 0.23,
                 height: 0.075,
                 inputColor: Palette.grey,
                 textColor: Palette.textColor,
@@ -280,7 +303,7 @@ class _InformationServicesState extends State<InformationServices> {
                 hasBorder: true,
               ),
               CustomElevatedButton(
-                text: 'Guardar',
+                text: 'Cotizar',
                 onPressed: saveQuotation,
                 height: screenHeight * 0.055,
                 width: screenWidth * 0.29,

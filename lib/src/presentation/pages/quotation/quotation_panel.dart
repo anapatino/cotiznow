@@ -19,33 +19,36 @@ class _QuotationPanelState extends State<QuotationPanel> {
   double screenHeight = 0;
   bool isContainerVisible = false;
   String? selectedOption;
-  Materials material = Materials(
-      url_photo:
-          'https://firebasestorage.googleapis.com/v0/b/cotiznow-a609d.appspot.com/o/images%2F1000050874.jpg?alt=media&token=47b1929d-2c38-4471-abac-76032edbd671',
-      name: 'Arena de peña 40kg',
-      code: '00001',
-      unit: '',
-      size: '',
-      purchasePrice: '16000',
-      salePrice: '22000',
-      sectionId: 'pklvjcLwk0CV3D8NidRY',
-      quantity: '26',
-      description: 'tipo Arenapanete pega ensacado',
-      status: 'activo',
-      id: '5bWSF13kkBlIg2RFVl7a',
-      discount: '');
 
   @override
   void initState() {
     super.initState();
   }
 
+  List<Quotation> _filterListByOption(List<Quotation> quotations) {
+    if (selectedOption != "todos") {
+      return quotations
+          .where((quotation) => quotation.status == selectedOption)
+          .toList();
+    }
+    return quotations;
+  }
+
+  Future<List<Quotation>> _fetchQuotationList() async {
+    if (widget.userController.role == "cliente") {
+      await widget.quotationController
+          .getQuotationsByUserId(widget.userController.idUser);
+      widget.quotationController.quotationsListByUser ?? [];
+    } else {
+      await widget.quotationController.getAllQuotations();
+      return widget.quotationController.quotationsList ?? [];
+    }
+    return [];
+  }
+
   Widget _buildQuotationList() {
     return FutureBuilder<List<Quotation>>(
-      future: widget.userController.role == "cliente"
-          ? widget.quotationController.getAllQuotations()
-          : widget.quotationController
-              .getQuotationsByUserId(widget.userController.idUser),
+      future: _fetchQuotationList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -54,59 +57,48 @@ class _QuotationPanelState extends State<QuotationPanel> {
         }
         if (snapshot.hasError) {
           return const Center(
-            child: Text('Error al cargar la lista de usuarios'),
+            child: Text('Error al cargar la lista de cotizaciones'),
           );
         }
-        final quotations = snapshot.data!;
-//        return _buildCardQuotation(quotations);
-
-        return const SizedBox();
+        List<Quotation> quotations = snapshot.data!;
+        quotations = _filterListByOption(quotations);
+        return _buildCardQuotation(quotations);
       },
     );
   }
 
   Widget _buildCardQuotation(List<Quotation> quotations) {
-/*return SizedBox(
-            height: screenHeight * 0.75,
-            child: ListView.builder(
-              itemCount: quotations.length,
-              itemBuilder: (context, index) {
-                Users user = quotations[index];
-                return CardUser(
-                  name: user.name,
-                  email: user.email,
-                  phone: user.phone,
-                  lastName: user.lastName,
-                  address: user.address,
-                  role: user.role,
-                  account: user.account,
-                  onLongPress: () {
-                    showDeleteAlert(user);
-                  },
-                );
+    return SizedBox(
+      height: screenHeight * 0.75,
+      child: ListView.builder(
+        itemCount: quotations.length,
+        itemBuilder: (context, index) {
+          Quotation quotation = quotations[index];
+          return CardQuotation(
+              onLongPress: () {
+                showDeleteAlert(quotation);
               },
-            ),
-          );*/
-    return const SizedBox();
+              backgroundColor: quotation.status == "pendiente"
+                  ? Palette.accent
+                  : quotation.status == "rechazado"
+                      ? Palette.error
+                      : Palette.primary,
+              title: quotation.name,
+              description: quotation.description,
+              status: quotation.status,
+              total: quotation.total,
+              onTap: () {});
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = ['pendiente', 'terminada', 'rechazada'];
-    Quotation quotation = Quotation(
-        id: 'ASDFGHJKLQWERTYUIOP',
-        name: 'Instalacion de baño con materiales',
-        description:
-            'Quisiera cotizar la instalación completa de un baño moderno',
-        idService: 'h2x42Mwb5u1IS9arelTU',
-        length: '24 m',
-        status: 'pendiente',
-        total: '38000',
-        width: '34 m',
-        materials: [material],
-        userId: '');
+    List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada'];
+
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
@@ -133,32 +125,19 @@ class _QuotationPanelState extends State<QuotationPanel> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),
-              //_buildQuotationList(),
-              CardQuotation(
-                onLongPress: () {
-                  showDeleteAlert(quotation);
-                },
-                backgroundColor: Palette.accent,
-                title: quotation.name,
-                description: quotation.description,
-                status: quotation.status,
-                total: quotation.total,
-                onTap: () {
-                  /*Get.toNamed('/details-quotation', arguments: {
-                'name': quotation.name,
-                'description': quotation.description,
-                'id_section': quotation.idSection,
-                'id_service': quotation.idService,
-                'length': quotation.length,
-                'materials': quotation.materials
-                    .map((material) => material.toJson())
-                    .toList(),
-                'status': quotation.status,
-                'total': quotation.total,
-                'width': quotation.width,
-              });*/
+              CustomDropdown(
+                options: options,
+                width: 0.9,
+                height: 0.06,
+                widthItems: 0.65,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedOption = newValue;
+                  });
                 },
               ),
+              SizedBox(height: screenHeight * 0.02),
+              _buildQuotationList(),
             ],
           ),
         ),

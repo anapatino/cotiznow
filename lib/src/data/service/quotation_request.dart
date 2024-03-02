@@ -5,8 +5,7 @@ import '../../domain/domain.dart';
 class QuotationRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
 
-  static Future<String> quoteRegistration(
-      Quotation quotation, String userId) async {
+  static Future<String> quoteRegistration(Quotation quotation) async {
     try {
       await database.collection('quotations').add({
         'name': quotation.name,

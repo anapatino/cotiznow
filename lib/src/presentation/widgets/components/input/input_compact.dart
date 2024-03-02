@@ -36,42 +36,39 @@ class _CompactTextFieldState extends State<CompactTextField> {
     double screenHeight = MediaQuery.of(context).size.height;
     double? border = widget.border ?? 10;
 
-    return SizedBox(
+    return Container(
+      width: widget.width,
       height: screenHeight * widget.height,
-      child: Container(
-        width: widget.width,
-        decoration: BoxDecoration(
-          color: widget.inputColor,
-          borderRadius: BorderRadius.circular(border),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
-            keyboardType: widget.type,
-            enabled: true,
-            controller: widget.controller,
-            onChanged: (value) {
-              if (widget.onChanged != null) {
-                widget.onChanged!(value);
-              }
-            },
-            cursorColor: widget.textColor,
-            style: GoogleFonts.varelaRound(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3),
+        child: TextField(
+          keyboardType: widget.type,
+          enabled: true,
+          controller: widget.controller,
+          onChanged: (value) {
+            if (widget.onChanged != null) {
+              widget.onChanged!(value);
+            }
+          },
+          cursorColor: widget.textColor,
+          style: GoogleFonts.varelaRound(
+            color: widget.textColor,
+            fontSize: screenWidth * 0.04,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 1,
+          ),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border),
+              borderSide: BorderSide.none,
+            ),
+            labelText: widget.hintText,
+            labelStyle: GoogleFonts.varelaRound(
               color: widget.textColor,
               fontSize: screenWidth * 0.04,
-              fontWeight: FontWeight.w400,
-              letterSpacing: 1,
             ),
-            decoration: InputDecoration(
-              labelText: widget.hintText,
-              labelStyle: GoogleFonts.varelaRound(
-                color: widget.textColor,
-                fontSize: screenWidth * 0.04,
-              ),
-              border: InputBorder.none,
-              filled: true,
-              fillColor: widget.inputColor,
-            ),
+            filled: true,
+            fillColor: widget.inputColor,
           ),
         ),
       ),

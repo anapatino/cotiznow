@@ -9,9 +9,9 @@ class QuotationController extends GetxController {
   List<Quotation>? get quotationsList => _quotationsList.value;
   List<Quotation>? get quotationsListByUser => _quotationsListByUser.value;
 
-  Future<String> registerQuotation(Quotation quotation, String userId) async {
+  Future<String> registerQuotation(Quotation quotation) async {
     try {
-      return await QuotationRequest.quoteRegistration(quotation, userId);
+      return await QuotationRequest.quoteRegistration(quotation);
     } catch (e) {
       throw Future.error('Error al registrar cotización en la base de datos');
     }

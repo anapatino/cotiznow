@@ -15,10 +15,12 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   TextEditingController controllerDescription = TextEditingController();
   TextEditingController controllerLength = TextEditingController();
   TextEditingController controllerWidth = TextEditingController();
+  UserController userController = Get.find();
+  QuotationController quotationController = Get.find();
   List<Materials> selectedMaterials = [];
 
-  String? selectOptionSection;
-  String total = "";
+  String? selectOptionService;
+  String totalQuotation = "";
   int _activeCurrentStep = 0;
 
   void clearControllers() {
@@ -49,13 +51,26 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
         description.isNotEmpty &&
         length.isNotEmpty &&
         width.isNotEmpty &&
-        total.isNotEmpty) {
-      print(name);
+        totalQuotation.isNotEmpty &&
+        selectOptionService != "") {
+      Quotation quotation = Quotation(
+          id: '',
+          name: name,
+          description: description,
+          idService: selectOptionService!,
+          length: length,
+          materials: selectedMaterials,
+          status: 'pendiente',
+          total: totalQuotation,
+          width: width,
+          userId: userController.idUser);
+      confirmationRegistrationQuotation(quotation);
+      /* print(name);
       print(description);
       print(width);
       print(length);
-      print(total);
-      print(selectedMaterials);
+      print(totalQuotation);
+      print(selectedMaterials.map((e) => e.name));*/
     }
   }
 
@@ -97,8 +112,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           onSelected: (section, total, materials) {
             setState(() {
               selectedMaterials = materials;
-              total = total;
-              selectOptionSection = section;
+              totalQuotation = total;
+              selectOptionService = section;
+
               sendQuotation();
             });
           },
@@ -137,7 +153,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                     title: controllerName.text,
                     description: controllerDescription.text,
                     status: "pendiente",
-                    total: total,
+                    total: totalQuotation,
                     onTap: () {
                       /*Get.toNamed('/details-quotation', arguments: {
                         'name': quotation.name,
@@ -174,6 +190,41 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> confirmationRegistrationQuotation(Quotation quotation) async {
+    DialogUtil.showConfirmationDialog(
+      title: 'Registro de cotización',
+      message: '¿Desea registrar esta cotización?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onConfirm: () async {
+        try {
+          String message =
+              await quotationController.registerQuotation(quotation);
+          Get.snackbar(
+            'Éxito',
+            message,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 5),
+            backgroundColor: Palette.accent,
+            icon: const Icon(Icons.check_circle),
+          );
+        } catch (error) {
+          print("Error al registrar la cotización: $error");
+          Get.snackbar(
+            'Error',
+            'Hubo un problema al registrar la cotización.',
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+            icon: const Icon(Icons.error),
+          );
+        }
+      },
+      backgroundConfirmButton: Palette.accentBackground,
+      backgroundCancelButton: Palette.accent,
+      backgroundColor: Palette.accent,
     );
   }
 
