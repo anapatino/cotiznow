@@ -21,12 +21,19 @@ class InformationServices extends StatefulWidget {
 class _InformationServicesState extends State<InformationServices> {
   SectionsController sectionsController = Get.find();
   ServicesController servicesController = Get.find();
+  MaterialsController materialController = Get.find();
+
+  double screenWidth = 0;
+  double screenHeight = 0;
   List<String> optionsService = [];
   List<Service> services = [];
   List<String> optionsSection = [];
   List<Section> sections = [];
+  List<Materials> filteredMaterials = [];
+
   String? selectedOptionSection;
   String? selectedOptionService;
+  String sectionId = "";
 
   @override
   void initState() {
@@ -47,14 +54,116 @@ class _InformationServicesState extends State<InformationServices> {
     }
   }
 
+  Widget _buildMaterialsBySectionId(String sectionId) {
+    return FutureBuilder<List<Materials>>(
+      future: materialController.getMaterialsBySectionId(sectionId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        final materials = snapshot.data!;
+        filteredMaterials =
+            materials.where((material) => material.status == 'activo').toList();
+        return _buildCardMaterial(filteredMaterials);
+      },
+    );
+  }
+
+  Widget _buildCardMaterial(List<Materials> materials) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+      child: SizedBox(
+        width: screenWidth * 1,
+        height: screenHeight * 0.35,
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: materials.length,
+          itemBuilder: (context, index) {
+            Materials material = materials[index];
+
+            return CardMaterialSimple(
+                isLarge: false,
+                material: material,
+                onClick: () {},
+                onLongPress: () {},
+                onDoubleTap: () {});
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+          child: Text("Medidas de la sección",
+              style: GoogleFonts.varelaRound(
+                color: Palette.textColor,
+                fontSize: screenWidth * 0.035,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 1,
+              )),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text("Largo",
+                style: GoogleFonts.varelaRound(
+                  color: Palette.textColor,
+                  fontSize: screenWidth * 0.035,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 1,
+                )),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.015,
+              ),
+              child: CompactTextField(
+                hintText: '',
+                width: screenWidth * 0.22,
+                height: 0.075,
+                inputColor: Palette.grey,
+                textColor: Palette.textColor,
+                onChanged: (value) {},
+                controller: widget.controllerLength,
+              ),
+            ),
+            Text("Ancho",
+                style: GoogleFonts.varelaRound(
+                  color: Palette.textColor,
+                  fontSize: screenWidth * 0.035,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 1,
+                )),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.015,
+              ),
+              child: CompactTextField(
+                hintText: '',
+                width: screenWidth * 0.22,
+                height: 0.075,
+                inputColor: Palette.grey,
+                textColor: Palette.textColor,
+                onChanged: (value) {},
+                controller: widget.controllerWidth,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: screenHeight * 0.02,
+        ),
         Text("  Servicios",
             style: GoogleFonts.varelaRound(
               color: Palette.textColor,
@@ -96,77 +205,16 @@ class _InformationServicesState extends State<InformationServices> {
             setState(() {
               selectedOptionSection = newValue;
             });
+            if (newValue != null) {
+              Section section =
+                  sections.firstWhere((section) => section.name == newValue);
+              sectionId = section.id;
+            }
           },
         ),
+        if (sectionId.isNotEmpty) _buildMaterialsBySectionId(sectionId),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-          child: Text("Medidas de la sección",
-              style: GoogleFonts.varelaRound(
-                color: Palette.textColor,
-                fontSize: screenWidth * 0.035,
-                fontWeight: FontWeight.w400,
-                letterSpacing: 1,
-              )),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Largo",
-                style: GoogleFonts.varelaRound(
-                  color: Palette.textColor,
-                  fontSize: screenWidth * 0.035,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1,
-                )),
-            CustomTextField(
-              icon: Icons.dehaze_rounded,
-              hintText: '',
-              isPassword: false,
-              width: screenWidth * 0.34,
-              height: screenHeight * 0.075,
-              inputColor: Colors.white,
-              textColor: Colors.black,
-              onChanged: (value) {},
-              controller: widget.controllerLength,
-              showIcon: false,
-              type: TextInputType.number,
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenHeight * 0.02,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Ancho",
-                style: GoogleFonts.varelaRound(
-                  color: Palette.textColor,
-                  fontSize: screenWidth * 0.035,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1,
-                )),
-            CustomTextField(
-              icon: Icons.dehaze_rounded,
-              hintText: '',
-              isPassword: false,
-              width: screenWidth * 0.34,
-              height: screenHeight * 0.075,
-              inputColor: Colors.white,
-              textColor: Colors.black,
-              onChanged: (value) {},
-              controller: widget.controllerLength,
-              showIcon: false,
-              type: TextInputType.number,
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.03,
-          ),
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -182,7 +230,7 @@ class _InformationServicesState extends State<InformationServices> {
                 hasBorder: true,
               ),
               CustomElevatedButton(
-                text: 'Continuar',
+                text: 'Guardar',
                 onPressed: () {},
                 height: screenHeight * 0.055,
                 width: screenWidth * 0.29,

@@ -3,6 +3,7 @@ import 'package:cotiznow/src/domain/domain.dart';
 
 class CardMaterialSimple extends StatelessWidget {
   final Materials material;
+  final bool isLarge;
   final Function onClick;
   final Function onLongPress;
   final Function onDoubleTap;
@@ -11,7 +12,8 @@ class CardMaterialSimple extends StatelessWidget {
       required this.material,
       required this.onClick,
       required this.onLongPress,
-      required this.onDoubleTap});
+      required this.onDoubleTap,
+      this.isLarge = true});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class CardMaterialSimple extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: screenHeight * 0.02),
       child: InkWell(
+        borderRadius: BorderRadius.circular(25),
         onTap: () {
           onClick();
         },
@@ -30,8 +33,8 @@ class CardMaterialSimple extends StatelessWidget {
           onDoubleTap();
         },
         child: Container(
-          width: screenWidth * 0.85,
-          height: screenHeight * 0.138,
+          width: isLarge ? screenWidth * 0.85 : screenWidth * 0.53,
+          height: isLarge ? screenHeight * 0.138 : screenHeight * 0.12,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -78,11 +81,13 @@ class CardMaterialSimple extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: screenWidth * 0.55,
+                    width: isLarge ? screenWidth * 0.55 : screenWidth * 0.38,
                     child: Text(
                       material.name,
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.045,
+                          fontSize: isLarge
+                              ? screenWidth * 0.045
+                              : screenWidth * 0.035,
                           fontWeight: FontWeight.w600),
                     ),
                   ),

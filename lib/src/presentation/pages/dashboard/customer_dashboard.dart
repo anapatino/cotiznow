@@ -15,30 +15,28 @@ class CustomerDashboard extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return SlideInRight(
       duration: const Duration(milliseconds: 15),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.local_mall_outlined,
-                  color: Palette.textColor,
-                ),
-                onPressed: () {},
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.local_mall_outlined,
+                color: Palette.textColor,
               ),
-              SizedBox(
-                width: screenWidth * 0.02,
-              )
-            ],
-          ),
-          drawer: CustomDrawer(
-            name: userController.name,
-            email: userController.userEmail,
-            itemConfigs: CustomerRoutes().itemConfigs,
-          ),
-          body: const Center(
-            child: Text("Este es el dashboard clientes"),
-          ),
+              onPressed: () {},
+            ),
+            SizedBox(
+              width: screenWidth * 0.02,
+            )
+          ],
+        ),
+        drawer: CustomDrawer(
+          name: userController.name,
+          email: userController.userEmail,
+          itemConfigs: CustomerRoutes().itemConfigs,
+        ),
+        body: const Center(
+          child: Text("Este es el dashboard clientes"),
         ),
       ),
     );

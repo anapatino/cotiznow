@@ -19,6 +19,13 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   String total = "";
   int _activeCurrentStep = 0;
 
+  void clearControllers() {
+    controllerName.clear();
+    controllerDescription.clear();
+    controllerLength.clear();
+    controllerWidth.clear();
+  }
+
   void handleContinue() {
     setState(() {
       _activeCurrentStep += 1;
@@ -70,8 +77,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
       ),
     ];
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         actions: const [],
       ),
@@ -93,6 +99,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
               ),
             ),
             CardQuotation(
+              showDescription: true,
               onLongPress: () {},
               backgroundColor: Palette.accent,
               title: controllerName.text,
@@ -101,18 +108,18 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
               total: total,
               onTap: () {
                 /*Get.toNamed('/details-quotation', arguments: {
-                          'name': quotation.name,
-                          'description': quotation.description,
-                          'id_section': quotation.idSection,
-                          'id_service': quotation.idService,
-                          'length': quotation.length,
-                          'materials': quotation.materials
-                              .map((material) => material.toJson())
-                              .toList(),
-                          'status': quotation.status,
-                          'total': quotation.total,
-                          'width': quotation.width,
-                        });*/
+                      'name': quotation.name,
+                      'description': quotation.description,
+                      'id_section': quotation.idSection,
+                      'id_service': quotation.idService,
+                      'length': quotation.length,
+                      'materials': quotation.materials
+                          .map((material) => material.toJson())
+                          .toList(),
+                      'status': quotation.status,
+                      'total': quotation.total,
+                      'width': quotation.width,
+                    });*/
               },
             ),
             SizedBox(
@@ -134,6 +141,19 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           ]),
         ),
       ),
-    ));
+    );
+  }
+
+  @override
+  void dispose() {
+    clearControllers();
+    if (mounted) {
+      controllerName.dispose();
+      controllerDescription.dispose();
+      controllerLength.dispose();
+      controllerWidth.dispose();
+    }
+
+    super.dispose();
   }
 }

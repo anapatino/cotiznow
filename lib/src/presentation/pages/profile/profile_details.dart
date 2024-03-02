@@ -8,7 +8,7 @@ import '../../routes/administrator.dart';
 import '../../widgets/components/button/custom_button.dart';
 import '../../widgets/components/drawer.dart';
 import '../../widgets/components/dropdown.dart';
-import '../../widgets/components/input.dart';
+import '../../widgets/components/input/input_custom.dart';
 
 // ignore: must_be_immutable
 class ProfileDetails extends StatefulWidget {
@@ -135,185 +135,183 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     double screenHeight = MediaQuery.of(context).size.height;
     bool isEnable = userController.role == "cliente" ? false : true;
 
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            actions: const [],
-          ),
-          drawer: CustomDrawer(
-            name: userController.name,
-            email: userController.userEmail,
-            itemConfigs: userController.role == "cliente"
-                ? CustomerRoutes().itemConfigs
-                : AdministratorRoutes().itemConfigs,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-              child: Center(
-                child: Column(children: [
-                  Text("Perfil",
-                      style: GoogleFonts.varelaRound(
-                        color: Colors.black,
-                        fontSize: screenWidth * 0.06,
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 1,
-                      )),
-                  SizedBox(
-                    height: screenHeight * 0.015,
+    return Scaffold(
+        appBar: AppBar(
+          actions: const [],
+        ),
+        drawer: CustomDrawer(
+          name: userController.name,
+          email: userController.userEmail,
+          itemConfigs: userController.role == "cliente"
+              ? CustomerRoutes().itemConfigs
+              : AdministratorRoutes().itemConfigs,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+            child: Center(
+              child: Column(children: [
+                Text("Perfil",
+                    style: GoogleFonts.varelaRound(
+                      color: Colors.black,
+                      fontSize: screenWidth * 0.06,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1,
+                    )),
+                SizedBox(
+                  height: screenHeight * 0.015,
+                ),
+                CustomTextField(
+                  isEnable: isEnable,
+                  icon: Icons.person,
+                  hintText: 'Nombre',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerName,
+                ),
+                CustomTextField(
+                  isEnable: isEnable,
+                  icon: Icons.person,
+                  hintText: 'Apellido',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerLastName,
+                ),
+                CustomTextField(
+                  isEnable: isEnable,
+                  icon: Icons.phone,
+                  type: TextInputType.phone,
+                  hintText: 'Telefono',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerPhone,
+                ),
+                CustomTextField(
+                  isEnable: isEnable,
+                  type: TextInputType.streetAddress,
+                  icon: Icons.location_on_rounded,
+                  hintText: 'Dirección',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerAddress,
+                ),
+                CustomTextField(
+                  isEnable: isEnable,
+                  icon: Icons.mail_rounded,
+                  type: TextInputType.emailAddress,
+                  hintText: 'Correo electronico',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerEmail,
+                ),
+                CustomTextField(
+                  isEnable: false,
+                  icon: Icons.account_circle_rounded,
+                  hintText: 'Rol',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerRole,
+                ),
+                CustomTextField(
+                  isEnable: false,
+                  icon: Icons.admin_panel_settings_sharp,
+                  hintText: 'Cuenta',
+                  isPassword: false,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.073,
+                  inputColor: Palette.grey,
+                  textColor: Colors.black,
+                  onChanged: (value) {},
+                  controller: controllerAccount,
+                ),
+                if (userController.role == "super administrador")
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("  Cambiar estado",
+                          style: GoogleFonts.varelaRound(
+                            color: Colors.black,
+                            fontSize: screenWidth * 0.035,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 1,
+                          )),
+                      CustomDropdown(
+                        options: options,
+                        width: 0.75,
+                        widthItems: 0.55,
+                        height: 0.073,
+                        border: 10,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedOption = newValue;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.02,
+                      ),
+                      Text("  Cambiar rol",
+                          style: GoogleFonts.varelaRound(
+                            color: Colors.black,
+                            fontSize: screenWidth * 0.035,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 1,
+                          )),
+                      CustomDropdown(
+                        options: optionsRole,
+                        width: 0.75,
+                        widthItems: 0.55,
+                        height: 0.073,
+                        border: 10,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedOptionRole = newValue;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  CustomTextField(
-                    isEnable: isEnable,
-                    icon: Icons.person,
-                    hintText: 'Nombre',
-                    isPassword: false,
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: screenHeight * 0.02, bottom: screenHeight * 0.03),
+                  child: CustomElevatedButton(
+                    text: 'Actualizar',
+                    onPressed: checkAccessAndUpdateUser,
+                    height: screenHeight * 0.065,
                     width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerName,
+                    textColor: Colors.white,
+                    textSize: screenWidth * 0.04,
+                    backgroundColor: Palette.primary,
+                    hasBorder: false,
                   ),
-                  CustomTextField(
-                    isEnable: isEnable,
-                    icon: Icons.person,
-                    hintText: 'Apellido',
-                    isPassword: false,
-                    width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerLastName,
-                  ),
-                  CustomTextField(
-                    isEnable: isEnable,
-                    icon: Icons.phone,
-                    type: TextInputType.phone,
-                    hintText: 'Telefono',
-                    isPassword: false,
-                    width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerPhone,
-                  ),
-                  CustomTextField(
-                    isEnable: isEnable,
-                    type: TextInputType.streetAddress,
-                    icon: Icons.location_on_rounded,
-                    hintText: 'Dirección',
-                    isPassword: false,
-                    width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerAddress,
-                  ),
-                  CustomTextField(
-                    isEnable: isEnable,
-                    icon: Icons.mail_rounded,
-                    type: TextInputType.emailAddress,
-                    hintText: 'Correo electronico',
-                    isPassword: false,
-                    width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerEmail,
-                  ),
-                  CustomTextField(
-                    isEnable: false,
-                    icon: Icons.account_circle_rounded,
-                    hintText: 'Rol',
-                    isPassword: false,
-                    width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerRole,
-                  ),
-                  CustomTextField(
-                    isEnable: false,
-                    icon: Icons.admin_panel_settings_sharp,
-                    hintText: 'Cuenta',
-                    isPassword: false,
-                    width: screenWidth * 0.75,
-                    height: screenHeight * 0.073,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    onChanged: (value) {},
-                    controller: controllerAccount,
-                  ),
-                  if (userController.role == "super administrador")
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("  Cambiar estado",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.black,
-                              fontSize: screenWidth * 0.035,
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 1,
-                            )),
-                        CustomDropdown(
-                          options: options,
-                          width: 0.75,
-                          widthItems: 0.55,
-                          height: 0.073,
-                          border: 10,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedOption = newValue;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        Text("  Cambiar rol",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.black,
-                              fontSize: screenWidth * 0.035,
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 1,
-                            )),
-                        CustomDropdown(
-                          options: optionsRole,
-                          width: 0.75,
-                          widthItems: 0.55,
-                          height: 0.073,
-                          border: 10,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedOptionRole = newValue;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: screenHeight * 0.02, bottom: screenHeight * 0.03),
-                    child: CustomElevatedButton(
-                      text: 'Actualizar',
-                      onPressed: checkAccessAndUpdateUser,
-                      height: screenHeight * 0.065,
-                      width: screenWidth * 0.75,
-                      textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
-                      backgroundColor: Palette.primary,
-                      hasBorder: false,
-                    ),
-                  )
-                ]),
-              ),
+                )
+              ]),
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

@@ -110,8 +110,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
         userId: '');
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
-      child: SafeArea(
-          child: Scaffold(
+      child: Scaffold(
         appBar: AppBar(
           actions: const [],
         ),
@@ -147,18 +146,18 @@ class _QuotationPanelState extends State<QuotationPanel> {
                 total: quotation.total,
                 onTap: () {
                   /*Get.toNamed('/details-quotation', arguments: {
-                    'name': quotation.name,
-                    'description': quotation.description,
-                    'id_section': quotation.idSection,
-                    'id_service': quotation.idService,
-                    'length': quotation.length,
-                    'materials': quotation.materials
-                        .map((material) => material.toJson())
-                        .toList(),
-                    'status': quotation.status,
-                    'total': quotation.total,
-                    'width': quotation.width,
-                  });*/
+                'name': quotation.name,
+                'description': quotation.description,
+                'id_section': quotation.idSection,
+                'id_service': quotation.idService,
+                'length': quotation.length,
+                'materials': quotation.materials
+                    .map((material) => material.toJson())
+                    .toList(),
+                'status': quotation.status,
+                'total': quotation.total,
+                'width': quotation.width,
+              });*/
                 },
               ),
             ],
@@ -177,7 +176,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
                 ),
                 shape: const CircleBorder(),
               ),
-      )),
+      ),
     );
   }
 
