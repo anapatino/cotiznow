@@ -65,12 +65,6 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           width: width,
           userId: userController.idUser);
       confirmationRegistrationQuotation(quotation);
-      /* print(name);
-      print(description);
-      print(width);
-      print(length);
-      print(totalQuotation);
-      print(selectedMaterials.map((e) => e.name));*/
     }
   }
 
@@ -211,6 +205,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
             backgroundColor: Palette.accent,
             icon: const Icon(Icons.check_circle),
           );
+          Navigator.pop(context);
         } catch (error) {
           print("Error al registrar la cotización: $error");
           Get.snackbar(

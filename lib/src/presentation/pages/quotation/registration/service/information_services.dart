@@ -126,13 +126,15 @@ class _InformationServicesState extends State<InformationServices> {
     String servicePrice = services
         .firstWhere((service) => service.name == selectedOptionService)
         .price;
+    String idService = services
+        .firstWhere((service) => service.name == selectedOptionService)
+        .id;
 
     double total = materialsTotal + double.parse(servicePrice);
 
     int roundedTotal = total.round();
 
-    widget.onSelected(
-        selectedOptionService!, roundedTotal.toString(), selectedMaterials);
+    widget.onSelected(idService, roundedTotal.toString(), selectedMaterials);
   }
 
   @override
