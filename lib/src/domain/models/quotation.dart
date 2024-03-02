@@ -4,7 +4,6 @@ class Quotation {
   String id;
   String name;
   String description;
-  String idSection;
   String idService;
   String length;
   List<Materials> materials;
@@ -17,7 +16,6 @@ class Quotation {
     required this.id,
     required this.name,
     required this.description,
-    required this.idSection,
     required this.idService,
     required this.length,
     required this.materials,
@@ -32,7 +30,6 @@ class Quotation {
       id: json?['id'] ?? '',
       name: json?['name'] ?? '',
       description: json?['description'] ?? '',
-      idSection: json?['id_section'] ?? '',
       idService: json?['id_service'] ?? '',
       length: json?['length'] ?? '',
       materials: (json?['materials'] as List<dynamic>?)
@@ -50,7 +47,6 @@ class Quotation {
     return {
       'name': name,
       'description': description,
-      'id_section': idSection,
       'id_service': idService,
       'length': length,
       'materials': materials.map((material) => material.toJson()).toList(),

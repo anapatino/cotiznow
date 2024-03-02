@@ -7,12 +7,14 @@ class InformationServices extends StatefulWidget {
   final TextEditingController controllerLength;
   final TextEditingController controllerWidth;
   final VoidCallback onBack;
+  final Function(String, String, List<Materials>) onSelected;
 
   const InformationServices(
       {super.key,
       required this.onBack,
       required this.controllerLength,
-      required this.controllerWidth});
+      required this.controllerWidth,
+      required this.onSelected});
 
   @override
   State<InformationServices> createState() => _InformationServicesState();
@@ -30,6 +32,7 @@ class _InformationServicesState extends State<InformationServices> {
   List<String> optionsSection = [];
   List<Section> sections = [];
   List<Materials> filteredMaterials = [];
+  List<Materials> selectedMaterials = [];
 
   String? selectedOptionSection;
   String? selectedOptionService;
@@ -67,12 +70,13 @@ class _InformationServicesState extends State<InformationServices> {
         final materials = snapshot.data!;
         filteredMaterials =
             materials.where((material) => material.status == 'activo').toList();
-        return _buildCardMaterial(filteredMaterials);
+        return _buildCardMaterial(filteredMaterials, true, false);
       },
     );
   }
 
-  Widget _buildCardMaterial(List<Materials> materials) {
+  Widget _buildCardMaterial(
+      List<Materials> materials, bool enableClick, bool enableLongPrees) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
       child: SizedBox(
@@ -87,13 +91,47 @@ class _InformationServicesState extends State<InformationServices> {
             return CardMaterialSimple(
                 isLarge: false,
                 material: material,
-                onClick: () {},
-                onLongPress: () {},
+                onClick: () {
+                  if (enableClick) {
+                    setState(() {
+                      selectedMaterials.add(material);
+                    });
+                  }
+                },
+                onLongPress: () {
+                  if (enableLongPrees) {
+                    setState(() {
+                      selectedMaterials.remove(material);
+                    });
+                  }
+                },
                 onDoubleTap: () {});
           },
         ),
       ),
     );
+  }
+
+  void saveQuotation() {
+    double materialsTotal = selectedMaterials.fold(0, (sum, material) {
+      int salePrice = int.parse(material.salePrice);
+      double discount =
+          material.discount.isEmpty ? 0 : double.parse(material.discount);
+      discount *= salePrice;
+      return sum +
+          (material.discount.isEmpty ? salePrice : salePrice - discount);
+    });
+
+    String servicePrice = services
+        .firstWhere((service) => service.name == selectedOptionService)
+        .price;
+
+    double total = materialsTotal + double.parse(servicePrice);
+    print(total);
+    print(selectedMaterials.map((e) => e.name));
+
+    widget.onSelected(
+        selectedOptionService!, total.toString(), filteredMaterials);
   }
 
   @override
@@ -104,6 +142,55 @@ class _InformationServicesState extends State<InformationServices> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text("  Servicios",
+            style: GoogleFonts.varelaRound(
+              color: Palette.textColor,
+              fontSize: screenWidth * 0.035,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 1,
+            )),
+        CustomDropdown(
+          padding: 0,
+          border: 10,
+          options: optionsService,
+          width: 0.75,
+          height: 0.075,
+          widthItems: 0.55,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedOptionService = newValue;
+            });
+          },
+        ),
+        SizedBox(
+          height: screenHeight * 0.02,
+        ),
+        Text("  Seccion",
+            style: GoogleFonts.varelaRound(
+              color: Palette.textColor,
+              fontSize: screenWidth * 0.035,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 1,
+            )),
+        CustomDropdown(
+          padding: 0,
+          border: 10,
+          options: optionsSection,
+          width: 0.75,
+          height: 0.075,
+          widthItems: 0.55,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedOptionSection = newValue;
+            });
+            if (newValue != null) {
+              Section section =
+                  sections.firstWhere((section) => section.name == newValue);
+              sectionId = section.id;
+            }
+          },
+        ),
+        if (sectionId.isNotEmpty) _buildMaterialsBySectionId(sectionId),
         Padding(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
           child: Text("Medidas de la sección",
@@ -164,55 +251,18 @@ class _InformationServicesState extends State<InformationServices> {
         SizedBox(
           height: screenHeight * 0.02,
         ),
-        Text("  Servicios",
-            style: GoogleFonts.varelaRound(
-              color: Palette.textColor,
-              fontSize: screenWidth * 0.035,
-              fontWeight: FontWeight.w400,
-              letterSpacing: 1,
-            )),
-        CustomDropdown(
-          padding: 0,
-          border: 10,
-          options: optionsService,
-          width: 0.75,
-          height: 0.075,
-          widthItems: 0.55,
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedOptionService = newValue;
-            });
-          },
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+          child: Text("Materiales seleccionados",
+              style: GoogleFonts.varelaRound(
+                color: Palette.accent,
+                fontSize: screenWidth * 0.042,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1,
+              )),
         ),
-        SizedBox(
-          height: screenHeight * 0.02,
-        ),
-        Text("  Seccion",
-            style: GoogleFonts.varelaRound(
-              color: Palette.textColor,
-              fontSize: screenWidth * 0.035,
-              fontWeight: FontWeight.w400,
-              letterSpacing: 1,
-            )),
-        CustomDropdown(
-          padding: 0,
-          border: 10,
-          options: optionsSection,
-          width: 0.75,
-          height: 0.075,
-          widthItems: 0.55,
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedOptionSection = newValue;
-            });
-            if (newValue != null) {
-              Section section =
-                  sections.firstWhere((section) => section.name == newValue);
-              sectionId = section.id;
-            }
-          },
-        ),
-        if (sectionId.isNotEmpty) _buildMaterialsBySectionId(sectionId),
+        if (selectedMaterials.isNotEmpty)
+          _buildCardMaterial(selectedMaterials, false, true),
         Padding(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
           child: Row(
@@ -231,7 +281,7 @@ class _InformationServicesState extends State<InformationServices> {
               ),
               CustomElevatedButton(
                 text: 'Guardar',
-                onPressed: () {},
+                onPressed: saveQuotation,
                 height: screenHeight * 0.055,
                 width: screenWidth * 0.29,
                 textColor: Colors.white,
@@ -244,5 +294,15 @@ class _InformationServicesState extends State<InformationServices> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      widget.controllerLength.dispose();
+      widget.controllerWidth.dispose();
+    }
+
+    super.dispose();
   }
 }

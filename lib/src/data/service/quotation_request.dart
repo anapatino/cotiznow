@@ -11,7 +11,6 @@ class QuotationRequest {
       await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
-        'id_section': quotation.idSection,
         'id_service': quotation.idService,
         'length': quotation.length,
         'materials':

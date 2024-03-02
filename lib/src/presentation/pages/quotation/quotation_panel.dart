@@ -100,7 +100,6 @@ class _QuotationPanelState extends State<QuotationPanel> {
         name: 'Instalacion de baño con materiales',
         description:
             'Quisiera cotizar la instalación completa de un baño moderno',
-        idSection: 'isqsvCxniHwm3Fitg0Pk',
         idService: 'h2x42Mwb5u1IS9arelTU',
         length: '24 m',
         status: 'pendiente',
