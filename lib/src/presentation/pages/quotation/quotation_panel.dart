@@ -26,29 +26,24 @@ class _QuotationPanelState extends State<QuotationPanel> {
   }
 
   List<Quotation> _filterListByOption(List<Quotation> quotations) {
-    if (selectedOption != "todos") {
-      return quotations
-          .where((quotation) => quotation.status == selectedOption)
-          .toList();
+    if (widget.userController.role != "cliente") {
+      if (selectedOption == "pendiente" ||
+          selectedOption == "aprobada" ||
+          selectedOption == "rechazada") {
+        quotations = quotations
+            .where((quotation) => quotation.status == selectedOption)
+            .toList();
+      }
     }
     return quotations;
   }
 
-  Future<List<Quotation>> _fetchQuotationList() async {
-    if (widget.userController.role == "cliente") {
-      await widget.quotationController
-          .getQuotationsByUserId(widget.userController.idUser);
-      widget.quotationController.quotationsListByUser ?? [];
-    } else {
-      await widget.quotationController.getAllQuotations();
-      return widget.quotationController.quotationsList ?? [];
-    }
-    return [];
-  }
-
   Widget _buildQuotationList() {
     return FutureBuilder<List<Quotation>>(
-      future: _fetchQuotationList(),
+      future: widget.userController.role == "cliente"
+          ? widget.quotationController
+              .getQuotationsByUserId(widget.userController.idUser)
+          : widget.quotationController.getAllQuotations(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -80,14 +75,16 @@ class _QuotationPanelState extends State<QuotationPanel> {
               },
               backgroundColor: quotation.status == "pendiente"
                   ? Palette.accent
-                  : quotation.status == "rechazado"
+                  : quotation.status == "rechazada"
                       ? Palette.error
                       : Palette.primary,
               title: quotation.name,
               description: quotation.description,
               status: quotation.status,
               total: quotation.total,
-              onTap: () {});
+              onTap: () {
+                Get.toNamed('/details-quotation', arguments: quotation);
+              });
         },
       ),
     );

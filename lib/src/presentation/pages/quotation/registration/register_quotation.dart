@@ -148,21 +148,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                     description: controllerDescription.text,
                     status: "pendiente",
                     total: totalQuotation,
-                    onTap: () {
-                      /*Get.toNamed('/details-quotation', arguments: {
-                        'name': quotation.name,
-                        'description': quotation.description,
-                        'id_section': quotation.idSection,
-                        'id_service': quotation.idService,
-                        'length': quotation.length,
-                        'materials': quotation.materials
-                            .map((material) => material.toJson())
-                            .toList(),
-                        'status': quotation.status,
-                        'total': quotation.total,
-                        'width': quotation.width,
-                      });*/
-                    },
+                    onTap: () {},
                   ),
                   SizedBox(
                     width: screenWidth * 1,

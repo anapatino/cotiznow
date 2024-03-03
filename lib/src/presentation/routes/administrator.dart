@@ -61,7 +61,7 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: quotationsDetails,
-      page: () => const RegisterQuotation(),
+      page: () => const DetailsQuotation(),
     ),
     GetPage(
       name: exit,
