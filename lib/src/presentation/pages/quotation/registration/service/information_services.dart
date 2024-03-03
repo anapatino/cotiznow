@@ -320,14 +320,4 @@ class _InformationServicesState extends State<InformationServices> {
       ],
     );
   }
-
-  @override
-  void dispose() {
-    if (mounted) {
-      widget.controllerLength.dispose();
-      widget.controllerWidth.dispose();
-    }
-
-    super.dispose();
-  }
 }

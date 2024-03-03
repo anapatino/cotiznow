@@ -13,6 +13,8 @@ class AdministratorRoutes {
   static const String services = '/services';
   static const String quotations = '/quotations';
   static const String quotationsDetails = '/details-quotation';
+  static const String quotationsUpdate = '/update-quotation';
+
   static const String quotationsRegistration = '/registration-quotation';
 
   static const String discounts = '/discounts';
@@ -41,7 +43,7 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: details,
-      page: () => const MaterialDetails(),
+      page: () => MaterialDetails(),
     ),
     GetPage(
       name: services,
@@ -49,7 +51,11 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: discounts,
-      page: () => Discount(),
+      page: () => DiscountPanel(),
+    ),
+    GetPage(
+      name: quotationsUpdate,
+      page: () => UpdateDiscount(),
     ),
     GetPage(
       name: quotations,

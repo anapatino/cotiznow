@@ -69,10 +69,19 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
       future: widget.materialController.getMaterialsBySectionId(sectionId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.15,
+              child: SizedBox(
+                  width: screenWidth * 0.86,
+                  height: screenHeight * 0.3,
+                  child: const Center(child: CircularProgressIndicator())));
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.15,
+              child: Center(child: Text(snapshot.error.toString())));
         }
         final materials = snapshot.data!;
         filteredMaterials =
@@ -95,7 +104,7 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
   Widget _buildCardMaterial(List<Materials> materials) {
     return SizedBox(
       width: screenWidth * 0.86,
-      height: screenHeight * 0.29,
+      height: screenHeight * 0.32,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: materials.length,
@@ -105,21 +114,62 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
           return CardMaterialCustom(
               material: material,
               onClick: () {
-                Get.toNamed('/details-material', arguments: {
-                  'urlPhoto': material.url_photo,
-                  'name': material.name,
-                  'code': material.code,
-                  'unit': material.unit,
-                  'size': material.size,
-                  'purchasePrice': material.purchasePrice,
-                  'salePrice': material.salePrice,
-                  'sectionId': material.sectionId,
-                  'quantity': material.quantity,
-                  'description': material.description,
-                  'id': material.id,
-                  'status': material.status,
-                  'discount': material.discount,
-                });
+                Get.toNamed(
+                  '/details-material',
+                  arguments: material,
+                );
+              },
+              onLongPress: () {},
+              onDoubleTap: () {});
+        },
+      ),
+    );
+  }
+
+  Widget _buildMaterialsWithDiscount() {
+    return FutureBuilder<List<Materials>>(
+      future: widget.materialController.getAllMaterials(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.2,
+              child: const Center(child: CircularProgressIndicator()));
+        }
+        if (snapshot.hasError) {
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.2,
+              child: Center(child: Text(snapshot.error.toString())));
+        }
+        final materials = snapshot.data!;
+        List<Materials> filteredMaterials = materials
+            .where((material) =>
+                material.status == 'activo' && material.discount != "")
+            .toList();
+
+        return _buildCardMaterialClassic(filteredMaterials);
+      },
+    );
+  }
+
+  Widget _buildCardMaterialClassic(List<Materials> materials) {
+    return SizedBox(
+      width: screenWidth * 0.86,
+      height: screenHeight * 0.2,
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: materials.length,
+        itemBuilder: (context, index) {
+          Materials material = materials[index];
+
+          return CardMaterialSimple(
+              material: material,
+              onClick: () {
+                Get.toNamed(
+                  '/details-material',
+                  arguments: material,
+                );
               },
               onLongPress: () {},
               onDoubleTap: () {});
@@ -131,7 +181,7 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
   Widget _buildRoundIconButtons(List<Section> sections) {
     return SizedBox(
       width: screenWidth * 0.86,
-      height: screenHeight * 0.15,
+      height: screenHeight * 0.17,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: sections.length,
@@ -210,6 +260,7 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
                   ),
                 ),
               ),
+              _buildMaterialsWithDiscount(),
             ],
           ),
         ),

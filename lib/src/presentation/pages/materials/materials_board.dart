@@ -159,21 +159,10 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
             return CardMaterialSimple(
                 material: material,
                 onClick: () {
-                  Get.toNamed('/details-material', arguments: {
-                    'urlPhoto': material.url_photo,
-                    'name': material.name,
-                    'code': material.code,
-                    'unit': material.unit,
-                    'size': material.size,
-                    'purchasePrice': material.purchasePrice,
-                    'salePrice': material.salePrice,
-                    'sectionId': material.sectionId,
-                    'quantity': material.quantity,
-                    'description': material.description,
-                    'id': material.id,
-                    'status': material.status,
-                    'discount': material.discount,
-                  });
+                  Get.toNamed(
+                    '/details-material',
+                    arguments: material,
+                  );
                 },
                 onLongPress: () {
                   toggleUpdateStatusVisibility(material);

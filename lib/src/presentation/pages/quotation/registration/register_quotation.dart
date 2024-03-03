@@ -208,17 +208,4 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
       backgroundColor: Palette.accent,
     );
   }
-
-  @override
-  void dispose() {
-    clearControllers();
-    if (mounted) {
-      controllerName.dispose();
-      controllerDescription.dispose();
-      controllerLength.dispose();
-      controllerWidth.dispose();
-    }
-
-    super.dispose();
-  }
 }

@@ -31,6 +31,17 @@ class MaterialsController extends GetxController {
     }
   }
 
+  Future<String> updateDiscount(
+    String materialId,
+    String discount,
+  ) async {
+    try {
+      return await MaterialsRequest.changeDiscount(materialId, discount);
+    } catch (e) {
+      throw Future.error('Error al actualizar el descuento del material');
+    }
+  }
+
   Future<String> updateMaterial(Materials material, String urlOld) async {
     try {
       return await MaterialsRequest.updateMaterial(material, urlOld);
@@ -39,10 +50,11 @@ class MaterialsController extends GetxController {
     }
   }
 
-  Future<void> getAllMaterials() async {
+  Future<List<Materials>> getAllMaterials() async {
     try {
       List<Materials> list = await MaterialsRequest.getAllMaterials();
       _materialsList.value = list;
+      return list;
     } catch (e) {
       throw Future.error(
           'Error al obtener los materiales desde la base de datos');

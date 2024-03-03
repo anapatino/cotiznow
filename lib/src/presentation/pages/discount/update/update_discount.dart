@@ -1,13 +1,58 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/material.dart';
+import '../../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
-class MaterialDetails extends StatelessWidget {
+class UpdateDiscount extends StatelessWidget {
+  TextEditingController controllerDiscount = TextEditingController();
   final material = Get.arguments as Materials;
   UserController userController = Get.find();
+  MaterialsController materialController = Get.find();
+  UpdateDiscount({super.key});
 
-  MaterialDetails({super.key});
+  void clearControllers() {
+    controllerDiscount.clear();
+  }
+
+  void updateDiscount(BuildContext context) async {
+    int discount = int.parse(controllerDiscount.text);
+    try {
+      if (discount > 0) {
+        double newDiscount = discount / 100;
+        String message = await materialController.updateDiscount(
+            material.id, newDiscount.toString());
+        Get.snackbar(
+          'Actualización de descuento',
+          message,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.check_circle),
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+      } else {
+        Get.snackbar(
+          'Validar campos',
+          'Intente ingresar un numero mayor a 0',
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.error),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error al actualizar descuento',
+        '$e',
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+        backgroundColor: Palette.error,
+        icon: const Icon(Icons.error),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +74,7 @@ class MaterialDetails extends StatelessWidget {
           children: [
             Container(
               width: screenWidth * 1,
-              height: screenHeight * 0.58,
+              height: screenHeight * 0.5,
               decoration: const BoxDecoration(),
               clipBehavior: Clip.antiAliasWithSaveLayer,
               child: material.url_photo.isNotEmpty
@@ -40,7 +85,7 @@ class MaterialDetails extends StatelessWidget {
                   : const Center(
                       child: Icon(
                         Icons.broken_image,
-                        color: Palette.accent,
+                        color: Colors.white,
                         size: 40.0,
                       ),
                     ),
@@ -57,15 +102,15 @@ class MaterialDetails extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: screenHeight * 0.48,
+              top: screenHeight * 0.35,
               child: Container(
                 width: screenWidth * 1,
                 height: screenHeight * 0.8,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(29),
-                    topRight: Radius.circular(29),
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
                   ),
                 ),
                 child: Padding(
@@ -172,6 +217,67 @@ class MaterialDetails extends StatelessWidget {
                               fontSize: screenWidth * 0.069,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
+                            ),
+                          ),
+                        if (userController.role != "cliente")
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenHeight * 0.02,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("  Modificar descuento",
+                                    style: GoogleFonts.varelaRound(
+                                      color: Colors.black,
+                                      fontSize: screenWidth * 0.035,
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: 1,
+                                    )),
+                                CompactTextField(
+                                  type: TextInputType.number,
+                                  hintText: '',
+                                  width: screenWidth * 0.33,
+                                  height: 0.075,
+                                  inputColor: Palette.grey,
+                                  textColor: Palette.textColor,
+                                  onChanged: (value) {},
+                                  controller: controllerDiscount,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: screenHeight * 0.03),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomElevatedButton(
+                                        text: 'Anular',
+                                        onPressed: clearControllers,
+                                        height: screenHeight * 0.059,
+                                        width: screenWidth * 0.35,
+                                        textColor: Palette.error,
+                                        textSize: screenWidth * 0.033,
+                                        backgroundColor: Colors.white,
+                                        hasBorder: true,
+                                        borderColor: Palette.error,
+                                      ),
+                                      CustomElevatedButton(
+                                        text: 'Modificar',
+                                        onPressed: () {
+                                          updateDiscount(context);
+                                        },
+                                        height: screenHeight * 0.059,
+                                        width: screenWidth * 0.35,
+                                        textColor: Colors.white,
+                                        textSize: screenWidth * 0.033,
+                                        backgroundColor: Palette.primary,
+                                        hasBorder: false,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                       ],
