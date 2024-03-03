@@ -58,10 +58,12 @@ class UpdateDiscount extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    int salePrice = int.parse(material.salePrice);
+    int salePrice = 0;
     double percentage = 0;
     double discount = 0;
     if (material.discount != "") {
+      salePrice = int.parse(material.salePrice);
+
       percentage = double.parse(material.discount);
       discount = salePrice - (salePrice * percentage);
     }
@@ -252,7 +254,7 @@ class UpdateDiscount extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       CustomElevatedButton(
-                                        text: 'Anular',
+                                        text: 'Limpiar',
                                         onPressed: clearControllers,
                                         height: screenHeight * 0.059,
                                         width: screenWidth * 0.35,
