@@ -88,21 +88,25 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String unit = controllerUnit.text;
-    String size = selectedOption!;
     String quantity = controllerQuantity.text;
-    String sectionId = selectedOptionSectionId!;
+    String sectionId = "";
     String salePrice = controllerSalePrice.text;
     String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
+    String size = "";
     if (name.isNotEmpty &&
         description.isNotEmpty &&
         unit.isNotEmpty &&
-        size.isNotEmpty &&
         quantity.isNotEmpty &&
-        sectionId.isNotEmpty &&
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
         purchasePrice.isNotEmpty) {
+      if (selectedOption != null) {
+        size = selectedOption!;
+      }
+      if (selectedOptionSectionId != null) {
+        sectionId = selectedOptionSectionId!;
+      }
       Materials material = Materials(
         url_photo: url_photo,
         name: name,
@@ -116,7 +120,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         status: widget.material.status,
         id: widget.material.id,
         code: code,
-        discount: '',
+        discount: widget.material.discount,
       );
       materialController
           .updateMaterial(material, widget.material.url_photo)
@@ -322,6 +326,11 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                             setState(() {
                               selectedOptionSectionId = newValue;
                             });
+                            if (newValue != null) {
+                              Section section = sections.firstWhere(
+                                  (section) => section.name == newValue);
+                              selectedOptionSectionId = section.id;
+                            }
                           },
                         ),
                       ],
@@ -372,7 +381,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                             hasBorder: true,
                           ),
                           CustomElevatedButton(
-                            text: 'Registrar',
+                            text: 'Actualizar',
                             onPressed: updateMaterial,
                             height: screenHeight * 0.065,
                             width: screenWidth * 0.35,

@@ -42,10 +42,14 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
       future: widget.sectionsController.getAllSections(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.15,
+              child: const Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return SizedBox(    width: screenWidth * 0.86,
+              height: screenHeight * 0.15,child: Center(child: Text(snapshot.error.toString())));
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
@@ -86,10 +90,14 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
       future: widget.materialController.getMaterialsBySectionId(sectionId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.15,
+              child: const Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return SizedBox(    width: screenWidth * 0.86,
+              height: screenHeight * 0.15,child: Center(child: Text(snapshot.error.toString())));
         }
         final materials = snapshot.data!;
         filteredMaterials =

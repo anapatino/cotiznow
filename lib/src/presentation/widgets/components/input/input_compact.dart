@@ -74,12 +74,4 @@ class _CompactTextFieldState extends State<CompactTextField> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    if (mounted) {
-      widget.controller.dispose();
-    }
-    super.dispose();
-  }
 }

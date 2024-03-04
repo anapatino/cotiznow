@@ -52,10 +52,10 @@ class GeneralInformation extends StatelessWidget {
               CustomElevatedButton(
                 text: 'Continuar',
                 onPressed: onNext,
-                height: screenHeight * 0.055,
-                width: screenWidth * 0.29,
+                height: screenHeight * 0.058,
+                width: screenWidth * 0.33,
                 textColor: Colors.white,
-                textSize: screenWidth * 0.03,
+                textSize: screenWidth * 0.039,
                 backgroundColor: Palette.accent,
                 hasBorder: false,
               ),

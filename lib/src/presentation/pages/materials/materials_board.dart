@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/materials/materials.dart';
+import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
 import '../../widgets/components/components.dart';
@@ -25,6 +26,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   bool isUpdateStatusVisible = false;
   bool isRegisterFormVisible = false;
   List<Section> listSections = [];
+  List<Section> filteredSections = [];
   List<Materials> filteredMaterials = [];
 
   Materials material = Materials(
@@ -84,7 +86,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
           return Center(child: Text(snapshot.error.toString()));
         }
         final sections = snapshot.data!;
-        List<Section> filteredSections =
+        filteredSections =
             sections.where((section) => section.status == 'activo').toList();
         return _buildRoundIconButtons(filteredSections);
       },
@@ -165,7 +167,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                   );
                 },
                 onLongPress: () {
-                  toggleUpdateStatusVisibility(material);
+                  showDeleteAlert(material);
                 },
                 onDoubleTap: () {
                   toggleUpdateFormVisibility(material);
@@ -304,6 +306,30 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                 shape: const CircleBorder(),
               ),
       ),
+    );
+  }
+
+  Future<void> showDeleteAlert(Materials material) async {
+    DialogUtil.showConfirmationDialog(
+      title: 'Eliminar material',
+      message: '¿Desea eliminar este material?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onConfirm: () async {
+        String message = await widget.materialController
+            .deleteMaterial(material.id, material.url_photo);
+        Get.snackbar(
+          'Éxito',
+          message,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+          backgroundColor: Palette.accent,
+          icon: const Icon(Icons.check_circle),
+        );
+      },
+      backgroundConfirmButton: Palette.errorBackground,
+      backgroundCancelButton: Palette.error,
+      backgroundColor: Palette.error,
     );
   }
 

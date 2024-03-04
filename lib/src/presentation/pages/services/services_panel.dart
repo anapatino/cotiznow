@@ -234,7 +234,7 @@ class _ServicesPanel extends State<ServicesPanel> {
   void showDisableServiceAlert(Service service) {
     DialogUtil.showConfirmationDialog(
       title: 'Deshabilitar Servicio',
-      message: '¿Desea eliminar este usuario?',
+      message: '¿Desea eliminar este servicio?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {

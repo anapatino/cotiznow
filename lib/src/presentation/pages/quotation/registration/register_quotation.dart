@@ -76,7 +76,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
       Step(
         state: StepState.indexed,
         isActive: _activeCurrentStep >= 0,
-        title: Text('',
+        title: Text('Datos generales',
             style: GoogleFonts.varelaRound(
               color: Colors.black,
               fontSize: screenWidth * 0.036,
@@ -92,7 +92,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
       Step(
         state: StepState.indexed,
         isActive: _activeCurrentStep >= 1,
-        title: Text('',
+        title: Text('Servicios',
             style: GoogleFonts.varelaRound(
               color: Colors.black,
               fontSize: screenWidth * 0.036,
@@ -164,6 +164,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                       onStepTapped: (int index) {
                         setState(() => _activeCurrentStep = index);
                       },
+                      elevation: 0,
                     ),
                   )
                 ]),

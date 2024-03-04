@@ -220,48 +220,50 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
           email: userController.userEmail,
           itemConfigs: AdministratorRoutes().itemConfigs,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CustomTextField(
-                    icon: Icons.search_rounded,
-                    hintText: 'Buscar',
-                    isPassword: false,
-                    width: screenWidth * 0.85,
-                    height: screenHeight * 0.06,
-                    inputColor: Palette.grey,
-                    textColor: Colors.black,
-                    border: 30,
-                    onChanged: (value) {
-                      filterMaterials(value);
-                    },
-                    controller: controllerSearch,
-                  ),
-                ],
-              ),
-              _buildSectionsList(),
-              SizedBox(
-                height: screenHeight * 0.03,
-              ),
-              _buildMaterialsBySectionId(sectionId),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
-                child: Text(
-                  'Descuentos',
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.1,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CustomTextField(
+                      icon: Icons.search_rounded,
+                      hintText: 'Buscar',
+                      isPassword: false,
+                      width: screenWidth * 0.85,
+                      height: screenHeight * 0.06,
+                      inputColor: Palette.grey,
+                      textColor: Colors.black,
+                      border: 30,
+                      onChanged: (value) {
+                        filterMaterials(value);
+                      },
+                      controller: controllerSearch,
+                    ),
+                  ],
+                ),
+                _buildSectionsList(),
+                SizedBox(
+                  height: screenHeight * 0.03,
+                ),
+                _buildMaterialsBySectionId(sectionId),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
+                  child: Text(
+                    'Descuentos',
+                    style: GoogleFonts.varelaRound(
+                      color: Colors.black,
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.1,
+                    ),
                   ),
                 ),
-              ),
-              _buildMaterialsWithDiscount(),
-            ],
+                _buildMaterialsWithDiscount(),
+              ],
+            ),
           ),
         ),
       ),

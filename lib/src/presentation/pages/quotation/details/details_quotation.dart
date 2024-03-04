@@ -2,8 +2,6 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import 'package:whatsapp/whatsapp.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:http_parser/http_parser.dart' as http_parser;
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -75,6 +73,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
           backgroundColor: Palette.accent,
           icon: const Icon(Icons.check_circle),
         );
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
       }
     } catch (e) {
@@ -139,13 +138,24 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(top: screenHeight * 0.02),
-                      child: Text(
-                        'Servicio: ${getServiceName(quotation.idService)}',
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w300,
-                          letterSpacing: 0.1,
+                      child: RichText(
+                        text: TextSpan(
+                          style: GoogleFonts.varelaRound(
+                            color: Colors.black,
+                            fontSize: screenWidth * 0.045,
+                            letterSpacing: 0.1,
+                          ),
+                          children: [
+                            const TextSpan(
+                              text: 'Servicio: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: getServiceName(quotation.idService),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -157,14 +167,14 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                         style: GoogleFonts.varelaRound(
                           color: Colors.black,
                           fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 0.1,
                         ),
                       ),
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -189,30 +199,38 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                      child: Text(
-                        'Materiales seleccionados',
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w300,
-                          letterSpacing: 0.1,
-                        ),
+                    if (quotation.materials.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: screenHeight * 0.02),
+                            child: Text(
+                              'Materiales seleccionados',
+                              style: GoogleFonts.varelaRound(
+                                color: Palette.accent,
+                                fontSize: screenWidth * 0.045,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                          ),
+                          _buildCardMaterial(quotation.materials),
+                        ],
                       ),
-                    ),
-                    _buildCardMaterial(quotation.materials),
                     if (userController.role != "cliente")
                       Padding(
-                        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+                        padding: EdgeInsets.only(
+                            bottom: screenHeight * 0.02,
+                            top: screenHeight * 0.02),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("  Cambiar estado",
                                 style: GoogleFonts.varelaRound(
                                   color: Colors.black,
-                                  fontSize: screenWidth * 0.035,
+                                  fontSize: screenWidth * 0.04,
                                   fontWeight: FontWeight.w400,
                                   letterSpacing: 1,
                                 )),
