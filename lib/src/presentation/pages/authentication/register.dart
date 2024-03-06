@@ -3,6 +3,7 @@ import 'package:cotiznow/src/domain/domain.dart';
 import '../../widgets/components/components.dart';
 import '../dashboard/dashboard.dart';
 
+// ignore: must_be_immutable
 class Register extends StatelessWidget {
   final TextEditingController controllerName = TextEditingController();
   final TextEditingController controllerLastName = TextEditingController();

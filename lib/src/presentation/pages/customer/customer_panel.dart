@@ -60,9 +60,7 @@ class _CustomerState extends State<Customer> {
                   address: user.address,
                   role: user.role,
                   account: user.account,
-                  onLongPress: () {
-                    showDeleteAlert(user);
-                  },
+                  onLongPress: () {},
                 );
               },
             ),
@@ -172,29 +170,6 @@ class _CustomerState extends State<Customer> {
                 shape: const CircleBorder(),
               ),
       ),
-    );
-  }
-
-  Future<void> showDeleteAlert(Users user) async {
-    DialogUtil.showConfirmationDialog(
-      title: 'Eliminar usuario',
-      message: '¿Desea eliminar este usuario?',
-      confirmButtonText: 'Aceptar',
-      cancelButtonText: 'Cancelar',
-      onConfirm: () async {
-        String message = await widget.userController.deleteUser(user.id);
-        Get.snackbar(
-          'Éxito',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
-      },
-      backgroundConfirmButton: Palette.errorBackground,
-      backgroundCancelButton: Palette.error,
-      backgroundColor: Palette.error,
     );
   }
 }

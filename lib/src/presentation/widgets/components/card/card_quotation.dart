@@ -10,6 +10,7 @@ class CardQuotation extends StatelessWidget {
   final Function onLongPress;
   final bool showDescription;
   final bool showIcon;
+  final Function icon;
 
   const CardQuotation(
       {super.key,
@@ -21,7 +22,8 @@ class CardQuotation extends StatelessWidget {
       required this.description,
       required this.status,
       required this.total,
-      required this.onTap});
+      required this.onTap,
+      required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,9 @@ class CardQuotation extends StatelessWidget {
                     ),
                     if (showIcon)
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          icon();
+                        },
                         icon: Icon(
                           Icons.download_for_offline_rounded,
                           color: Colors.white,

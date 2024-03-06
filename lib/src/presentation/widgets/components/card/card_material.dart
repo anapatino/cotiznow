@@ -41,14 +41,14 @@ class CardMaterialSimple extends StatelessWidget {
           onDoubleTap();
         },
         child: Container(
-          width: isLarge ? screenWidth * 0.85 : screenWidth * 0.53,
-          height: isLarge ? screenHeight * 0.14 : screenHeight * 0.12,
+          width: isLarge ? screenWidth * 0.83 : screenWidth * 0.53,
+          height: isLarge ? screenHeight * 0.16 : screenHeight * 0.12,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.2),
                 offset: const Offset(0, 8),
                 blurRadius: 6,
                 spreadRadius: 2,
@@ -60,7 +60,6 @@ class CardMaterialSimple extends StatelessWidget {
             children: [
               Container(
                 width: screenWidth * 0.27,
-                height: screenHeight * 0.15,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25),
@@ -89,7 +88,7 @@ class CardMaterialSimple extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: isLarge ? screenWidth * 0.55 : screenWidth * 0.38,
+                    width: isLarge ? screenWidth * 0.45 : screenWidth * 0.38,
                     child: Text(
                       material.name,
                       style: GoogleFonts.varelaRound(

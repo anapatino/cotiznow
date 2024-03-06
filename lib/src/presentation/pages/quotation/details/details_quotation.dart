@@ -2,6 +2,11 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import 'package:whatsapp/whatsapp.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:pdf/pdf.dart';
+
+import 'package:pdf/widgets.dart' as pw;
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -34,6 +39,29 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     Service? service = servicesController.servicesList
         ?.firstWhereOrNull((e) => e.id == idService);
     return service?.name ?? '';
+  }
+
+  Future<void> generatePDF() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Center(
+          child: pw.Text(
+            'Hello World',
+          ),
+        ),
+      ),
+    );
+    try {
+      final outputDir =
+          await getExternalStorageDirectory(); // Or getApplicationDocumentsDirectory()
+      final file = File('${outputDir!.path}/example.pdf');
+      await file.writeAsBytes(await pdf.save());
+      print("se supone que ya guarde el pdf");
+    } catch (e) {
+      print("Error saving PDF: $e");
+    }
   }
 
   Widget _buildCardMaterial(List<Materials> materials) {
@@ -132,6 +160,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                   status: quotation.status,
                   total: quotation.total,
                   onTap: () {},
+                  icon: () {
+                    generatePDF();
+                  },
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

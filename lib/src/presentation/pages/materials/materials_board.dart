@@ -28,6 +28,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   List<Section> listSections = [];
   List<Section> filteredSections = [];
   List<Materials> filteredMaterials = [];
+  double _sliderValue = 0;
 
   Materials material = Materials(
       url_photo: '',
@@ -47,6 +48,23 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   @override
   void initState() {
     super.initState();
+    loadSectionsAndHandleIconClick();
+  }
+
+  Future<void> loadSectionsAndHandleIconClick() async {
+    try {
+      listSections = await widget.sectionsController.getAllSections();
+      setState(() {
+        filteredSections = listSections
+            .where((section) => section.status == 'activo')
+            .toList();
+        if (filteredSections.isNotEmpty) {
+          handleIconClick(0, filteredSections[0]);
+        }
+      });
+    } catch (error) {
+      print("Error loading sections: $error");
+    }
   }
 
   void toggleUpdateFormVisibility(Materials selectMaterial) {

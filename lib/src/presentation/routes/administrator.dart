@@ -1,5 +1,4 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/pages/discount/register/register_discount.dart';
 import 'package:cotiznow/src/presentation/pages/pages.dart';
 import '../widgets/components/drawer.dart';
 
@@ -84,6 +83,11 @@ class AdministratorRoutes {
   ];
 
   final List<DrawerItemConfig> itemConfigs = [
+    DrawerItemConfig(
+      icon: Icons.home_rounded,
+      title: 'Principal',
+      routeName: administrator,
+    ),
     DrawerItemConfig(
       icon: Icons.person,
       title: 'Perfil',

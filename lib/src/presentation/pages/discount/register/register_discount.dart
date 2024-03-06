@@ -1,5 +1,4 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/presentation/routes/routes.dart';
 
 import '../../../../domain/domain.dart';
 import '../../../widgets/components/components.dart';
@@ -37,6 +36,28 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
       code: '',
       discount: '');
 
+  @override
+  void initState() {
+    super.initState();
+    loadSectionsAndHandleIconClick();
+  }
+
+  Future<void> loadSectionsAndHandleIconClick() async {
+    try {
+      listSections = await widget.sectionsController.getAllSections();
+      setState(() {
+        List<Section> filteredSections = listSections
+            .where((section) => section.status == 'activo')
+            .toList();
+        if (filteredSections.isNotEmpty) {
+          handleIconClick(0, filteredSections[0]);
+        }
+      });
+    } catch (error) {
+      print("Error loading sections: $error");
+    }
+  }
+
   Widget _buildSectionsList() {
     return FutureBuilder<List<Section>>(
       future: widget.sectionsController.getAllSections(),
@@ -48,8 +69,10 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
               child: const Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasError) {
-          return SizedBox(    width: screenWidth * 0.86,
-              height: screenHeight * 0.15,child: Center(child: Text(snapshot.error.toString())));
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.15,
+              child: Center(child: Text(snapshot.error.toString())));
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
@@ -96,8 +119,10 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
               child: const Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasError) {
-          return SizedBox(    width: screenWidth * 0.86,
-              height: screenHeight * 0.15,child: Center(child: Text(snapshot.error.toString())));
+          return SizedBox(
+              width: screenWidth * 0.86,
+              height: screenHeight * 0.15,
+              child: Center(child: Text(snapshot.error.toString())));
         }
         final materials = snapshot.data!;
         filteredMaterials =
@@ -135,21 +160,16 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    return SlideInLeft(
+    return SlideInRight(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
         appBar: AppBar(
           actions: const [],
         ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: AdministratorRoutes().itemConfigs,
-        ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 "Registrar Descuento",

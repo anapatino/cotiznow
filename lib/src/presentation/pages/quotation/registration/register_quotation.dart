@@ -149,6 +149,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                     status: "pendiente",
                     total: totalQuotation,
                     onTap: () {},
+                    icon: () {},
                   ),
                   SizedBox(
                     width: screenWidth * 1,

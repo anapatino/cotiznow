@@ -24,14 +24,18 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   TextEditingController controllerSalePrice = TextEditingController();
   TextEditingController controllerPurchasePrice = TextEditingController();
   TextEditingController controllerCode = TextEditingController();
+  TextEditingController controllerRegisterUnit = TextEditingController();
   List<String> optionsSection = [];
   List<Section> sections = [];
+  List<String> options = [];
   MaterialsController materialController = Get.find();
   SectionsController sectionsController = Get.find();
+  UnitsController unitsController = Get.find();
 
   String url_photo = "";
   String? selectedOption;
   String? selectedOptionSectionId;
+  bool showControllerRegister = false;
 
   void _resetForm() {
     controllerName.clear();
@@ -41,17 +45,30 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     controllerSalePrice.clear();
     controllerPurchasePrice.clear();
     controllerCode.clear();
+    controllerRegisterUnit.clear();
   }
 
   @override
   void initState() {
     super.initState();
     loadSections();
+    loadUnits();
   }
 
   void _onCancelForm() {
     widget.onCancelForm();
     _resetForm();
+  }
+
+  Future<void> loadUnits() async {
+    try {
+      List<Units> unitsList = await unitsController.getAllUnits();
+      setState(() {
+        options = unitsList.map((unit) => unit.name).toList();
+      });
+    } catch (error) {
+      print("Error loading units: $error");
+    }
   }
 
   Future<void> loadSections() async {
@@ -87,10 +104,15 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
     String status = "activo";
+    String newUnit = controllerRegisterUnit.text;
     if (selectedOption != null) {
       size = selectedOption!;
     } else {
       size = "";
+    }
+    if (newUnit.isNotEmpty) {
+      size = newUnit;
+      String message = await unitsController.registerUnit(newUnit);
     }
     if (name.isNotEmpty &&
         description.isNotEmpty &&
@@ -154,7 +176,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = ['m2', 'm'];
 
     return BounceInUp(
       duration: const Duration(microseconds: 10),
@@ -169,6 +190,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
@@ -186,6 +208,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
               height: screenHeight * 0.75,
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
                       padding:
@@ -207,7 +230,12 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                             icon: "Icons.add",
                             title: "",
                             onClick: _pickImage,
-                            onLongPress: () {},
+                            onLongPress: () {
+                              setState(() {
+                                showControllerRegister !=
+                                    showControllerRegister;
+                              });
+                            },
                             isBackgroundImage: true,
                           )
                         ],
@@ -237,19 +265,28 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                       controller: controllerName,
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.12),
-                      child: Row(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.13,
+                          vertical: screenHeight * 0.02),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Text(
+                            "Agregar unidades",
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.white,
+                              fontSize: screenWidth * 0.03,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(0),
+                            padding: EdgeInsets.only(top: screenHeight * 0.01),
                             child: CustomTextField(
                               icon: Icons.dehaze_rounded,
-                              hintText: 'Unidad',
+                              hintText: 'Valor unidad',
                               isPassword: false,
-                              width: screenWidth * 0.34,
+                              width: screenWidth * 0.75,
                               height: screenHeight * 0.075,
                               inputColor: Colors.white,
                               textColor: Colors.black,
@@ -259,18 +296,57 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                               type: TextInputType.number,
                             ),
                           ),
-                          CustomDropdown(
-                            padding: 0,
-                            border: 10,
-                            options: options,
-                            width: 0.39,
-                            height: 0.075,
-                            widthItems: 0.18,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedOption = newValue;
-                              });
-                            },
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: screenHeight * 0.03),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomDropdown(
+                                  padding: 0,
+                                  border: 10,
+                                  options: options,
+                                  width: 0.55,
+                                  height: 0.075,
+                                  widthItems: 0.33,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedOption = newValue;
+                                    });
+                                  },
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showControllerRegister =
+                                          !showControllerRegister;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    showControllerRegister
+                                        ? Icons.remove
+                                        : Icons.add,
+                                    color: Palette.accentBackground,
+                                    size: 40,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: showControllerRegister,
+                            child: CustomTextField(
+                              icon: Icons.dehaze_rounded,
+                              hintText: 'Nueva unidad',
+                              isPassword: false,
+                              width: screenWidth * 0.75,
+                              height: screenHeight * 0.075,
+                              inputColor: Colors.white,
+                              textColor: Colors.black,
+                              onChanged: (value) {},
+                              controller: controllerRegisterUnit,
+                              showIcon: false,
+                            ),
                           ),
                         ],
                       ),

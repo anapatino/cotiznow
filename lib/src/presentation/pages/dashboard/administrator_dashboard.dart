@@ -25,6 +25,28 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
   String sectionId = "";
   int activeIndex = -1;
 
+  @override
+  void initState() {
+    super.initState();
+    loadSectionsAndHandleIconClick();
+  }
+
+  Future<void> loadSectionsAndHandleIconClick() async {
+    try {
+      listSections = await widget.sectionsController.getAllSections();
+      setState(() {
+        List<Section> filteredSections = listSections
+            .where((section) => section.status == 'activo')
+            .toList();
+        if (filteredSections.isNotEmpty) {
+          handleIconClick(0, filteredSections[0]);
+        }
+      });
+    } catch (error) {
+      print("Error loading sections: $error");
+    }
+  }
+
   void filterMaterials(String searchText) {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
           if (searchText.isEmpty) {
@@ -158,21 +180,25 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
       width: screenWidth * 0.86,
       height: screenHeight * 0.2,
       child: ListView.builder(
-        scrollDirection: Axis.vertical,
+        scrollDirection: Axis.horizontal,
         itemCount: materials.length,
         itemBuilder: (context, index) {
           Materials material = materials[index];
 
-          return CardMaterialSimple(
-              material: material,
-              onClick: () {
-                Get.toNamed(
-                  '/details-material',
-                  arguments: material,
-                );
-              },
-              onLongPress: () {},
-              onDoubleTap: () {});
+          return Padding(
+            padding: EdgeInsets.only(
+                left: screenWidth * 0.01, right: screenWidth * 0.025),
+            child: CardMaterialSimple(
+                material: material,
+                onClick: () {
+                  Get.toNamed(
+                    '/details-material',
+                    arguments: material,
+                  );
+                },
+                onLongPress: () {},
+                onDoubleTap: () {}),
+          );
         },
       ),
     );

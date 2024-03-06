@@ -70,21 +70,23 @@ class _QuotationPanelState extends State<QuotationPanel> {
         itemBuilder: (context, index) {
           Quotation quotation = quotations[index];
           return CardQuotation(
-              onLongPress: () {
-                showDeleteAlert(quotation);
-              },
-              backgroundColor: quotation.status == "pendiente"
-                  ? Palette.accent
-                  : quotation.status == "rechazada"
-                      ? Palette.error
-                      : Palette.primary,
-              title: quotation.name,
-              description: quotation.description,
-              status: quotation.status,
-              total: quotation.total,
-              onTap: () {
-                Get.toNamed('/details-quotation', arguments: quotation);
-              });
+            onLongPress: () {
+              showDeleteAlert(quotation);
+            },
+            backgroundColor: quotation.status == "pendiente"
+                ? Palette.accent
+                : quotation.status == "rechazada"
+                    ? Palette.error
+                    : Palette.primary,
+            title: quotation.name,
+            description: quotation.description,
+            status: quotation.status,
+            total: quotation.total,
+            onTap: () {
+              Get.toNamed('/details-quotation', arguments: quotation);
+            },
+            icon: () {},
+          );
         },
       ),
     );

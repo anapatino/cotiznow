@@ -1,11 +1,9 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/routes.dart';
-
-import '../../../domain/controllers/controllers.dart';
 import '../../../domain/domain.dart';
-import '../../widgets/components/components.dart';
 import '../../widgets/widgets.dart';
 
+// ignore: must_be_immutable
 class DiscountPanel extends StatelessWidget {
   UserController userController = Get.find();
   MaterialsController materialController = Get.find();
