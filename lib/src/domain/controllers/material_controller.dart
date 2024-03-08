@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../data/service/material_request.dart';
-import '../models/material.dart';
+import '../models/entities/material.dart';
 
 class MaterialsController extends GetxController {
   final Rxn<List<Materials>> _materialsList = Rxn<List<Materials>>();

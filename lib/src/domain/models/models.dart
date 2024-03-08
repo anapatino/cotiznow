@@ -1,6 +1,3 @@
-export 'material.dart';
-export 'quotation.dart';
-export 'section.dart';
-export 'service.dart';
-export 'units.dart';
-export 'user.dart';
+export 'entities/entities.dart';
+export 'processes/processes.dart';
+export 'services/services.dart';

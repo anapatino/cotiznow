@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/models/section.dart';
+import '../../domain/models/entities/section.dart';
 
 class SectionsRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;

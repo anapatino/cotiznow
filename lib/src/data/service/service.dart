@@ -1,4 +1,5 @@
 export 'material_request.dart';
+export 'quotation_history_request.dart';
 export 'quotation_request.dart';
 export 'section_request.dart';
 export 'service_request.dart';

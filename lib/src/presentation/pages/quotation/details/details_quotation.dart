@@ -35,10 +35,18 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     await servicesController.getAllServices();
   }
 
-  String getServiceName(String idService) {
-    Service? service = servicesController.servicesList
-        ?.firstWhereOrNull((e) => e.id == idService);
-    return service?.name ?? '';
+  List<String> getServiceNames(List<String> idServices) {
+    List<String> serviceNames = [];
+
+    idServices.forEach((id) {
+      Service? service =
+          servicesController.servicesList?.firstWhereOrNull((e) => e.id == id);
+      if (service != null) {
+        serviceNames.add(service.name);
+      }
+    });
+
+    return serviceNames;
   }
 
   Future<void> generatePDF() async {
@@ -184,7 +192,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                               ),
                             ),
                             TextSpan(
-                              text: getServiceName(quotation.idService),
+                              text: getServiceNames(quotation.idService)
+                                  .join(', '),
                             ),
                           ],
                         ),

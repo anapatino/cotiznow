@@ -1,12 +1,26 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cotiznow/src/domain/models/material.dart';
+import 'package:cotiznow/src/domain/models/entities/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class MaterialsRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
+  static Materials material = Materials(
+      id: '',
+      url_photo: '',
+      name: '',
+      code: '',
+      unit: '',
+      size: '',
+      purchasePrice: '',
+      salePrice: '',
+      sectionId: '',
+      quantity: '',
+      description: '',
+      status: '',
+      discount: '');
 
   static Future<String> _uploadImageToFirebase(String filePath) async {
     try {
@@ -91,32 +105,6 @@ class MaterialsRequest {
     }
   }
 
-  static Future<String> updateMaterial(
-      Materials material, String urlOld) async {
-    try {
-      await deleteMaterialPhoto(urlOld);
-      final urlNew = await _uploadImageToFirebase(material.url_photo);
-      await database.collection('materials').doc(material.id).update({
-        'url_photo': urlNew,
-        'name': material.name,
-        'code': material.code,
-        'unit': material.unit,
-        'size': material.size,
-        'purchase_price': material.purchasePrice,
-        'sale_price': material.salePrice,
-        'section_id': material.sectionId,
-        'quantity': material.quantity,
-        'description': material.description,
-        'status': material.status,
-        'discount': material.discount,
-      });
-
-      return "Se ha actualizado exitosamente el material";
-    } catch (e) {
-      throw Future.error('Error al actualizar el material');
-    }
-  }
-
   static Future<List<Materials>> getAllMaterials() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
@@ -179,6 +167,75 @@ class MaterialsRequest {
     } catch (e) {
       throw Future.error(
           'Error al obtener los materiales desde la base de datos');
+    }
+  }
+
+  static Future<String> updateMaterial(
+      Materials material, String urlOld) async {
+    try {
+      await deleteMaterialPhoto(urlOld);
+      final urlNew = await _uploadImageToFirebase(material.url_photo);
+      await database.collection('materials').doc(material.id).update({
+        'url_photo': urlNew,
+        'name': material.name,
+        'code': material.code,
+        'unit': material.unit,
+        'size': material.size,
+        'purchase_price': material.purchasePrice,
+        'sale_price': material.salePrice,
+        'section_id': material.sectionId,
+        'quantity': material.quantity,
+        'description': material.description,
+        'status': material.status,
+        'discount': material.discount,
+      });
+
+      return "Se ha actualizado exitosamente el material";
+    } catch (e) {
+      throw Future.error('Error al actualizar el material');
+    }
+  }
+
+  static Future<void> subtractMaterialsQuantity(
+    List<Materials> quotationMaterials,
+  ) async {
+    try {
+      for (var quotationMaterial in quotationMaterials) {
+        // Buscar el material en quotationMaterials
+        Materials matchingMaterial = quotationMaterials.firstWhere(
+          (newMaterial) => newMaterial.id == quotationMaterial.id,
+          orElse: () => material,
+        );
+
+        if (matchingMaterial.id != '') {
+          int quantityInQuotation = int.parse(quotationMaterial.quantity);
+          int quantityInMaterial = int.parse(matchingMaterial.quantity);
+
+          if (quantityInMaterial >= quantityInQuotation) {
+            matchingMaterial.quantity =
+                (quantityInMaterial - quantityInQuotation).toString();
+            await updateMaterialQuantityInDatabase(matchingMaterial);
+          } else {
+            throw Future.error(
+                'Error, la cantidad elegida del material no está disponible');
+          }
+        }
+      }
+    } catch (e) {
+      throw Future.error(
+          'Error al intentar hacer los cambios en la cantidad de materiales');
+    }
+  }
+
+  static Future<void> updateMaterialQuantityInDatabase(
+      Materials material) async {
+    try {
+      await database.collection('materials').doc(material.id).update({
+        'quantity': material.quantity,
+      });
+    } catch (e) {
+      throw Future.error(
+          'Error al actualizar la cantidad del material en la base de datos: $e');
     }
   }
 

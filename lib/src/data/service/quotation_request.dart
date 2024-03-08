@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cotiznow/src/data/service/service.dart';
 
 import '../../domain/domain.dart';
 
@@ -6,6 +7,7 @@ class QuotationRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
 
   static Future<String> quoteRegistration(Quotation quotation) async {
+    DateTime now = DateTime.now();
     try {
       await database.collection('quotations').add({
         'name': quotation.name,
@@ -20,10 +22,45 @@ class QuotationRequest {
         'userId': quotation.userId,
       });
 
+      QuotationHistory quotationHistory = QuotationHistory(
+        id: "",
+        quotation: quotation,
+        date: now.toString(),
+      );
+
+      await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
+
+      MaterialsRequest.subtractMaterialsQuantity(quotation.materials);
+
       return "Se ha realizado exitosamente el registro de una cotización";
     } catch (e) {
       throw Future.error(
           'Error al registrar la cotización en la base de datos: $e');
+    }
+  }
+
+  static Future<String> updateQuotation(Quotation updatedQuotation) async {
+    DateTime now = DateTime.now();
+
+    try {
+      await database
+          .collection('quotations')
+          .doc(updatedQuotation.id)
+          .update(updatedQuotation.toJson());
+
+      QuotationHistory quotationHistory = QuotationHistory(
+        id: "",
+        quotation: updatedQuotation,
+        date: now.toString(),
+      );
+
+      await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
+      //MaterialsRequest.subtractMaterialsQuantity(updatedQuotation.materials);
+
+      return "Se ha actualizado la cotización y registrado en el historial";
+    } catch (e) {
+      throw Future.error(
+          'Error al actualizar la cotización en la base de datos: $e');
     }
   }
 

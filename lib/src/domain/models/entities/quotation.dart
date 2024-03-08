@@ -4,7 +4,7 @@ class Quotation {
   String id;
   String name;
   String description;
-  String idService;
+  List<String> idService;
   String length;
   List<Materials> materials;
   String status;
@@ -30,7 +30,9 @@ class Quotation {
       id: json?['id'] ?? '',
       name: json?['name'] ?? '',
       description: json?['description'] ?? '',
-      idService: json?['id_service'] ?? '',
+      idService: json?['id_service'] != null
+          ? List<String>.from(json?['id_service'])
+          : [],
       length: json?['length'] ?? '',
       materials: (json?['materials'] as List<dynamic>?)
               ?.map((materialJson) => Materials.fromJson(materialJson))
@@ -47,7 +49,7 @@ class Quotation {
     return {
       'name': name,
       'description': description,
-      'id_service': idService,
+      'idService': idService,
       'length': length,
       'materials': materials.map((material) => material.toJson()).toList(),
       'status': status,

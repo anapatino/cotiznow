@@ -3,7 +3,7 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/customer.dart';
 
 import '../../../domain/controllers/user_controller.dart';
-import '../../../domain/models/user.dart';
+import '../../../domain/models/entities/user.dart';
 import '../../routes/administrator.dart';
 import '../../widgets/components/button/custom_button.dart';
 import '../../widgets/components/drawer.dart';

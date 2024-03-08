@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/models/service.dart';
+import '../../domain/models/services/service.dart';
 
 class ServicesRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;

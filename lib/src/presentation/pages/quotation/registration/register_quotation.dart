@@ -19,7 +19,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   QuotationController quotationController = Get.find();
   List<Materials> selectedMaterials = [];
 
-  String? selectOptionService;
+  List<String> selectOptionsService = [];
   String totalQuotation = "";
   int _activeCurrentStep = 0;
 
@@ -51,13 +51,12 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
         description.isNotEmpty &&
         length.isNotEmpty &&
         width.isNotEmpty &&
-        totalQuotation.isNotEmpty &&
-        selectOptionService != "") {
+        totalQuotation.isNotEmpty) {
       Quotation quotation = Quotation(
           id: '',
           name: name,
           description: description,
-          idService: selectOptionService!,
+          idService: selectOptionsService,
           length: length,
           materials: selectedMaterials,
           status: 'pendiente',
@@ -107,7 +106,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
             setState(() {
               selectedMaterials = materials;
               totalQuotation = total;
-              selectOptionService = section;
+              selectOptionsService = section;
 
               sendQuotation();
             });

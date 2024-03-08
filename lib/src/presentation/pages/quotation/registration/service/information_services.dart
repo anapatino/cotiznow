@@ -7,7 +7,7 @@ class InformationServices extends StatefulWidget {
   final TextEditingController controllerLength;
   final TextEditingController controllerWidth;
   final VoidCallback onBack;
-  final Function(String, String, List<Materials>) onSelected;
+  final Function(List<String>, String, List<Materials>) onSelected;
 
   const InformationServices(
       {super.key,
@@ -29,6 +29,7 @@ class _InformationServicesState extends State<InformationServices> {
   double screenWidth = 0;
   double screenHeight = 0;
   List<String> optionsService = [];
+  List<String> selectedService = [];
   List<Service> services = [];
   List<String> optionsSection = [];
   List<Section> sections = [];
@@ -71,13 +72,47 @@ class _InformationServicesState extends State<InformationServices> {
         final materials = snapshot.data!;
         filteredMaterials =
             materials.where((material) => material.status == 'activo').toList();
-        return _buildCardMaterial(filteredMaterials, true, false);
+        return _buildCardMaterial(filteredMaterials, false);
       },
     );
   }
 
-  Widget _buildCardMaterial(
-      List<Materials> materials, bool enableClick, bool enableLongPrees) {
+  void updateMaterialQuantity(Materials newMaterial) {
+    setState(() {
+      Materials materialFound = selectedMaterials.firstWhere(
+        (m) => m.id == newMaterial.id,
+        orElse: () => Materials(
+          url_photo: '',
+          discount: '',
+          name: '',
+          code: '',
+          unit: '',
+          size: '',
+          purchasePrice: '',
+          salePrice: '',
+          sectionId: '',
+          quantity: '',
+          description: '',
+          status: '',
+          id: '-1',
+        ),
+      );
+
+      if (materialFound.id == "-1") {
+        selectedMaterials.add(newMaterial);
+      } else {
+        int newMaterialQuantity = int.parse(newMaterial.quantity);
+
+        if (newMaterialQuantity > 0) {
+          materialFound.quantity = newMaterial.quantity;
+        } else {
+          selectedMaterials.remove(materialFound);
+        }
+      }
+    });
+  }
+
+  Widget _buildCardMaterial(List<Materials> materials, bool showQuantity) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
       child: SizedBox(
@@ -89,24 +124,14 @@ class _InformationServicesState extends State<InformationServices> {
           itemBuilder: (context, index) {
             Materials material = materials[index];
 
-            return CardMaterialSimple(
-                isLarge: false,
-                material: material,
-                onClick: () {
-                  if (enableClick) {
-                    setState(() {
-                      selectedMaterials.add(material);
-                    });
-                  }
-                },
-                onLongPress: () {
-                  if (enableLongPrees) {
-                    setState(() {
-                      selectedMaterials.remove(material);
-                    });
-                  }
-                },
-                onDoubleTap: () {});
+            return CardShop(
+              material: material,
+              changeQuantity: (Materials newMaterial) {
+                print("cantidad" + newMaterial.quantity);
+                updateMaterialQuantity(newMaterial);
+              },
+              showQuantity: showQuantity,
+            );
           },
         ),
       ),
@@ -122,19 +147,20 @@ class _InformationServicesState extends State<InformationServices> {
       return sum +
           (material.discount.isEmpty ? salePrice : salePrice - discount);
     });
+    List<String> selectedServiceIds = [];
+    int servicesTotal = selectedService.fold(0, (sum, serviceName) {
+      Service service =
+          services.firstWhere((service) => service.name == serviceName);
+      selectedServiceIds.add(service.id);
+      return sum + int.parse(service.price);
+    });
 
-    String servicePrice = services
-        .firstWhere((service) => service.name == selectedOptionService)
-        .price;
-    String idService = services
-        .firstWhere((service) => service.name == selectedOptionService)
-        .id;
-
-    double total = materialsTotal + double.parse(servicePrice);
+    double total = materialsTotal + servicesTotal;
 
     int roundedTotal = total.round();
 
-    widget.onSelected(idService, roundedTotal.toString(), selectedMaterials);
+    widget.onSelected(
+        selectedServiceIds, roundedTotal.toString(), selectedMaterials);
   }
 
   @override
@@ -164,8 +190,16 @@ class _InformationServicesState extends State<InformationServices> {
               selectedOptionService = newValue;
               if (selectedOptionService != null) {
                 Service service = services.firstWhere(
-                    (service) => service.name == selectedOptionService);
+                  (service) => service.name == selectedOptionService,
+                );
                 controllerPrice.text = service.price;
+                bool isServiceSelected =
+                    selectedService.contains(selectedOptionService);
+                if (!isServiceSelected) {
+                  selectedService.add(selectedOptionService!);
+                } else {
+                  selectedService.remove(selectedOptionService!);
+                }
               }
             });
           },
@@ -278,6 +312,30 @@ class _InformationServicesState extends State<InformationServices> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+          child: Text("Servicios seleccionados",
+              style: GoogleFonts.varelaRound(
+                color: Palette.accent,
+                fontSize: screenWidth * 0.042,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1,
+              )),
+        ),
+        Text(
+          selectedService.isEmpty
+              ? "No hay servicios seleccionados"
+              : selectedService.join(", "),
+          style: TextStyle(
+            color: Palette.textColor,
+            fontSize: screenWidth * 0.035,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 1,
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.02,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
           child: Text("Materiales seleccionados",
               style: GoogleFonts.varelaRound(
                 color: Palette.accent,
@@ -287,7 +345,10 @@ class _InformationServicesState extends State<InformationServices> {
               )),
         ),
         if (selectedMaterials.isNotEmpty)
-          _buildCardMaterial(selectedMaterials, false, true),
+          _buildCardMaterial(
+            selectedMaterials,
+            false,
+          ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
           child: Row(

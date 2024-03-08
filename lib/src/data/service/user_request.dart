@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/models/user.dart';
+import '../../domain/models/entities/user.dart';
 
 class UserRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;

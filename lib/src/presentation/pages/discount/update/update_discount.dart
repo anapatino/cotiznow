@@ -1,6 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
-import 'package:cotiznow/src/domain/models/material.dart';
+import 'package:cotiznow/src/domain/models/entities/material.dart';
 import '../../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
