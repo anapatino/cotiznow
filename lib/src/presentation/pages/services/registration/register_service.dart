@@ -1,6 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
-import 'package:cotiznow/src/domain/models/services/service.dart';
+import 'package:cotiznow/src/domain/models/entities/service.dart';
 import 'package:cotiznow/src/presentation/utils/utils.dart';
 import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 

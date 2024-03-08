@@ -1,7 +1,7 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/models/models.dart';
 
-import '../../data/service/service_request.dart';
-import '../models/services/service.dart';
+import '../../../data/service/entities/service_request.dart';
 
 class ServicesController extends GetxController {
   final Rxn<List<Service>> _servicesList = Rxn<List<Service>>();

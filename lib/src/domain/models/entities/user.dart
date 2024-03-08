@@ -26,4 +26,18 @@ class Users {
       authId: json?['authId'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'lastName': lastName,
+      'phone': phone,
+      'address': address,
+      'email': email,
+      'role': role,
+      'account': account,
+      'id': id,
+      'authId': authId,
+    };
+  }
 }

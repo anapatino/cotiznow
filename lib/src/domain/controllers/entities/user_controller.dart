@@ -1,7 +1,7 @@
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import '../../data/service/user_request.dart';
+import '../../../data/service/entities/user_request.dart';
 
 class UserController extends GetxController {
   final Rx<dynamic> _email = "".obs;

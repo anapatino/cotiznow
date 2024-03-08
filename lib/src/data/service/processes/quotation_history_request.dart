@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/domain.dart';
+import '../../../domain/domain.dart';
 
 class QuotationHistoryRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;

@@ -40,7 +40,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
 
     idServices.forEach((id) {
       Service? service =
-          servicesController.servicesList?.firstWhereOrNull((e) => e.id == id);
+          servicesController.servicesList?.firstWhereOrNull((e) => e?.id == id);
       if (service != null) {
         serviceNames.add(service.name);
       }

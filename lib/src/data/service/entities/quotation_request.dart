@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cotiznow/src/data/service/service.dart';
 
-import '../../domain/domain.dart';
+import '../../../domain/domain.dart';
 
 class QuotationRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;

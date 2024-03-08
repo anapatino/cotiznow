@@ -1,8 +1,8 @@
 import 'package:cotiznow/lib.dart';
 import 'package:get/get.dart';
 
-import '../../data/service/section_request.dart';
-import '../models/entities/section.dart';
+import '../../../data/service/entities/section_request.dart';
+import '../../models/entities/section.dart';
 
 class SectionsController extends GetxController {
   final Rxn<List<Section>> _sectionsList = Rxn<List<Section>>();

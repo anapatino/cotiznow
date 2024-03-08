@@ -1,7 +1,7 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/data/data.dart';
 
-import '../models/models.dart';
+import '../../models/models.dart';
 
 class UnitsController extends GetxController {
   final Rxn<List<Units>> _unitsList = Rxn<List<Units>>();

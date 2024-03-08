@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/domain.dart';
+import '../../../domain/domain.dart';
 
 class UnitsRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
