@@ -201,7 +201,6 @@ class MaterialsRequest {
   ) async {
     try {
       for (var quotationMaterial in quotationMaterials) {
-        // Buscar el material en quotationMaterials
         Materials matchingMaterial = quotationMaterials.firstWhere(
           (newMaterial) => newMaterial.id == quotationMaterial.id,
           orElse: () => material,

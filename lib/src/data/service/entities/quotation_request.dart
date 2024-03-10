@@ -9,7 +9,8 @@ class QuotationRequest {
   static Future<String> quoteRegistration(Quotation quotation) async {
     DateTime now = DateTime.now();
     try {
-      await database.collection('quotations').add({
+      DocumentReference newQuotation =
+          await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
         'id_service': quotation.idService,
@@ -21,7 +22,8 @@ class QuotationRequest {
         'width': quotation.width,
         'userId': quotation.userId,
       });
-
+      await newQuotation.update({'id': newQuotation.id});
+      quotation.id = newQuotation.id;
       QuotationHistory quotationHistory = QuotationHistory(
         id: "",
         quotation: quotation,
@@ -82,11 +84,9 @@ class QuotationRequest {
       QuerySnapshot querySnapshot =
           await database.collection('quotations').get();
 
-      List<Quotation> quotations = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Quotation.fromJson(data);
-      }).toList();
+      List<Quotation> quotations = querySnapshot.docs
+          .map((doc) => Quotation.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
 
       return quotations;
     } catch (e) {

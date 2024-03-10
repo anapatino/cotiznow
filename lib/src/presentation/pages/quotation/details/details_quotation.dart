@@ -155,23 +155,23 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                   ),
                 ),
                 CardQuotation(
-                  showIcon: true,
-                  showDescription: true,
-                  onLongPress: () {},
-                  backgroundColor: quotation.status == "pendiente"
-                      ? Palette.accent
-                      : quotation.status == "rechazada"
-                          ? Palette.error
-                          : Palette.primary,
-                  title: quotation.name,
-                  description: quotation.description,
-                  status: quotation.status,
-                  total: quotation.total,
-                  onTap: () {},
-                  icon: () {
-                    generatePDF();
-                  },
-                ),
+                    showIcon: true,
+                    showDescription: true,
+                    onLongPress: () {},
+                    backgroundColor: quotation.status == "pendiente"
+                        ? Palette.accent
+                        : quotation.status == "rechazada"
+                            ? Palette.error
+                            : Palette.primary,
+                    title: quotation.name,
+                    description: quotation.description,
+                    status: quotation.status,
+                    total: quotation.total,
+                    onTap: () {},
+                    icon: () {
+                      generatePDF();
+                    },
+                    onDoubleTap: () {}),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

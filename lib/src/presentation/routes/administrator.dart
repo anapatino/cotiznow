@@ -16,10 +16,14 @@ class AdministratorRoutes {
   static const String quotations = '/quotations';
   static const String quotationsDetails = '/details-quotation';
   static const String quotationsRegistration = '/registration-quotation';
+  static const String quotationsUpdate = '/update-quotation';
+  static const String quotationsHistory = '/history-quotation';
 
   static const String discounts = '/discounts';
   static const String discountsRegister = '/register-discounts';
   static const String discountsUpdate = '/update-discounts';
+
+  static const String requestVisit = '/request-visit';
 
   static const String exit = '/principal';
 
@@ -73,8 +77,20 @@ class AdministratorRoutes {
       page: () => const RegisterQuotation(),
     ),
     GetPage(
+      name: quotationsUpdate,
+      page: () => const UpdateQuotation(),
+    ),
+    GetPage(
       name: quotationsDetails,
       page: () => const DetailsQuotation(),
+    ),
+    GetPage(
+      name: quotationsHistory,
+      page: () => HistoryQuotationPanel(),
+    ),
+    GetPage(
+      name: requestVisit,
+      page: () => ProgrammeVisitsPanel(),
     ),
     GetPage(
       name: exit,
@@ -119,9 +135,19 @@ class AdministratorRoutes {
       routeName: quotations,
     ),
     DrawerItemConfig(
+      icon: Icons.request_quote,
+      title: 'Historial cotizaciones',
+      routeName: quotationsHistory,
+    ),
+    DrawerItemConfig(
       icon: Icons.percent,
       title: 'Descuentos',
       routeName: discounts,
+    ),
+    DrawerItemConfig(
+      icon: Icons.person_pin_rounded,
+      title: 'Consultar visitas',
+      routeName: requestVisit,
     ),
     DrawerItemConfig(
       icon: Icons.door_front_door_rounded,

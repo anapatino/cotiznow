@@ -8,6 +8,7 @@ class CardQuotation extends StatelessWidget {
   final String total;
   final Function onTap;
   final Function onLongPress;
+  final Function onDoubleTap;
   final bool showDescription;
   final bool showIcon;
   final Function icon;
@@ -23,7 +24,8 @@ class CardQuotation extends StatelessWidget {
       required this.status,
       required this.total,
       required this.onTap,
-      required this.icon});
+      required this.icon,
+      required this.onDoubleTap});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,9 @@ class CardQuotation extends StatelessWidget {
       },
       onLongPress: () {
         onLongPress();
+      },
+      onDoubleTap: () {
+        onDoubleTap();
       },
       child: Padding(
         padding: EdgeInsets.only(bottom: screenHeight * 0.02),

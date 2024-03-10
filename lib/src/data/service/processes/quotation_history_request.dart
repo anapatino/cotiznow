@@ -29,7 +29,6 @@ class QuotationHistoryRequest {
 
       List<QuotationHistory> quotationsHistory = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
         return QuotationHistory.fromJson(data);
       }).toList();
 

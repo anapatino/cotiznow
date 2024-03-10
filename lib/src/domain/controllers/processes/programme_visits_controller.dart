@@ -16,11 +16,12 @@ class ProgrammeVisitsController extends GetxController {
     }
   }
 
-  Future<void> getAllVisits() async {
+  Future<List<ProgrammeVisits>> getAllVisits() async {
     try {
       List<ProgrammeVisits> visits =
           await ProgrammeVisitsRequest.getAllVisits();
       _visitsList.value = visits;
+      return visits;
     } catch (e) {
       throw Future.error('Error al obtener todas las visitas: $e');
     }

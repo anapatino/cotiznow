@@ -3,14 +3,15 @@ import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/pages/quotation/registration/registration.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 
-class RegisterQuotation extends StatefulWidget {
-  const RegisterQuotation({super.key});
+class UpdateQuotation extends StatefulWidget {
+  const UpdateQuotation({super.key});
 
   @override
-  State<RegisterQuotation> createState() => _RegisterQuotationState();
+  State<UpdateQuotation> createState() => _UpdateQuotationState();
 }
 
-class _RegisterQuotationState extends State<RegisterQuotation> {
+class _UpdateQuotationState extends State<UpdateQuotation> {
+  final quotation = Get.arguments as Quotation;
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
   TextEditingController controllerLength = TextEditingController();
@@ -22,6 +23,12 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   List<String> selectOptionsService = [];
   String totalQuotation = "";
   int _activeCurrentStep = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadControllers();
+  }
 
   void clearControllers() {
     controllerName.clear();
@@ -42,6 +49,16 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
     });
   }
 
+  void loadControllers() {
+    if (quotation != null) {
+      controllerName.text = quotation.name;
+      controllerDescription.text = quotation.description;
+      controllerLength.text = quotation.length;
+      controllerWidth.text = quotation.width;
+      totalQuotation = quotation.total;
+    }
+  }
+
   void sendQuotation() {
     String name = controllerName.text;
     String description = controllerDescription.text;
@@ -52,7 +69,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
         length.isNotEmpty &&
         width.isNotEmpty &&
         totalQuotation.isNotEmpty) {
-      Quotation quotation = Quotation(
+      Quotation newQuotation = Quotation(
           id: '',
           name: name,
           description: description,
@@ -63,7 +80,8 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           total: totalQuotation,
           width: width,
           userId: userController.idUser);
-      confirmationRegistrationQuotation(quotation);
+
+      confirmationUpdateQuotation(newQuotation);
     }
   }
 
@@ -130,7 +148,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                   Padding(
                     padding: EdgeInsets.only(bottom: screenHeight * 0.02),
                     child: Text(
-                      "Registrar cotización",
+                      "Actualizar cotización",
                       style: GoogleFonts.varelaRound(
                         color: Colors.black,
                         fontSize: screenWidth * 0.064,
@@ -140,17 +158,16 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                     ),
                   ),
                   CardQuotation(
-                    showDescription: true,
-                    onLongPress: () {},
-                    backgroundColor: Palette.accent,
-                    title: controllerName.text,
-                    description: controllerDescription.text,
-                    status: "pendiente",
-                    total: totalQuotation,
-                    onTap: () {},
-                    icon: () {},
-                    onDoubleTap: () {},
-                  ),
+                      showDescription: true,
+                      onLongPress: () {},
+                      backgroundColor: Palette.accent,
+                      title: controllerName.text,
+                      description: controllerDescription.text,
+                      status: quotation.status,
+                      total: totalQuotation,
+                      onTap: () {},
+                      icon: () {},
+                      onDoubleTap: () {}),
                   SizedBox(
                     width: screenWidth * 1,
                     height: screenHeight * 0.65,
@@ -175,16 +192,15 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
     );
   }
 
-  Future<void> confirmationRegistrationQuotation(Quotation quotation) async {
+  Future<void> confirmationUpdateQuotation(Quotation quotation) async {
     DialogUtil.showConfirmationDialog(
-      title: 'Registro de cotización',
-      message: '¿Desea registrar esta cotización?',
+      title: 'Actualizar  cotización',
+      message: '¿Desea actualizar esta cotización?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message =
-              await quotationController.registerQuotation(quotation);
+          String message = await quotationController.updateQuotation(quotation);
           Get.snackbar(
             'Éxito',
             message,
@@ -195,10 +211,10 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           );
           Navigator.pop(context);
         } catch (error) {
-          print("Error al registrar la cotización: $error");
+          print("Error al actualizar la cotización: $error");
           Get.snackbar(
             'Error',
-            'Hubo un problema al registrar la cotización.',
+            error.toString(),
             colorText: Colors.white,
             backgroundColor: Colors.red,
             icon: const Icon(Icons.error),

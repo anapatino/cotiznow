@@ -4,17 +4,17 @@ import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 
 // ignore: must_be_immutable
-class QuotationPanel extends StatefulWidget {
+class HistoryQuotationPanel extends StatefulWidget {
   UserController userController = Get.find();
-  QuotationController quotationController = Get.find();
+  QuotationHistoryController quotationController = Get.find();
 
-  QuotationPanel({super.key});
+  HistoryQuotationPanel({super.key});
 
   @override
-  State<QuotationPanel> createState() => _QuotationPanelState();
+  State<HistoryQuotationPanel> createState() => _HistoryQuotationPanelState();
 }
 
-class _QuotationPanelState extends State<QuotationPanel> {
+class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
   double screenWidth = 0;
   double screenHeight = 0;
   bool isContainerVisible = false;
@@ -25,13 +25,14 @@ class _QuotationPanelState extends State<QuotationPanel> {
     super.initState();
   }
 
-  List<Quotation> _filterListByOption(List<Quotation> quotations) {
+  List<QuotationHistory> _filterListByOption(
+      List<QuotationHistory> quotations) {
     if (widget.userController.role != "cliente") {
       if (selectedOption == "pendiente" ||
           selectedOption == "aprobada" ||
           selectedOption == "rechazada") {
         quotations = quotations
-            .where((quotation) => quotation.status == selectedOption)
+            .where((quotation) => quotation.quotation.status == selectedOption)
             .toList();
       }
     }
@@ -39,11 +40,8 @@ class _QuotationPanelState extends State<QuotationPanel> {
   }
 
   Widget _buildQuotationList() {
-    return FutureBuilder<List<Quotation>>(
-      future: widget.userController.role == "cliente"
-          ? widget.quotationController
-              .getQuotationsByUserId(widget.userController.idUser)
-          : widget.quotationController.getAllQuotations(),
+    return FutureBuilder<List<QuotationHistory>>(
+      future: widget.quotationController.getAllQuotationsHistory(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -55,40 +53,38 @@ class _QuotationPanelState extends State<QuotationPanel> {
             child: Text('Error al cargar la lista de cotizaciones'),
           );
         }
-        List<Quotation> quotations = snapshot.data!;
+        List<QuotationHistory> quotations = snapshot.data!;
         quotations = _filterListByOption(quotations);
         return _buildCardQuotation(quotations);
       },
     );
   }
 
-  Widget _buildCardQuotation(List<Quotation> quotations) {
+  Widget _buildCardQuotation(List<QuotationHistory> quotations) {
     return SizedBox(
       height: screenHeight * 0.75,
       child: ListView.builder(
         itemCount: quotations.length,
         itemBuilder: (context, index) {
-          Quotation quotation = quotations[index];
+          QuotationHistory quotation = quotations[index];
           return CardQuotation(
             onLongPress: () {
               showDeleteAlert(quotation);
             },
-            backgroundColor: quotation.status == "pendiente"
+            backgroundColor: quotation.quotation.status == "pendiente"
                 ? Palette.accent
-                : quotation.status == "rechazada"
+                : quotation.quotation.status == "rechazada"
                     ? Palette.error
                     : Palette.primary,
-            title: quotation.name,
-            description: quotation.description,
-            status: quotation.status,
-            total: quotation.total,
+            title: quotation.quotation.name,
+            description: quotation.quotation.description,
+            status: quotation.quotation.status,
+            total: quotation.quotation.total,
             onTap: () {
               Get.toNamed('/details-quotation', arguments: quotation);
             },
             icon: () {},
-            onDoubleTap: () {
-              Get.toNamed('/update-quotation', arguments: quotation);
-            },
+            onDoubleTap: () {},
           );
         },
       ),
@@ -120,7 +116,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Cotizaciones",
+                " Historial de cotizaciones",
                 style: GoogleFonts.varelaRound(
                   color: Colors.black,
                   fontSize: screenWidth * 0.06,
@@ -143,35 +139,21 @@ class _QuotationPanelState extends State<QuotationPanel> {
             ],
           ),
         ),
-        floatingActionButton: isContainerVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: () {
-                  Get.toNamed('/registration-quotation');
-                },
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                shape: const CircleBorder(),
-              ),
       ),
     );
   }
 
-  Future<void> showDeleteAlert(Quotation quotation) async {
+  Future<void> showDeleteAlert(QuotationHistory quotation) async {
     DialogUtil.showConfirmationDialog(
       title: 'Eliminar cotización',
       message: '¿Desea eliminar esta cotización?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        String message =
-            await widget.quotationController.deleteQuotation(quotation.id);
+        await widget.quotationController.deleteQuotationHistory(quotation.id);
         Get.snackbar(
           'Éxito',
-          message,
+          "Se ha eliminado la cotización satisfactoriamente",
           colorText: Colors.white,
           duration: const Duration(seconds: 5),
           backgroundColor: Palette.accent,

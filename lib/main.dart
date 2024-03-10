@@ -15,6 +15,8 @@ void main() async {
     Get.put(ServicesController());
     Get.put(QuotationController());
     Get.put(UnitsController());
+    Get.put(ProgrammeVisitsController());
+    Get.put(QuotationHistoryController());
 
     runApp(const App());
   } catch (e) {
