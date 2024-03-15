@@ -104,7 +104,8 @@ class _InformationServicesState extends State<InformationServices> {
         int newMaterialQuantity = int.parse(newMaterial.quantity);
 
         if (newMaterialQuantity > 0) {
-          materialFound.quantity = newMaterial.quantity;
+          selectedMaterials.remove(materialFound);
+          selectedMaterials.add(newMaterial);
         } else {
           selectedMaterials.remove(materialFound);
         }

@@ -7,13 +7,15 @@ class CardMaterialSimple extends StatelessWidget {
   final Function onClick;
   final Function onLongPress;
   final Function onDoubleTap;
+  final bool showDescount;
   const CardMaterialSimple(
       {super.key,
       required this.material,
       required this.onClick,
       required this.onLongPress,
       required this.onDoubleTap,
-      this.isLarge = true});
+      this.isLarge = true,
+      this.showDescount = true});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,8 @@ class CardMaterialSimple extends StatelessWidget {
           onDoubleTap();
         },
         child: Container(
-          width: isLarge ? screenWidth * 0.83 : screenWidth * 0.53,
-          height: isLarge ? screenHeight * 0.16 : screenHeight * 0.12,
+          width: isLarge ? screenWidth * 0.83 : screenWidth * 0.83,
+          height: isLarge ? screenHeight * 0.16 : screenHeight * 0.155,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -88,13 +90,13 @@ class CardMaterialSimple extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: isLarge ? screenWidth * 0.45 : screenWidth * 0.38,
+                    width: isLarge ? screenWidth * 0.45 : screenWidth * 0.45,
                     child: Text(
                       material.name,
                       style: GoogleFonts.varelaRound(
                           fontSize: isLarge
                               ? screenWidth * 0.045
-                              : screenWidth * 0.035,
+                              : screenWidth * 0.039,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -105,29 +107,32 @@ class CardMaterialSimple extends StatelessWidget {
                         fontWeight: FontWeight.w300),
                   ),
                   if (percentage > 0)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Antes: ${material.salePrice} ${material.size}',
-                          style: GoogleFonts.varelaRound(
-                              fontSize: screenWidth * 0.03,
-                              fontWeight: FontWeight.w300),
-                        ),
-                        Text(
-                          '\$${discount.round()}',
-                          style: GoogleFonts.varelaRound(
-                              fontSize: screenWidth * 0.04,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
+                    Text(
+                      'Antes: ${material.salePrice} ${material.size}',
+                      style: GoogleFonts.varelaRound(
+                          fontSize: screenWidth * 0.028,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  if (showDescount != true)
+                    Text(
+                      'Cantidad: ${material.quantity}',
+                      style: GoogleFonts.varelaRound(
+                          fontSize: screenWidth * 0.03,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  if (percentage > 0)
+                    Text(
+                      '\$${discount.round()}',
+                      style: GoogleFonts.varelaRound(
+                          fontSize: screenWidth * 0.04,
+                          fontWeight: FontWeight.w600),
                     ),
                   if (percentage <= 0)
                     Text(
                       '\$${material.salePrice} ${material.size}',
                       style: GoogleFonts.varelaRound(
                           fontSize: screenWidth * 0.038,
-                          fontWeight: FontWeight.w300),
+                          fontWeight: FontWeight.w600),
                     ),
                 ],
               )

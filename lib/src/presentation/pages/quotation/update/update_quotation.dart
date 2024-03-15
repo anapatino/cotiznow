@@ -59,7 +59,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
     }
   }
 
-  void sendQuotation() {
+  void updateQuotation() {
     String name = controllerName.text;
     String description = controllerDescription.text;
     String length = controllerLength.text;
@@ -70,16 +70,16 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
         width.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation newQuotation = Quotation(
-          id: '',
+          id: quotation.id,
           name: name,
           description: description,
           idService: selectOptionsService,
           length: length,
           materials: selectedMaterials,
-          status: 'pendiente',
+          status: quotation.status,
           total: totalQuotation,
           width: width,
-          userId: userController.idUser);
+          userId: quotation.userId);
 
       confirmationUpdateQuotation(newQuotation);
     }
@@ -125,9 +125,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
               selectedMaterials = materials;
               totalQuotation = total;
               selectOptionsService = section;
-
-              sendQuotation();
             });
+            updateQuotation();
           },
         ),
       ),
@@ -209,6 +208,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
             backgroundColor: Palette.accent,
             icon: const Icon(Icons.check_circle),
           );
+          // ignore: use_build_context_synchronously
           Navigator.pop(context);
         } catch (error) {
           print("Error al actualizar la cotización: $error");

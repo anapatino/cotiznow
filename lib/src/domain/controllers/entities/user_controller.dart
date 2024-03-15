@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../data/service/entities/user_request.dart';
 
 class UserController extends GetxController {
+  final Rx<Users?> _user = Rx<Users?>(null);
   final Rx<dynamic> _email = "".obs;
   final Rx<dynamic> _name = "".obs;
   final Rx<dynamic> _role = "".obs;
@@ -14,6 +15,7 @@ class UserController extends GetxController {
   final Rx<dynamic> _id = "".obs;
   final Rx<dynamic> _authId = "".obs;
   final Rxn<List<Users>> _listUsers = Rxn<List<Users>>();
+  Users? get user => _user.value;
 
   String get userEmail => _email.value;
   String get name => _name.value;
@@ -48,6 +50,7 @@ class UserController extends GetxController {
   }
 
   void updateController(Users user) {
+    _user.value = user;
     _email.value = user.email;
     _name.value = user.name;
     _lastName.value = user.lastName;

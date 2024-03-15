@@ -7,7 +7,10 @@ class CustomerRoutes {
   static const String profiles = '/profiles';
   static const String sections = '/sections';
   static const String requestVisit = '/request-visit';
+  static const String visitDetails = '/visit-details';
+
   static const String quotations = '/quotations';
+  static const String quotationsRegistration = '/registration-quotation';
   static const String whatsapp = '/whatsapp';
   static const String exit = '/principal';
   static final routes = [
@@ -25,11 +28,19 @@ class CustomerRoutes {
     ),
     GetPage(
       name: requestVisit,
-      page: () => const Main(),
+      page: () => ProgrammeVisitsPanel(),
+    ),
+    GetPage(
+      name: visitDetails,
+      page: () => VisitDetails(),
     ),
     GetPage(
       name: quotations,
       page: () => QuotationPanel(),
+    ),
+    GetPage(
+      name: quotationsRegistration,
+      page: () => const RegisterQuotation(),
     ),
     GetPage(
       name: whatsapp,

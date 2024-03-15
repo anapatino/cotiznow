@@ -3,7 +3,7 @@ export 'authentication/authentication.dart';
 export 'customer/customer.dart';
 export 'dashboard/dashboard.dart';
 export 'discount/discount.dart';
-export 'history_quotation/history_quotation.dart';
+export 'quotation/history_quotation/history_quotation.dart';
 export 'main.dart';
 export 'materials/materials.dart';
 export 'profile/profile.dart';

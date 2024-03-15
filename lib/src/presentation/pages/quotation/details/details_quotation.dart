@@ -24,6 +24,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   double screenWidth = 0;
   double screenHeight = 0;
   String? selectOption;
+  List<Service> listServices = [];
   WhatsApp whatsapp = WhatsApp();
   @override
   void initState() {
@@ -32,20 +33,16 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> loadService() async {
-    await servicesController.getAllServices();
+    listServices = await servicesController.getAllServices();
   }
 
   List<String> getServiceNames(List<String> idServices) {
-    List<String> serviceNames = [];
+    print(idServices);
+    final filteredServices =
+        listServices.where((service) => idServices.contains(service.id));
 
-    idServices.forEach((id) {
-      Service? service =
-          servicesController.servicesList?.firstWhereOrNull((e) => e?.id == id);
-      if (service != null) {
-        serviceNames.add(service.name);
-      }
-    });
-
+    final serviceNames =
+        filteredServices.map((service) => service.name).toList();
     return serviceNames;
   }
 
@@ -62,8 +59,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
       ),
     );
     try {
-      final outputDir =
-          await getExternalStorageDirectory(); // Or getApplicationDocumentsDirectory()
+      final outputDir = await getExternalStorageDirectory();
       final file = File('${outputDir!.path}/example.pdf');
       await file.writeAsBytes(await pdf.save());
       print("se supone que ya guarde el pdf");
@@ -73,25 +69,27 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Widget _buildCardMaterial(List<Materials> materials) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-      child: SizedBox(
-        width: screenWidth * 1,
-        height: screenHeight * 0.3,
-        child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: materials.length,
-          itemBuilder: (context, index) {
-            Materials material = materials[index];
+    return SizedBox(
+      width: screenWidth * 0.96,
+      height: screenHeight * 0.17,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: materials.length,
+        itemBuilder: (context, index) {
+          Materials material = materials[index];
 
-            return CardMaterialSimple(
+          return Padding(
+            padding: EdgeInsets.only(
+                left: screenWidth * 0.01, right: screenWidth * 0.025),
+            child: CardMaterialSimple(
+                showDescount: false,
                 isLarge: false,
                 material: material,
                 onClick: () {},
                 onLongPress: () {},
-                onDoubleTap: () {});
-          },
-        ),
+                onDoubleTap: () {}),
+          );
+        },
       ),
     );
   }
@@ -185,15 +183,18 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                             letterSpacing: 0.1,
                           ),
                           children: [
-                            const TextSpan(
+                            TextSpan(
                               text: 'Servicio: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: GoogleFonts.varelaRound(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
                             ),
                             TextSpan(
                               text: getServiceNames(quotation.idService)
                                   .join(', '),
+                              style: GoogleFonts.varelaRound(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
                             ),
                           ],
                         ),
@@ -214,7 +215,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

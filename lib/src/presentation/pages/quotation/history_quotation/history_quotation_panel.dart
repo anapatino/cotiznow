@@ -1,7 +1,7 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/routes.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
-import '../../../domain/domain.dart';
+import '../../../../domain/domain.dart';
 
 // ignore: must_be_immutable
 class HistoryQuotationPanel extends StatefulWidget {
@@ -81,7 +81,7 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
             status: quotation.quotation.status,
             total: quotation.quotation.total,
             onTap: () {
-              Get.toNamed('/details-quotation', arguments: quotation);
+              Get.toNamed('/details-quotation', arguments: quotation.quotation);
             },
             icon: () {},
             onDoubleTap: () {},

@@ -24,6 +24,7 @@ class AdministratorRoutes {
   static const String discountsUpdate = '/update-discounts';
 
   static const String requestVisit = '/request-visit';
+  static const String visitDetails = '/visit-details';
 
   static const String exit = '/principal';
 
@@ -91,6 +92,10 @@ class AdministratorRoutes {
     GetPage(
       name: requestVisit,
       page: () => ProgrammeVisitsPanel(),
+    ),
+    GetPage(
+      name: visitDetails,
+      page: () => VisitDetails(),
     ),
     GetPage(
       name: exit,

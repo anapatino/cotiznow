@@ -133,7 +133,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         : ['cliente', 'administrador'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    bool isEnable = userController.role == "cliente" ? false : true;
+    bool isEnable = true;
 
     return Scaffold(
         appBar: AppBar(
