@@ -67,11 +67,21 @@ class QuotationRequest {
   }
 
   static Future<String> updateQuotationStatus(
-      String quotationId, String newStatus) async {
+      Quotation quotation, String newStatus) async {
+    DateTime now = DateTime.now();
+
     try {
-      await database.collection('quotations').doc(quotationId).update({
+      await database.collection('quotations').doc(quotation.id).update({
         'status': newStatus,
       });
+      quotation.status = newStatus;
+      QuotationHistory quotationHistory = QuotationHistory(
+        id: "",
+        quotation: quotation,
+        date: now.toString(),
+      );
+
+      await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
       return "Se ha actualizado el estado de la cotización";
     } catch (e) {
       throw Future.error(

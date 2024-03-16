@@ -24,7 +24,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   double screenWidth = 0;
   double screenHeight = 0;
   String? selectOption;
-  List<Service> listServices = [];
+  List<String> serviceNames = [];
   WhatsApp whatsapp = WhatsApp();
   @override
   void initState() {
@@ -33,17 +33,10 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> loadService() async {
-    listServices = await servicesController.getAllServices();
-  }
+    final filteredServices = servicesController.servicesList!
+        .where((service) => quotation.idService.contains(service.id));
 
-  List<String> getServiceNames(List<String> idServices) {
-    print(idServices);
-    final filteredServices =
-        listServices.where((service) => idServices.contains(service.id));
-
-    final serviceNames =
-        filteredServices.map((service) => service.name).toList();
-    return serviceNames;
+    serviceNames = filteredServices.map((service) => service.name).toList();
   }
 
   Future<void> generatePDF() async {
@@ -98,7 +91,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     try {
       if (selectOption != null) {
         String message = await quotationController.updateQuotationStatus(
-            quotation.id, selectOption!);
+            quotation, selectOption!);
         Get.snackbar(
           'Actualización de cotización',
           message,
@@ -190,8 +183,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                                   color: Colors.black),
                             ),
                             TextSpan(
-                              text: getServiceNames(quotation.idService)
-                                  .join(', '),
+                              text: serviceNames.join(', '),
                               style: GoogleFonts.varelaRound(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black),

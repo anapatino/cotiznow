@@ -7,6 +7,7 @@ import '../../../../domain/domain.dart';
 class HistoryQuotationPanel extends StatefulWidget {
   UserController userController = Get.find();
   QuotationHistoryController quotationController = Get.find();
+  ServicesController servicesController = Get.find();
 
   HistoryQuotationPanel({super.key});
 
@@ -80,7 +81,8 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
             description: quotation.quotation.description,
             status: quotation.quotation.status,
             total: quotation.quotation.total,
-            onTap: () {
+            onTap: () async {
+              await widget.servicesController.getAllServices();
               Get.toNamed('/details-quotation', arguments: quotation.quotation);
             },
             icon: () {},

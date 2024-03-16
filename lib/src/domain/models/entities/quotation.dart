@@ -49,7 +49,7 @@ class Quotation {
     return {
       'name': name,
       'description': description,
-      'idService': idService,
+      'id_service': idService,
       'length': length,
       'materials': materials.map((material) => material.toJson()).toList(),
       'status': status,
