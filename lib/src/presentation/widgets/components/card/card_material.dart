@@ -122,7 +122,7 @@ class CardMaterialSimple extends StatelessWidget {
                     ),
                   if (percentage > 0)
                     Text(
-                      '\$${discount.round()}',
+                      '\$${(discount.round() * int.parse(material.quantity))}',
                       style: GoogleFonts.varelaRound(
                           fontSize: screenWidth * 0.04,
                           fontWeight: FontWeight.w600),

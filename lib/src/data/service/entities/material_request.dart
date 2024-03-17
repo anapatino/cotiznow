@@ -200,8 +200,10 @@ class MaterialsRequest {
     List<Materials> quotationMaterials,
   ) async {
     try {
+      List<Materials> allMaterials = await getAllMaterials();
+      List<Materials> updatedMaterials = [];
       for (var quotationMaterial in quotationMaterials) {
-        Materials matchingMaterial = quotationMaterials.firstWhere(
+        Materials matchingMaterial = allMaterials.firstWhere(
           (newMaterial) => newMaterial.id == quotationMaterial.id,
           orElse: () => material,
         );
@@ -213,12 +215,16 @@ class MaterialsRequest {
           if (quantityInMaterial >= quantityInQuotation) {
             matchingMaterial.quantity =
                 (quantityInMaterial - quantityInQuotation).toString();
-            await updateMaterialQuantityInDatabase(matchingMaterial);
+            updatedMaterials.add(matchingMaterial);
           } else {
             throw Future.error(
                 'Error, la cantidad elegida del material no está disponible');
           }
         }
+      }
+
+      for (var updatedMaterial in updatedMaterials) {
+        await updateMaterialQuantityInDatabase(updatedMaterial);
       }
     } catch (e) {
       throw Future.error(

@@ -17,6 +17,8 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   TextEditingController controllerWidth = TextEditingController();
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
+  ShoppingCartController shoppingCartController = Get.find();
+
   List<Materials> selectedMaterials = [];
 
   List<String> selectOptionsService = [];
@@ -193,9 +195,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
             backgroundColor: Palette.accent,
             icon: const Icon(Icons.check_circle),
           );
+          // ignore: use_build_context_synchronously
           Navigator.pop(context);
         } catch (error) {
-          print("Error al registrar la cotización: $error");
           Get.snackbar(
             'Error',
             'Hubo un problema al registrar la cotización.',
@@ -209,5 +211,11 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
       backgroundCancelButton: Palette.accent,
       backgroundColor: Palette.accent,
     );
+  }
+
+  @override
+  void dispose() {
+    shoppingCartController.clearCart();
+    super.dispose();
   }
 }

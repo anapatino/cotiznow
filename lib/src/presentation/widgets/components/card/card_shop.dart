@@ -3,28 +3,30 @@ import 'package:cotiznow/src/domain/domain.dart';
 
 class CardShop extends StatefulWidget {
   final Materials material;
-  final Function(Materials) changeQuantity;
+  final Function(Materials) increaseQuantity;
+  final Function(Materials) decreaseQuantity;
 
   final bool showQuantity;
 
   const CardShop({
-    super.key,
+    Key? key,
     required this.material,
-    required this.changeQuantity,
+    required this.increaseQuantity,
+    required this.decreaseQuantity,
     required this.showQuantity,
-  });
+  }) : super(key: key);
 
   @override
   State<CardShop> createState() => _CardShopState();
 }
 
 class _CardShopState extends State<CardShop> {
-  int quantity = 0;
+  late int quantity;
 
-  void verification() {
-    if (quantity >= 0) {
-      widget.changeQuantity(widget.material);
-    }
+  @override
+  void initState() {
+    super.initState();
+    quantity = int.parse(widget.material.quantity);
   }
 
   @override
@@ -112,14 +114,6 @@ class _CardShopState extends State<CardShop> {
                               fontSize: screenWidth * 0.03,
                               fontWeight: FontWeight.w300),
                         ),
-                      if (widget.showQuantity)
-                        Text(
-                          'cantidad: ${widget.material.quantity}',
-                          style: GoogleFonts.varelaRound(
-                            fontSize: screenWidth * 0.038,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
                       Text(
                         '\$${discount.round()}',
                         style: GoogleFonts.varelaRound(
@@ -127,6 +121,14 @@ class _CardShopState extends State<CardShop> {
                             fontWeight: FontWeight.w600),
                       ),
                     ],
+                  ),
+                if (widget.showQuantity)
+                  Text(
+                    'cantidad: ${widget.material.quantity}',
+                    style: GoogleFonts.varelaRound(
+                      fontSize: screenWidth * 0.038,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 if (percentage <= 0)
                   Text(
@@ -143,14 +145,14 @@ class _CardShopState extends State<CardShop> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
+                      color: Palette.accentBackground,
                       onPressed: () {
                         setState(() {
                           if (quantity > 0) {
                             quantity--;
+                            widget.decreaseQuantity(widget.material);
                           }
-                          widget.material.quantity = quantity.toString();
                         });
-                        verification();
                       },
                       icon: const Icon(
                         Icons.remove,
@@ -166,12 +168,12 @@ class _CardShopState extends State<CardShop> {
                       ),
                     ),
                     IconButton(
+                      color: Palette.accentBackground,
                       onPressed: () {
                         setState(() {
                           quantity++;
-                          widget.material.quantity = quantity.toString();
+                          widget.increaseQuantity(widget.material);
                         });
-                        verification();
                       },
                       icon: const Icon(
                         Icons.add,

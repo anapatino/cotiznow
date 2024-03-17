@@ -25,6 +25,8 @@ class _InformationServicesState extends State<InformationServices> {
   SectionsController sectionsController = Get.find();
   ServicesController servicesController = Get.find();
   MaterialsController materialController = Get.find();
+  QuotationController quotationController = Get.find();
+  ShoppingCartController shoppingCartController = Get.find();
 
   double screenWidth = 0;
   double screenHeight = 0;
@@ -34,7 +36,6 @@ class _InformationServicesState extends State<InformationServices> {
   List<String> optionsSection = [];
   List<Section> sections = [];
   List<Materials> filteredMaterials = [];
-  List<Materials> selectedMaterials = [];
 
   String? selectedOptionSection;
   String? selectedOptionService;
@@ -72,48 +73,14 @@ class _InformationServicesState extends State<InformationServices> {
         final materials = snapshot.data!;
         filteredMaterials =
             materials.where((material) => material.status == 'activo').toList();
-        return _buildCardMaterial(filteredMaterials, false);
+        return _buildCardMaterial(filteredMaterials);
       },
     );
   }
 
-  void updateMaterialQuantity(Materials newMaterial) {
-    setState(() {
-      Materials materialFound = selectedMaterials.firstWhere(
-        (m) => m.id == newMaterial.id,
-        orElse: () => Materials(
-          url_photo: '',
-          discount: '',
-          name: '',
-          code: '',
-          unit: '',
-          size: '',
-          purchasePrice: '',
-          salePrice: '',
-          sectionId: '',
-          quantity: '',
-          description: '',
-          status: '',
-          id: '-1',
-        ),
-      );
-
-      if (materialFound.id == "-1") {
-        selectedMaterials.add(newMaterial);
-      } else {
-        int newMaterialQuantity = int.parse(newMaterial.quantity);
-
-        if (newMaterialQuantity > 0) {
-          selectedMaterials.remove(materialFound);
-          selectedMaterials.add(newMaterial);
-        } else {
-          selectedMaterials.remove(materialFound);
-        }
-      }
-    });
-  }
-
-  Widget _buildCardMaterial(List<Materials> materials, bool showQuantity) {
+  Widget _buildCardMaterial(
+    List<Materials> materials,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
       child: SizedBox(
@@ -124,14 +91,21 @@ class _InformationServicesState extends State<InformationServices> {
           itemCount: materials.length,
           itemBuilder: (context, index) {
             Materials material = materials[index];
+            material.quantity = "0";
+            Materials existingMaterial =
+                shoppingCartController.cartItems.firstWhere(
+              (element) => element.id == material.id,
+              orElse: () => shoppingCartController.materialNotFound,
+            );
+            if (existingMaterial.id != "-1") {
+              material.quantity = existingMaterial.quantity;
+            }
 
             return CardShop(
               material: material,
-              changeQuantity: (Materials newMaterial) {
-                print("cantidad" + newMaterial.quantity);
-                updateMaterialQuantity(newMaterial);
-              },
-              showQuantity: showQuantity,
+              showQuantity: false,
+              increaseQuantity: shoppingCartController.increaseQuantity,
+              decreaseQuantity: shoppingCartController.decreaseQuantity,
             );
           },
         ),
@@ -139,14 +113,44 @@ class _InformationServicesState extends State<InformationServices> {
     );
   }
 
+  Widget _buildCardMaterialCart(List<Materials> materials) {
+    return Obx(
+      () => Padding(
+        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+        child: SizedBox(
+          width: screenWidth * 1,
+          height: screenHeight * 0.35,
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: materials.length,
+            itemBuilder: (context, index) {
+              Materials material = materials[index];
+
+              return CardShop(
+                material: material,
+                showQuantity: true,
+                increaseQuantity: shoppingCartController.increaseQuantity,
+                decreaseQuantity: shoppingCartController.decreaseQuantity,
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   void saveQuotation() {
-    double materialsTotal = selectedMaterials.fold(0, (sum, material) {
+    double materialsTotal =
+        shoppingCartController.cartItems.fold(0, (sum, material) {
+      int quantity = int.parse(material.quantity);
       int salePrice = int.parse(material.salePrice);
       double discount =
           material.discount.isEmpty ? 0 : double.parse(material.discount);
       discount *= salePrice;
       return sum +
-          (material.discount.isEmpty ? salePrice : salePrice - discount);
+          (material.discount.isEmpty
+              ? (salePrice * quantity)
+              : ((salePrice - discount) * quantity));
     });
     List<String> selectedServiceIds = [];
     int servicesTotal = selectedService.fold(0, (sum, serviceName) {
@@ -160,8 +164,8 @@ class _InformationServicesState extends State<InformationServices> {
 
     int roundedTotal = total.round();
 
-    widget.onSelected(
-        selectedServiceIds, roundedTotal.toString(), selectedMaterials);
+    widget.onSelected(selectedServiceIds, roundedTotal.toString(),
+        shoppingCartController.cartItems);
   }
 
   @override
@@ -345,10 +349,9 @@ class _InformationServicesState extends State<InformationServices> {
                 letterSpacing: 1,
               )),
         ),
-        if (selectedMaterials.isNotEmpty)
-          _buildCardMaterial(
-            selectedMaterials,
-            false,
+        if (shoppingCartController.cartItems.isNotEmpty)
+          _buildCardMaterialCart(
+            shoppingCartController.cartItems,
           ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
