@@ -77,6 +77,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
             child: CardMaterialSimple(
                 showDescount: false,
                 isLarge: false,
+                showTotal: true,
                 material: material,
                 onClick: () {},
                 onLongPress: () {},

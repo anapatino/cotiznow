@@ -71,4 +71,36 @@ class ShoppingCartController extends GetxController {
   void clearCart() {
     cartItems.clear();
   }
+
+  double calculateMaterialsTotal() {
+    return cartItems.fold(0, (sum, material) {
+      int quantity = int.parse(material.quantity);
+      int salePrice = int.parse(material.salePrice);
+      double discount =
+          material.discount.isEmpty ? 0 : double.parse(material.discount);
+      discount *= salePrice;
+      return sum +
+          (material.discount.isEmpty
+              ? (salePrice * quantity)
+              : ((salePrice - discount) * quantity));
+    });
+  }
+
+  List<String> extractSelectedServiceIds(
+      List<String> selectedService, List<Service> services) {
+    return selectedService.map((serviceName) {
+      Service service =
+          services.firstWhere((service) => service.name == serviceName);
+      return service.id;
+    }).toList();
+  }
+
+  int calculateServicesTotal(
+      List<String> selectedService, List<Service> services) {
+    return selectedService.fold(0, (sum, serviceName) {
+      Service service =
+          services.firstWhere((service) => service.name == serviceName);
+      return sum + int.parse(service.price);
+    });
+  }
 }

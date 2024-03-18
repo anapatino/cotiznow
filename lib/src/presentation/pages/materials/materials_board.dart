@@ -3,7 +3,6 @@ import 'package:cotiznow/src/presentation/pages/materials/materials.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
-import '../../widgets/components/components.dart';
 
 class MaterialsBoard extends StatefulWidget {
   final MaterialsController materialController = Get.find();
@@ -28,7 +27,6 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   List<Section> listSections = [];
   List<Section> filteredSections = [];
   List<Materials> filteredMaterials = [];
-  double _sliderValue = 0;
 
   Materials material = Materials(
       url_photo: '',

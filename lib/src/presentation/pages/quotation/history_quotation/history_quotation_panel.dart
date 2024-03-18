@@ -26,79 +26,15 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
     super.initState();
   }
 
-  List<QuotationHistory> _filterListByOption(
-      List<QuotationHistory> quotations) {
-    if (widget.userController.role != "cliente") {
-      if (selectedOption == "pendiente" ||
-          selectedOption == "aprobada" ||
-          selectedOption == "rechazada") {
-        quotations = quotations
-            .where((quotation) => quotation.quotation.status == selectedOption)
-            .toList();
-      }
-    }
-    return quotations;
-  }
-
-  Widget _buildQuotationList() {
-    return FutureBuilder<List<QuotationHistory>>(
-      future: widget.quotationController.getAllQuotationsHistory(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error al cargar la lista de cotizaciones'),
-          );
-        }
-        List<QuotationHistory> quotations = snapshot.data!;
-        quotations = _filterListByOption(quotations);
-        return _buildCardQuotation(quotations);
-      },
-    );
-  }
-
-  Widget _buildCardQuotation(List<QuotationHistory> quotations) {
-    return SizedBox(
-      height: screenHeight * 0.75,
-      child: ListView.builder(
-        itemCount: quotations.length,
-        itemBuilder: (context, index) {
-          QuotationHistory quotation = quotations[index];
-          return CardQuotation(
-            onLongPress: () {
-              showDeleteAlert(quotation);
-            },
-            backgroundColor: quotation.quotation.status == "pendiente"
-                ? Palette.accent
-                : quotation.quotation.status == "rechazada"
-                    ? Palette.error
-                    : Palette.primary,
-            title: quotation.quotation.name,
-            description: quotation.quotation.description,
-            status: quotation.quotation.status,
-            total: quotation.quotation.total,
-            onTap: () async {
-              await widget.servicesController.getAllServices();
-              Get.toNamed('/details-quotation', arguments: quotation.quotation);
-            },
-            icon: () {},
-            onDoubleTap: () {},
-          );
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada'];
-
+    final QuotationWidget quotationWidget = QuotationWidget(
+      screenHeight: screenHeight,
+      screenWidth: screenWidth,
+    );
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
@@ -137,7 +73,10 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
                 },
               ),
               SizedBox(height: screenHeight * 0.02),
-              _buildQuotationList(),
+              quotationWidget.buildQuotationList(
+                  selectedOption != null ? selectedOption! : "",
+                  false,
+                  showDeleteAlert),
             ],
           ),
         ),

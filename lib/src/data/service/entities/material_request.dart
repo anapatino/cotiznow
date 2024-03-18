@@ -197,8 +197,7 @@ class MaterialsRequest {
   }
 
   static Future<void> subtractMaterialsQuantity(
-    List<Materials> quotationMaterials,
-  ) async {
+      List<Materials> quotationMaterials, bool add) async {
     try {
       List<Materials> allMaterials = await getAllMaterials();
       List<Materials> updatedMaterials = [];
@@ -213,8 +212,14 @@ class MaterialsRequest {
           int quantityInMaterial = int.parse(matchingMaterial.quantity);
 
           if (quantityInMaterial >= quantityInQuotation) {
-            matchingMaterial.quantity =
-                (quantityInMaterial - quantityInQuotation).toString();
+            if (add) {
+              matchingMaterial.quantity =
+                  (quantityInMaterial + quantityInQuotation).toString();
+            } else {
+              matchingMaterial.quantity =
+                  (quantityInMaterial - quantityInQuotation).toString();
+            }
+
             updatedMaterials.add(matchingMaterial);
           } else {
             throw Future.error(

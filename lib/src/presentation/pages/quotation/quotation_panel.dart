@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/routes.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 
@@ -26,82 +27,15 @@ class _QuotationPanelState extends State<QuotationPanel> {
     super.initState();
   }
 
-  List<Quotation> _filterListByOption(List<Quotation> quotations) {
-    if (widget.userController.role != "cliente") {
-      if (selectedOption == "pendiente" ||
-          selectedOption == "aprobada" ||
-          selectedOption == "rechazada") {
-        quotations = quotations
-            .where((quotation) => quotation.status == selectedOption)
-            .toList();
-      }
-    }
-    return quotations;
-  }
-
-  Widget _buildQuotationList() {
-    return FutureBuilder<List<Quotation>>(
-      future: widget.userController.role == "cliente"
-          ? widget.quotationController
-              .getQuotationsByUserId(widget.userController.idUser)
-          : widget.quotationController.getAllQuotations(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error al cargar la lista de cotizaciones'),
-          );
-        }
-        List<Quotation> quotations = snapshot.data!;
-        quotations = _filterListByOption(quotations);
-        return _buildCardQuotation(quotations);
-      },
-    );
-  }
-
-  Widget _buildCardQuotation(List<Quotation> quotations) {
-    return SizedBox(
-      height: screenHeight * 0.75,
-      child: ListView.builder(
-        itemCount: quotations.length,
-        itemBuilder: (context, index) {
-          Quotation quotation = quotations[index];
-          return CardQuotation(
-            onLongPress: () {
-              showDeleteAlert(quotation);
-            },
-            backgroundColor: quotation.status == "pendiente"
-                ? Palette.accent
-                : quotation.status == "rechazada"
-                    ? Palette.error
-                    : Palette.primary,
-            title: quotation.name,
-            description: quotation.description,
-            status: quotation.status,
-            total: quotation.total,
-            onTap: () async {
-              await widget.servicesController.getAllServices();
-              Get.toNamed('/details-quotation', arguments: quotation);
-            },
-            icon: () {},
-            onDoubleTap: () async {
-              Get.toNamed('/update-quotation', arguments: quotation);
-            },
-          );
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada'];
+    final QuotationWidget quotationWidget = QuotationWidget(
+      screenHeight: screenHeight,
+      screenWidth: screenWidth,
+    );
 
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
@@ -141,7 +75,10 @@ class _QuotationPanelState extends State<QuotationPanel> {
                 },
               ),
               SizedBox(height: screenHeight * 0.02),
-              _buildQuotationList(),
+              quotationWidget.buildQuotationList(
+                  selectedOption != null ? selectedOption! : "",
+                  true,
+                  showDeleteAlert),
             ],
           ),
         ),

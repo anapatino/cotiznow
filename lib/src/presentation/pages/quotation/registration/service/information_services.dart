@@ -60,118 +60,50 @@ class _InformationServicesState extends State<InformationServices> {
     }
   }
 
-  Widget _buildMaterialsBySectionId(String sectionId) {
-    return FutureBuilder<List<Materials>>(
-      future: materialController.getMaterialsBySectionId(sectionId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
-        }
-        final materials = snapshot.data!;
-        filteredMaterials =
-            materials.where((material) => material.status == 'activo').toList();
-        return _buildCardMaterial(filteredMaterials);
-      },
-    );
-  }
-
-  Widget _buildCardMaterial(
-    List<Materials> materials,
-  ) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-      child: SizedBox(
-        width: screenWidth * 1,
-        height: screenHeight * 0.35,
-        child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: materials.length,
-          itemBuilder: (context, index) {
-            Materials material = materials[index];
-            material.quantity = "0";
-            Materials existingMaterial =
-                shoppingCartController.cartItems.firstWhere(
-              (element) => element.id == material.id,
-              orElse: () => shoppingCartController.materialNotFound,
-            );
-            if (existingMaterial.id != "-1") {
-              material.quantity = existingMaterial.quantity;
-            }
-
-            return CardShop(
-              material: material,
-              showQuantity: false,
-              increaseQuantity: shoppingCartController.increaseQuantity,
-              decreaseQuantity: shoppingCartController.decreaseQuantity,
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCardMaterialCart(List<Materials> materials) {
-    return Obx(
-      () => Padding(
-        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-        child: SizedBox(
-          width: screenWidth * 1,
-          height: screenHeight * 0.35,
-          child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: materials.length,
-            itemBuilder: (context, index) {
-              Materials material = materials[index];
-
-              return CardShop(
-                material: material,
-                showQuantity: true,
-                increaseQuantity: shoppingCartController.increaseQuantity,
-                decreaseQuantity: shoppingCartController.decreaseQuantity,
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   void saveQuotation() {
-    double materialsTotal =
-        shoppingCartController.cartItems.fold(0, (sum, material) {
-      int quantity = int.parse(material.quantity);
-      int salePrice = int.parse(material.salePrice);
-      double discount =
-          material.discount.isEmpty ? 0 : double.parse(material.discount);
-      discount *= salePrice;
-      return sum +
-          (material.discount.isEmpty
-              ? (salePrice * quantity)
-              : ((salePrice - discount) * quantity));
+    double materialsTotal = shoppingCartController.calculateMaterialsTotal();
+    List<String> selectedServiceIds = shoppingCartController
+        .extractSelectedServiceIds(selectedService, services);
+    int servicesTotal = shoppingCartController.calculateServicesTotal(
+        selectedService, services);
+    int total = materialsTotal.round() + servicesTotal;
+
+    widget.onSelected(
+      selectedServiceIds,
+      total.toString(),
+      shoppingCartController.cartItems,
+    );
+  }
+
+  void _onServiceDropdownChanged(String? newValue) {
+    setState(() {
+      selectedOptionService = newValue;
+      if (selectedOptionService != null) {
+        Service service = services.firstWhere(
+          (service) => service.name == selectedOptionService,
+        );
+        controllerPrice.text = service.price;
+        bool isServiceSelected =
+            selectedService.contains(selectedOptionService);
+        if (!isServiceSelected) {
+          selectedService.add(selectedOptionService!);
+        } else {
+          selectedService.remove(selectedOptionService!);
+        }
+      }
     });
-    List<String> selectedServiceIds = [];
-    int servicesTotal = selectedService.fold(0, (sum, serviceName) {
-      Service service =
-          services.firstWhere((service) => service.name == serviceName);
-      selectedServiceIds.add(service.id);
-      return sum + int.parse(service.price);
-    });
-
-    double total = materialsTotal + servicesTotal;
-
-    int roundedTotal = total.round();
-
-    widget.onSelected(selectedServiceIds, roundedTotal.toString(),
-        shoppingCartController.cartItems);
   }
 
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+
+    final MaterialWidgets materialWidgets = MaterialWidgets(
+      screenHeight: screenHeight,
+      screenWidth: screenWidth,
+    );
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,24 +122,7 @@ class _InformationServicesState extends State<InformationServices> {
           width: 0.75,
           height: 0.075,
           widthItems: 0.55,
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedOptionService = newValue;
-              if (selectedOptionService != null) {
-                Service service = services.firstWhere(
-                  (service) => service.name == selectedOptionService,
-                );
-                controllerPrice.text = service.price;
-                bool isServiceSelected =
-                    selectedService.contains(selectedOptionService);
-                if (!isServiceSelected) {
-                  selectedService.add(selectedOptionService!);
-                } else {
-                  selectedService.remove(selectedOptionService!);
-                }
-              }
-            });
-          },
+          onChanged: _onServiceDropdownChanged,
         ),
         if (controllerPrice.text.isNotEmpty)
           Padding(
@@ -254,7 +169,8 @@ class _InformationServicesState extends State<InformationServices> {
             }
           },
         ),
-        if (sectionId.isNotEmpty) _buildMaterialsBySectionId(sectionId),
+        if (sectionId.isNotEmpty)
+          materialWidgets.buildMaterialsBySectionId(sectionId),
         Padding(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
           child: Text("Medidas de la sección",
@@ -329,7 +245,7 @@ class _InformationServicesState extends State<InformationServices> {
           selectedService.isEmpty
               ? "No hay servicios seleccionados"
               : selectedService.join(", "),
-          style: TextStyle(
+          style: GoogleFonts.varelaRound(
             color: Palette.textColor,
             fontSize: screenWidth * 0.035,
             fontWeight: FontWeight.w400,
@@ -350,7 +266,7 @@ class _InformationServicesState extends State<InformationServices> {
               )),
         ),
         if (shoppingCartController.cartItems.isNotEmpty)
-          _buildCardMaterialCart(
+          materialWidgets.buildCardMaterialCart(
             shoppingCartController.cartItems,
           ),
         Padding(

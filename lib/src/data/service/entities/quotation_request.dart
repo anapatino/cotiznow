@@ -32,7 +32,7 @@ class QuotationRequest {
 
       await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
 
-      MaterialsRequest.subtractMaterialsQuantity(quotation.materials);
+      MaterialsRequest.subtractMaterialsQuantity(quotation.materials, false);
 
       return "Se ha realizado exitosamente el registro de una cotización";
     } catch (e) {

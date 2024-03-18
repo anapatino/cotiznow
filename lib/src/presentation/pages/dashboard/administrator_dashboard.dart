@@ -1,8 +1,8 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
-import '../../widgets/components/components.dart';
 
 class AdministratorDashboard extends StatefulWidget {
   final MaterialsController materialController = Get.find();
@@ -86,124 +86,6 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
     );
   }
 
-  Widget _buildMaterialsBySectionId(String sectionId) {
-    return FutureBuilder<List<Materials>>(
-      future: widget.materialController.getMaterialsBySectionId(sectionId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(
-              width: screenWidth * 0.86,
-              height: screenHeight * 0.15,
-              child: SizedBox(
-                  width: screenWidth * 0.86,
-                  height: screenHeight * 0.3,
-                  child: const Center(child: CircularProgressIndicator())));
-        }
-        if (snapshot.hasError) {
-          return SizedBox(
-              width: screenWidth * 0.86,
-              height: screenHeight * 0.15,
-              child: Center(child: Text(snapshot.error.toString())));
-        }
-        final materials = snapshot.data!;
-        filteredMaterials =
-            materials.where((material) => material.status == 'activo').toList();
-        if (controllerSearch.text.isNotEmpty) {
-          filteredMaterials = filteredMaterials
-              .where((material) =>
-                  material.name
-                      .toLowerCase()
-                      .contains(controllerSearch.text.toLowerCase()) &&
-                  material.sectionId == sectionId &&
-                  material.status == 'activo')
-              .toList();
-        }
-        return _buildCardMaterial(filteredMaterials);
-      },
-    );
-  }
-
-  Widget _buildCardMaterial(List<Materials> materials) {
-    return SizedBox(
-      width: screenWidth * 0.86,
-      height: screenHeight * 0.32,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: materials.length,
-        itemBuilder: (context, index) {
-          Materials material = materials[index];
-
-          return CardMaterialCustom(
-              material: material,
-              onClick: () {
-                Get.toNamed(
-                  '/details-material',
-                  arguments: material,
-                );
-              },
-              onLongPress: () {},
-              onDoubleTap: () {});
-        },
-      ),
-    );
-  }
-
-  Widget _buildMaterialsWithDiscount() {
-    return FutureBuilder<List<Materials>>(
-      future: widget.materialController.getAllMaterials(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(
-              width: screenWidth * 0.86,
-              height: screenHeight * 0.2,
-              child: const Center(child: CircularProgressIndicator()));
-        }
-        if (snapshot.hasError) {
-          return SizedBox(
-              width: screenWidth * 0.86,
-              height: screenHeight * 0.2,
-              child: Center(child: Text(snapshot.error.toString())));
-        }
-        final materials = snapshot.data!;
-        List<Materials> filteredMaterials = materials
-            .where((material) =>
-                material.status == 'activo' && material.discount != "")
-            .toList();
-
-        return _buildCardMaterialClassic(filteredMaterials);
-      },
-    );
-  }
-
-  Widget _buildCardMaterialClassic(List<Materials> materials) {
-    return SizedBox(
-      width: screenWidth * 0.86,
-      height: screenHeight * 0.2,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: materials.length,
-        itemBuilder: (context, index) {
-          Materials material = materials[index];
-
-          return Padding(
-            padding: EdgeInsets.only(
-                left: screenWidth * 0.01, right: screenWidth * 0.025),
-            child: CardMaterialSimple(
-                material: material,
-                onClick: () {
-                  Get.toNamed(
-                    '/details-material',
-                    arguments: material,
-                  );
-                },
-                onLongPress: () {},
-                onDoubleTap: () {}),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildRoundIconButtons(List<Section> sections) {
     return SizedBox(
       width: screenWidth * 0.86,
@@ -234,6 +116,10 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    final MaterialWidgets materialWidgets = MaterialWidgets(
+      screenHeight: screenHeight,
+      screenWidth: screenWidth,
+    );
 
     return SlideInRight(
       duration: const Duration(milliseconds: 15),
@@ -274,7 +160,11 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
                 SizedBox(
                   height: screenHeight * 0.03,
                 ),
-                _buildMaterialsBySectionId(sectionId),
+                materialWidgets.buildMaterialsBySectionIdSearch(
+                    sectionId,
+                    controllerSearch.text.isNotEmpty
+                        ? controllerSearch.text
+                        : ""),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: screenHeight * 0.025),
                   child: Text(
@@ -287,7 +177,7 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
                     ),
                   ),
                 ),
-                _buildMaterialsWithDiscount(),
+                materialWidgets.buildMaterialsWithDiscount(false),
               ],
             ),
           ),

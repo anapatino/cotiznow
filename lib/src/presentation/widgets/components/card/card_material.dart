@@ -8,6 +8,7 @@ class CardMaterialSimple extends StatelessWidget {
   final Function onLongPress;
   final Function onDoubleTap;
   final bool showDescount;
+  final bool showTotal;
   const CardMaterialSimple(
       {super.key,
       required this.material,
@@ -15,7 +16,8 @@ class CardMaterialSimple extends StatelessWidget {
       required this.onLongPress,
       required this.onDoubleTap,
       this.isLarge = true,
-      this.showDescount = true});
+      this.showDescount = true,
+      this.showTotal = false});
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +124,9 @@ class CardMaterialSimple extends StatelessWidget {
                     ),
                   if (percentage > 0)
                     Text(
-                      '\$${(discount.round() * int.parse(material.quantity))}',
+                      showTotal
+                          ? '\$${(discount.round() * int.parse(material.quantity))}'
+                          : '\$${discount.round()}',
                       style: GoogleFonts.varelaRound(
                           fontSize: screenWidth * 0.04,
                           fontWeight: FontWeight.w600),
