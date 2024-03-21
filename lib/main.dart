@@ -18,6 +18,7 @@ void main() async {
     Get.put(ProgrammeVisitsController());
     Get.put(QuotationHistoryController());
     Get.put(ShoppingCartController());
+    Get.put(ManagementController());
 
     runApp(const App());
   } catch (e) {

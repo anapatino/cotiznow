@@ -1,9 +1,8 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
-import 'package:whatsapp/whatsapp.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -18,15 +17,17 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   QuotationController quotationController = Get.find();
   ServicesController servicesController = Get.find();
   MaterialsController materialsController = Get.find();
+  ManagementController managementController = Get.find();
+
   double screenWidth = 0;
   double screenHeight = 0;
   String? selectOption;
   List<String> serviceNames = [];
-  WhatsApp whatsapp = WhatsApp();
   @override
   void initState() {
     super.initState();
     loadService();
+    ManagementController.fetchManagement();
   }
 
   Future<void> loadService() async {
@@ -36,9 +37,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     serviceNames = filteredServices.map((service) => service.name).toList();
   }
 
-  Future<void> generatePDF() async {}
-
-  void enviarObjetoComplejo() async {
+  Future<void> generatePDF() async {
     var url = Uri.parse('http://localhost:3000/invoice');
 
     var body = {
@@ -60,6 +59,14 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
       }
     } catch (e) {
       print('Error en la solicitud: $e');
+    }
+  }
+
+  Future<void> _launchUrl() async {
+    final Uri url = Uri.parse(
+        'https://wa.me/${managementController.phone}?text=${managementController.messageWhatsApp}');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 
@@ -163,7 +170,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                     total: quotation.total,
                     onTap: () {},
                     icon: () {
-                      enviarObjetoComplejo();
+                      generatePDF();
                     },
                     onDoubleTap: () {}),
                 Column(
@@ -292,28 +299,28 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomElevatedButton(
-                            text: 'Contactame',
-                            onPressed: () async {
-                              print(await whatsapp.messagesTemplate(
-                                to: 3015849730,
-                                templateName:
-                                    "este es un ejemplo de enviar mensaje desde flutter",
-                              ));
-                            },
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.4,
-                            textColor: Palette.accentBackground,
-                            textSize: screenWidth * 0.04,
-                            backgroundColor: Colors.white,
-                            hasBorder: true,
-                            borderColor: Palette.accentBackground,
-                          ),
+                          if (userController.role == "cliente")
+                            InkWell(
+                              onTap: _launchUrl,
+                              child: Container(
+                                height: screenHeight * 0.065,
+                                width: screenWidth * 0.4,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/WhatsAppButtonWhiteSmall.png'),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
                           CustomElevatedButton(
                             text: 'Actualizar',
                             onPressed: updateQuotation,
                             height: screenHeight * 0.065,
-                            width: screenWidth * 0.4,
+                            width: userController.role == "cliente"
+                                ? screenWidth * 0.4
+                                : screenWidth * 0.85,
                             textColor: Colors.white,
                             textSize: screenWidth * 0.04,
                             backgroundColor: Palette.primary,
