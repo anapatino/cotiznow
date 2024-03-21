@@ -9,7 +9,7 @@ class MaterialsRequest {
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static Materials material = Materials(
       id: '',
-      url_photo: '',
+      urlPhoto: '',
       name: '',
       code: '',
       unit: '',
@@ -32,8 +32,8 @@ class MaterialsRequest {
       final UploadTask uploadTask = storageReference.putFile(file);
       await uploadTask;
 
-      String url_photo = await storageReference.getDownloadURL();
-      return url_photo;
+      String urlPhoto = await storageReference.getDownloadURL();
+      return urlPhoto;
     } catch (e) {
       throw Future.error('Error al subir la imagen a Firebase Storage');
     }
@@ -50,17 +50,17 @@ class MaterialsRequest {
 
   static Future<String> registerMaterial(Materials material) async {
     try {
-      final url = await _uploadImageToFirebase(material.url_photo);
+      final url = await _uploadImageToFirebase(material.urlPhoto);
 
       await database.collection('materials').add({
-        'url_photo': url,
+        'urlPhoto': url,
         'name': material.name,
         'code': material.code,
         'unit': material.unit,
         'size': material.size,
-        'purchase_price': material.purchasePrice,
-        'sale_price': material.salePrice,
-        'section_id': material.sectionId,
+        'purchasePrice': material.purchasePrice,
+        'salePrice': material.salePrice,
+        'sectionId': material.sectionId,
         'quantity': material.quantity,
         'description': material.description,
         'status': material.status,
@@ -113,14 +113,14 @@ class MaterialsRequest {
       List<Materials> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
         return Materials(
-          url_photo: data['url_photo'] ?? '',
+          urlPhoto: data['urlPhoto'] ?? '',
           name: data['name'] ?? '',
           code: data['code'] ?? '',
           unit: data['unit'] ?? '',
           size: data['size'] ?? '',
-          purchasePrice: data['purchase_price'] ?? '',
-          salePrice: data['sale_price'] ?? '',
-          sectionId: data['section_id'] ?? '',
+          purchasePrice: data['purchasePrice'] ?? '',
+          salePrice: data['salePrice'] ?? '',
+          sectionId: data['sectionId'] ?? '',
           quantity: data['quantity'] ?? '',
           description: data['description'] ?? '',
           status: data['status'] ?? '',
@@ -141,20 +141,20 @@ class MaterialsRequest {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await database
           .collection('materials')
-          .where('section_id', isEqualTo: sectionId)
+          .where('sectionId', isEqualTo: sectionId)
           .get();
 
       List<Materials> materialsList = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data();
         return Materials(
-          url_photo: data['url_photo'] ?? '',
+          urlPhoto: data['urlPhoto'] ?? '',
           name: data['name'] ?? '',
           code: data['code'] ?? '',
           unit: data['unit'] ?? '',
           size: data['size'] ?? '',
-          purchasePrice: data['purchase_price'] ?? '',
-          salePrice: data['sale_price'] ?? '',
-          sectionId: data['section_id'] ?? '',
+          purchasePrice: data['purchasePrice'] ?? '',
+          salePrice: data['salePrice'] ?? '',
+          sectionId: data['sectionId'] ?? '',
           quantity: data['quantity'] ?? '',
           description: data['description'] ?? '',
           status: data['status'] ?? '',
@@ -174,16 +174,16 @@ class MaterialsRequest {
       Materials material, String urlOld) async {
     try {
       await deleteMaterialPhoto(urlOld);
-      final urlNew = await _uploadImageToFirebase(material.url_photo);
+      final urlNew = await _uploadImageToFirebase(material.urlPhoto);
       await database.collection('materials').doc(material.id).update({
-        'url_photo': urlNew,
+        'urlPhoto': urlNew,
         'name': material.name,
         'code': material.code,
         'unit': material.unit,
         'size': material.size,
-        'purchase_price': material.purchasePrice,
-        'sale_price': material.salePrice,
-        'section_id': material.sectionId,
+        'purchasePrice': material.purchasePrice,
+        'salePrice': material.salePrice,
+        'sectionId': material.sectionId,
         'quantity': material.quantity,
         'description': material.description,
         'status': material.status,
@@ -234,6 +234,65 @@ class MaterialsRequest {
     } catch (e) {
       throw Future.error(
           'Error al intentar hacer los cambios en la cantidad de materiales');
+    }
+  }
+
+  static Future<void> subtractMaterialQuantity(
+      Materials material, bool isAdd) async {
+    try {
+      print("entre en el segundo metodo");
+      List<Materials> allMaterials = await getAllMaterials();
+
+      Materials materialToUpdate = allMaterials.firstWhere(
+          (m) => m.id == material.id,
+          orElse: () => throw Future.error(
+              'El material con ID ${material.id} no existe en la colección materials.'));
+
+      int currentQuantity = int.parse(materialToUpdate.quantity);
+      int quantityChange = int.parse(material.quantity);
+
+      if (isAdd) {
+        print("estoy agregando");
+        currentQuantity += quantityChange;
+      } else {
+        print("estoy disminuyendo");
+        currentQuantity -= quantityChange;
+      }
+
+      materialToUpdate.quantity = currentQuantity.toString();
+      await updateMaterialQuantityInDatabase(materialToUpdate);
+    } catch (e) {
+      throw Future.error('Error al actualizar la cantidad del material: $e');
+    }
+  }
+
+  static Future<void> calculateNewMaterialValue(
+      List<Materials> newMaterials, List<Materials> oldMaterials) async {
+    try {
+      print("entre a calcular nuevo material");
+      print("nuevo material:" +
+          newMaterials.map((e) => e.name + e.quantity).toString());
+      print("viejo material:" +
+          newMaterials.map((e) => e.name + e.quantity).toString());
+      for (int i = 0; i < newMaterials.length; i++) {
+        Materials newMaterial = newMaterials[i];
+        Materials oldMaterial = oldMaterials.firstWhere(
+            (oldMaterial) => oldMaterial.id == newMaterial.id,
+            orElse: () => throw Future.error(
+                'El material con ID ${newMaterial.id} no existe en la colección materials.'));
+
+        int quantityInNewMaterial = int.parse(newMaterial.quantity);
+        int quantityInOldMaterial = int.parse(oldMaterial.quantity);
+
+        if (quantityInNewMaterial != quantityInOldMaterial) {
+          print("entre en la primera condicion de calcular material");
+          await subtractMaterialQuantity(
+              newMaterial, quantityInNewMaterial > quantityInOldMaterial);
+        }
+      }
+    } catch (e) {
+      throw Future.error(
+          'Error: Al intentar hacer los cambios en la cantidad de materiales');
     }
   }
 

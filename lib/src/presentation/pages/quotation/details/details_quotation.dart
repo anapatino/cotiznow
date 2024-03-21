@@ -2,11 +2,8 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import 'package:whatsapp/whatsapp.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'package:pdf/pdf.dart';
-
-import 'package:pdf/widgets.dart' as pw;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -39,25 +36,30 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     serviceNames = filteredServices.map((service) => service.name).toList();
   }
 
-  Future<void> generatePDF() async {
-    final pdf = pw.Document();
+  Future<void> generatePDF() async {}
 
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Text(
-            'Hello World',
-          ),
-        ),
-      ),
-    );
+  void enviarObjetoComplejo() async {
+    var url = Uri.parse('http://localhost:3000/invoice');
+
+    var body = {
+      'name': userController.name,
+      'address': userController.address,
+      'phone': userController.phone,
+      'quotation': quotation.toJson(),
+    };
+
     try {
-      final outputDir = await getExternalStorageDirectory();
-      final file = File('${outputDir!.path}/example.pdf');
-      await file.writeAsBytes(await pdf.save());
-      print("se supone que ya guarde el pdf");
+      // Realiza la solicitud POST
+      var response = await http.post(url, body: body);
+
+      if (response.statusCode == 200) {
+        print('Solicitud exitosa');
+        print('Respuesta: ${response.body}');
+      } else {
+        print('Error en la solicitud: ${response.statusCode}');
+      }
     } catch (e) {
-      print("Error saving PDF: $e");
+      print('Error en la solicitud: $e');
     }
   }
 
@@ -161,7 +163,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                     total: quotation.total,
                     onTap: () {},
                     icon: () {
-                      generatePDF();
+                      enviarObjetoComplejo();
                     },
                     onDoubleTap: () {}),
                 Column(

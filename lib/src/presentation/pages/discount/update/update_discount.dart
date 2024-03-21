@@ -79,9 +79,9 @@ class UpdateDiscount extends StatelessWidget {
               height: screenHeight * 0.5,
               decoration: const BoxDecoration(),
               clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: material.url_photo.isNotEmpty
+              child: material.urlPhoto.isNotEmpty
                   ? Image.network(
-                      material.url_photo,
+                      material.urlPhoto,
                       fit: BoxFit.cover,
                     )
                   : const Center(

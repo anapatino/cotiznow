@@ -11,16 +11,17 @@ class UpdateQuotation extends StatefulWidget {
 }
 
 class _UpdateQuotationState extends State<UpdateQuotation> {
-  final quotation = Get.arguments as Quotation;
+  final parameters = Get.arguments as Quotation;
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
   TextEditingController controllerLength = TextEditingController();
   TextEditingController controllerWidth = TextEditingController();
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
-  List<Materials> selectedMaterials = [];
+  ShoppingCartController shoppingCartController = Get.find();
 
   List<String> selectOptionsService = [];
+  List<Materials> list = [];
   String totalQuotation = "";
   int _activeCurrentStep = 0;
 
@@ -50,12 +51,19 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   }
 
   void loadControllers() {
-    if (quotation != null) {
-      controllerName.text = quotation.name;
-      controllerDescription.text = quotation.description;
-      controllerLength.text = quotation.length;
-      controllerWidth.text = quotation.width;
-      totalQuotation = quotation.total;
+    if (parameters != null) {
+      list = List<Materials>.from(parameters.materials);
+      controllerName.text = parameters.name;
+      controllerDescription.text = parameters.description;
+      controllerLength.text = parameters.length;
+      controllerWidth.text = parameters.width;
+      totalQuotation = parameters.total;
+      shoppingCartController.cartItems =
+          RxList<Materials>(parameters.materials);
+
+      shoppingCartController.updateSelectedServices(parameters.idService);
+      print("viejo material:" +
+          list.map((er) => er.name + er.quantity).toString());
     }
   }
 
@@ -70,18 +78,33 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
         width.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation newQuotation = Quotation(
-          id: quotation.id,
+          id: parameters.id,
           name: name,
           description: description,
-          idService: selectOptionsService,
+          idService: shoppingCartController.extractSelectedServiceIds(),
           length: length,
-          materials: selectedMaterials,
-          status: quotation.status,
+          materials: shoppingCartController.cartItems,
+          status: parameters.status,
           total: totalQuotation,
           width: width,
-          userId: quotation.userId);
-
-      confirmationUpdateQuotation(newQuotation);
+          userId: parameters.userId);
+      if ((userController.role == "cliente" &&
+              parameters.status != "aprobado") ||
+          (userController.role != "cliente")) {
+        print("nuevo material:" +
+            newQuotation.materials.map((e) => e.name + e.quantity).toString());
+        print("viejo material:" +
+            list.map((er) => er.name + er.quantity).toString());
+        // confirmationUpdateQuotation(newQuotation, quotation.materials);
+      } else {
+        Get.snackbar(
+          'Mensaje informativo',
+          "No puedes actualizar la cotización en estado aprobada",
+          colorText: Colors.white,
+          backgroundColor: Palette.warning,
+          icon: const Icon(Icons.error),
+        );
+      }
     }
   }
 
@@ -120,11 +143,9 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           onBack: handleBack,
           controllerLength: controllerLength,
           controllerWidth: controllerWidth,
-          onSelected: (section, total, materials) {
+          onSelected: (total) {
             setState(() {
-              selectedMaterials = materials;
               totalQuotation = total;
-              selectOptionsService = section;
             });
             updateQuotation();
           },
@@ -162,7 +183,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
                       backgroundColor: Palette.accent,
                       title: controllerName.text,
                       description: controllerDescription.text,
-                      status: quotation.status,
+                      status: parameters.status,
                       total: totalQuotation,
                       onTap: () {},
                       icon: () {},
@@ -191,7 +212,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
     );
   }
 
-  Future<void> confirmationUpdateQuotation(Quotation quotation) async {
+  Future<void> confirmationUpdateQuotation(
+      Quotation quotation, List<Materials> oldMaterials) async {
     DialogUtil.showConfirmationDialog(
       title: 'Actualizar  cotización',
       message: '¿Desea actualizar esta cotización?',
@@ -199,7 +221,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message = await quotationController.updateQuotation(quotation);
+          /*String message = await quotationController.updateQuotation(
+              quotation, oldMaterials);
           Get.snackbar(
             'Éxito',
             message,
@@ -209,9 +232,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
             icon: const Icon(Icons.check_circle),
           );
           // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+          Navigator.pop(context);*/
         } catch (error) {
-          print("Error al actualizar la cotización: $error");
           Get.snackbar(
             'Error',
             error.toString(),
@@ -225,5 +247,11 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       backgroundCancelButton: Palette.accent,
       backgroundColor: Palette.accent,
     );
+  }
+
+  @override
+  void dispose() {
+    shoppingCartController.clearCart();
+    super.dispose();
   }
 }

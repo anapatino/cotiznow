@@ -18,10 +18,6 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
   ShoppingCartController shoppingCartController = Get.find();
-
-  List<Materials> selectedMaterials = [];
-
-  List<String> selectOptionsService = [];
   String totalQuotation = "";
   int _activeCurrentStep = 0;
 
@@ -58,9 +54,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           id: '',
           name: name,
           description: description,
-          idService: selectOptionsService,
+          idService: shoppingCartController.extractSelectedServiceIds(),
           length: length,
-          materials: selectedMaterials,
+          materials: shoppingCartController.cartItems,
           status: 'pendiente',
           total: totalQuotation,
           width: width,
@@ -104,12 +100,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           onBack: handleBack,
           controllerLength: controllerLength,
           controllerWidth: controllerWidth,
-          onSelected: (section, total, materials) {
+          onSelected: (total) {
             setState(() {
-              selectedMaterials = materials;
               totalQuotation = total;
-              selectOptionsService = section;
-
               sendQuotation();
             });
           },

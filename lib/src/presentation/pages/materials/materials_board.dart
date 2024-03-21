@@ -29,7 +29,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   List<Materials> filteredMaterials = [];
 
   Materials material = Materials(
-      url_photo: '',
+      urlPhoto: '',
       name: '',
       unit: '',
       size: '',
@@ -333,7 +333,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         String message = await widget.materialController
-            .deleteMaterial(material.id, material.url_photo);
+            .deleteMaterial(material.id, material.urlPhoto);
         Get.snackbar(
           'Éxito',
           message,

@@ -7,7 +7,7 @@ class InformationServices extends StatefulWidget {
   final TextEditingController controllerLength;
   final TextEditingController controllerWidth;
   final VoidCallback onBack;
-  final Function(List<String>, String, List<Materials>) onSelected;
+  final Function(String) onSelected;
 
   const InformationServices(
       {super.key,
@@ -31,7 +31,6 @@ class _InformationServicesState extends State<InformationServices> {
   double screenWidth = 0;
   double screenHeight = 0;
   List<String> optionsService = [];
-  List<String> selectedService = [];
   List<Service> services = [];
   List<String> optionsSection = [];
   List<Section> sections = [];
@@ -62,16 +61,12 @@ class _InformationServicesState extends State<InformationServices> {
 
   void saveQuotation() {
     double materialsTotal = shoppingCartController.calculateMaterialsTotal();
-    List<String> selectedServiceIds = shoppingCartController
-        .extractSelectedServiceIds(selectedService, services);
-    int servicesTotal = shoppingCartController.calculateServicesTotal(
-        selectedService, services);
+
+    int servicesTotal = shoppingCartController.calculateServicesTotal();
     int total = materialsTotal.round() + servicesTotal;
 
     widget.onSelected(
-      selectedServiceIds,
       total.toString(),
-      shoppingCartController.cartItems,
     );
   }
 
@@ -83,13 +78,7 @@ class _InformationServicesState extends State<InformationServices> {
           (service) => service.name == selectedOptionService,
         );
         controllerPrice.text = service.price;
-        bool isServiceSelected =
-            selectedService.contains(selectedOptionService);
-        if (!isServiceSelected) {
-          selectedService.add(selectedOptionService!);
-        } else {
-          selectedService.remove(selectedOptionService!);
-        }
+        shoppingCartController.toggleSelectedService(service);
       }
     });
   }
@@ -242,9 +231,11 @@ class _InformationServicesState extends State<InformationServices> {
               )),
         ),
         Text(
-          selectedService.isEmpty
+          shoppingCartController.selectService.isEmpty
               ? "No hay servicios seleccionados"
-              : selectedService.join(", "),
+              : shoppingCartController.selectService
+                  .map((service) => service.name)
+                  .join(", "),
           style: GoogleFonts.varelaRound(
             color: Palette.textColor,
             fontSize: screenWidth * 0.035,

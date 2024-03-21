@@ -126,7 +126,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         orElse: () => throw "Sección no encontrada",
       );
       Materials material = Materials(
-        url_photo: url_photo,
+        urlPhoto: url_photo,
         name: name,
         unit: unit,
         size: size,

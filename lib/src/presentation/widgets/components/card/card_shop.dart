@@ -71,9 +71,9 @@ class _CardShopState extends State<CardShop> {
                 ),
               ),
               clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: widget.material.url_photo.isNotEmpty
+              child: widget.material.urlPhoto.isNotEmpty
                   ? Image.network(
-                      widget.material.url_photo,
+                      widget.material.urlPhoto,
                       fit: BoxFit.cover,
                       height: 110,
                     )
@@ -97,7 +97,7 @@ class _CardShopState extends State<CardShop> {
                       ? screenWidth * 0.4
                       : screenWidth * 0.27,
                   child: Text(
-                    widget.material.name,
+                    '${widget.material.name}-${widget.material.unit} ${widget.material.size}',
                     style: GoogleFonts.varelaRound(
                         fontSize: screenWidth * 0.035,
                         fontWeight: FontWeight.w600),
@@ -132,7 +132,7 @@ class _CardShopState extends State<CardShop> {
                   ),
                 if (percentage <= 0)
                   Text(
-                    '\$${widget.material.salePrice} ${widget.material.size}',
+                    '\$${widget.material.salePrice}',
                     style: GoogleFonts.varelaRound(
                         fontSize: screenWidth * 0.038,
                         fontWeight: FontWeight.w300),

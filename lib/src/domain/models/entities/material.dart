@@ -1,5 +1,5 @@
 class Materials {
-  String url_photo;
+  String urlPhoto;
   String name;
   String code;
   String unit;
@@ -14,7 +14,7 @@ class Materials {
   String discount;
 
   Materials({
-    required this.url_photo,
+    required this.urlPhoto,
     required this.name,
     required this.code,
     required this.unit,
@@ -31,14 +31,14 @@ class Materials {
 
   factory Materials.fromJson(Map<String, dynamic>? json) {
     return Materials(
-      url_photo: json?['url_photo'] ?? '',
+      urlPhoto: json?['urlPhoto'] ?? '',
       name: json?['name'] ?? '',
       code: json?['code'] ?? '',
       unit: json?['unit'] ?? '',
       size: json?['size'] ?? '',
-      purchasePrice: json?['purchase_price'] ?? '',
-      salePrice: json?['sale_price'] ?? '',
-      sectionId: json?['section_id'] ?? '',
+      purchasePrice: json?['purchasePrice'] ?? '',
+      salePrice: json?['salePrice'] ?? '',
+      sectionId: json?['sectionId'] ?? '',
       quantity: json?['quantity'] ?? '',
       description: json?['description'] ?? '',
       status: json?['status'] ?? '',
@@ -49,14 +49,14 @@ class Materials {
 
   Map<String, dynamic> toJson() {
     return {
-      'url_photo': url_photo,
+      'urlPhoto': urlPhoto,
       'name': name,
       'code': code,
       'unit': unit,
       'size': size,
-      'purchase_price': purchasePrice,
-      'sale_price': salePrice,
-      'section_id': sectionId,
+      'purchasePrice': purchasePrice,
+      'salePrice': salePrice,
+      'sectionId': sectionId,
       'quantity': quantity,
       'description': description,
       'status': status,
@@ -70,7 +70,7 @@ class Materials {
     String? getValue(String key) => parameters?[key]?.toString();
 
     return Materials(
-      url_photo: getValue('url_photo') ?? '',
+      urlPhoto: getValue('urlPhoto') ?? '',
       name: getValue('name') ?? '',
       code: getValue('code') ?? '',
       unit: getValue('unit') ?? '',

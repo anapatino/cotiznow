@@ -1,6 +1,5 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/routes.dart';
-import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/domain.dart';
 
@@ -107,7 +106,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         String message =
-            await widget.quotationController.deleteQuotation(quotation.id);
+            await widget.quotationController.deleteQuotation(quotation);
         Get.snackbar(
           'Éxito',
           message,

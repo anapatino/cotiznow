@@ -22,7 +22,7 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
   List<Materials> filteredMaterials = [];
 
   Materials material = Materials(
-      url_photo: '',
+      urlPhoto: '',
       name: '',
       unit: '',
       size: '',

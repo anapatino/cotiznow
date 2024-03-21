@@ -30,8 +30,8 @@ class Quotation {
       id: json?['id'] ?? '',
       name: json?['name'] ?? '',
       description: json?['description'] ?? '',
-      idService: json?['id_service'] != null
-          ? List<String>.from(json?['id_service'])
+      idService: json?['idService'] != null
+          ? List<String>.from(json?['idService'])
           : [],
       length: json?['length'] ?? '',
       materials: (json?['materials'] as List<dynamic>?)
@@ -47,16 +47,16 @@ class Quotation {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'description': description,
-      'id_service': idService,
-      'length': length,
-      'materials': materials.map((material) => material.toJson()).toList(),
-      'status': status,
-      'total': total,
-      'width': width,
-      'id': id,
-      'userId': userId,
+      "name": name,
+      "description": description,
+      "idService": idService,
+      "length": length,
+      "materials": materials.map((material) => material.toJson()).toList(),
+      "status": status,
+      "total": total,
+      "width": width,
+      "id": id,
+      "userId": userId,
     };
   }
 }

@@ -1,10 +1,15 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/entities/entities.dart';
 
 class ShoppingCartController extends GetxController {
   RxList<Materials> cartItems = <Materials>[].obs;
+  RxList<Service> selectService = <Service>[].obs;
+  ServicesController serviceController = Get.find();
+  Service serviceNotFound = Service(
+      id: "-1", icon: "", name: "", description: "", status: "", price: "");
   Materials materialNotFound = Materials(
-      url_photo: "",
+      urlPhoto: "",
       name: "",
       code: "",
       unit: "",
@@ -70,6 +75,7 @@ class ShoppingCartController extends GetxController {
 
   void clearCart() {
     cartItems.clear();
+    selectService.clear();
   }
 
   double calculateMaterialsTotal() {
@@ -86,21 +92,33 @@ class ShoppingCartController extends GetxController {
     });
   }
 
-  List<String> extractSelectedServiceIds(
-      List<String> selectedService, List<Service> services) {
-    return selectedService.map((serviceName) {
-      Service service =
-          services.firstWhere((service) => service.name == serviceName);
-      return service.id;
-    }).toList();
+  void toggleSelectedService(Service service) {
+    if (selectService.contains(service)) {
+      selectService.remove(service);
+    } else {
+      selectService.add(service);
+    }
   }
 
-  int calculateServicesTotal(
-      List<String> selectedService, List<Service> services) {
-    return selectedService.fold(0, (sum, serviceName) {
-      Service service =
-          services.firstWhere((service) => service.name == serviceName);
+  List<String> extractSelectedServiceIds() {
+    return selectService.map((service) => service.id).toList();
+  }
+
+  int calculateServicesTotal() {
+    return selectService.fold(0, (sum, service) {
       return sum + int.parse(service.price);
     });
+  }
+
+  void updateSelectedServices(List<String> serviceIds) async {
+    selectService.clear();
+    List<Service> services = await serviceController.getAllServices();
+    for (String id in serviceIds) {
+      Service service =
+          services.firstWhere((s) => s.id == id, orElse: () => serviceNotFound);
+      if (service.id != "-1") {
+        selectService.add(service);
+      }
+    }
   }
 }

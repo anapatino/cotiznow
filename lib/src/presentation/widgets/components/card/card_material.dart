@@ -71,9 +71,9 @@ class CardMaterialSimple extends StatelessWidget {
                   ),
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: material.url_photo.isNotEmpty
+                child: material.urlPhoto.isNotEmpty
                     ? Image.network(
-                        material.url_photo,
+                        material.urlPhoto,
                         fit: BoxFit.cover,
                       )
                     : const Center(
@@ -94,7 +94,7 @@ class CardMaterialSimple extends StatelessWidget {
                   SizedBox(
                     width: isLarge ? screenWidth * 0.45 : screenWidth * 0.45,
                     child: Text(
-                      material.name,
+                      '${material.name} ${material.unit} ${material.size}',
                       style: GoogleFonts.varelaRound(
                           fontSize: isLarge
                               ? screenWidth * 0.045
@@ -133,7 +133,7 @@ class CardMaterialSimple extends StatelessWidget {
                     ),
                   if (percentage <= 0)
                     Text(
-                      '\$${material.salePrice} ${material.size}',
+                      '\$${material.salePrice}',
                       style: GoogleFonts.varelaRound(
                           fontSize: screenWidth * 0.038,
                           fontWeight: FontWeight.w600),

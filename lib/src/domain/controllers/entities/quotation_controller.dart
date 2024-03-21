@@ -17,9 +17,10 @@ class QuotationController extends GetxController {
     }
   }
 
-  Future<String> updateQuotation(Quotation quotation) async {
+  Future<String> updateQuotation(
+      Quotation quotation, List<Materials> oldMaterials) async {
     try {
-      return await QuotationRequest.updateQuotation(quotation);
+      return await QuotationRequest.updateQuotation(quotation, oldMaterials);
     } catch (e) {
       throw Future.error('Error al actualizar cotización en la base de datos');
     }
@@ -57,9 +58,9 @@ class QuotationController extends GetxController {
     }
   }
 
-  Future<String> deleteQuotation(String quotationId) async {
+  Future<String> deleteQuotation(Quotation quotation) async {
     try {
-      return await QuotationRequest.deleteQuotation(quotationId);
+      return await QuotationRequest.deleteQuotation(quotation);
     } catch (e) {
       throw Future.error('Error al eliminar la cotización');
     }
