@@ -13,7 +13,7 @@ class QuotationRequest {
           await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
-        'id_service': quotation.idService,
+        'idService': quotation.idService,
         'length': quotation.length,
         'materials':
             quotation.materials.map((material) => material.toJson()).toList(),

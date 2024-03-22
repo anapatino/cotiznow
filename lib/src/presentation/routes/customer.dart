@@ -32,7 +32,7 @@ class CustomerRoutes {
     ),
     GetPage(
       name: visitDetails,
-      page: () => VisitDetails(),
+      page: () => const VisitDetails(),
     ),
     GetPage(
       name: quotations,
@@ -44,7 +44,7 @@ class CustomerRoutes {
     ),
     GetPage(
       name: whatsapp,
-      page: () => const Main(),
+      page: () => const RedirectToWhatsapp(),
     ),
     GetPage(
       name: exit,

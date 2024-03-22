@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -28,6 +31,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     super.initState();
     loadService();
     ManagementController.fetchManagement();
+    requestStoragePermission();
   }
 
   Future<void> loadService() async {
@@ -37,25 +41,45 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     serviceNames = filteredServices.map((service) => service.name).toList();
   }
 
-  Future<void> generatePDF() async {
-    var url = Uri.parse('http://localhost:3000/invoice');
+  Future<void> requestStoragePermission() async {
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      print('Permiso de escritura en el almacenamiento externo denegado.');
+    }
+  }
 
-    var body = {
-      'name': userController.name,
-      'address': userController.address,
-      'phone': userController.phone,
-      'quotation': quotation.toJson(),
-    };
+  Future<void> generatePDF() async {
+    print("entre a la funcion general pdf");
+
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      print("el permiso es denegado" + status.toString());
+      await Permission.storage.request();
+    }
+
+    var baseUrl = 'https://pdf-invoicing-app.onrender.com/invoice';
+    var quotationJson = quotation.toJson();
+    var quotationJsonString = Uri.encodeComponent(jsonEncode(quotationJson));
+
+    var url = Uri.parse(
+        '$baseUrl?name=${userController.name}&address=${userController.address}&phone=${userController.phone}&quotation=$quotationJsonString');
 
     try {
-      // Realiza la solicitud POST
-      var response = await http.post(url, body: body);
+      if (!status.isGranted) {
+        var response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        print('Solicitud exitosa');
-        print('Respuesta: ${response.body}');
-      } else {
-        print('Error en la solicitud: ${response.statusCode}');
+        if (response.statusCode == 200) {
+          if (response.headers['content-type'] == 'application/pdf') {
+            String path = (await getExternalStorageDirectory())!.path;
+            File file = File('$path/invoice.pdf');
+            await file.writeAsBytes(response.bodyBytes);
+            print('PDF descargado correctamente.');
+          } else {
+            print('La respuesta no es un PDF.');
+          }
+        } else {
+          print('Error en la solicitud: ${response.statusCode}');
+        }
       }
     } catch (e) {
       print('Error en la solicitud: $e');
@@ -63,8 +87,15 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> _launchUrl() async {
-    final Uri url = Uri.parse(
-        'https://wa.me/${managementController.phone}?text=${managementController.messageWhatsApp}');
+    String message = "*¡Hola Ferreenergy!* 🛠️%0A%0A"
+        "Tengo algunas dudas sobre la cotización: *${quotation.name}*.%0A%0A"
+        "*Código de la cotización:* ${quotation.id}%0A"
+        "*Estado de la cotización:* ${quotation.status}%0A"
+        "*Cliente:* ${userController.name} ${userController.lastName}%0A"
+        "*Descripción:* ${quotation.description}%0A%0A"
+        "¿Me podrías ayudar con esto? 🤔%0A%0A";
+    final Uri url =
+        Uri.parse('https://wa.me/${managementController.phone}?text=$message');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
@@ -299,33 +330,38 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (userController.role == "cliente")
-                            InkWell(
-                              onTap: _launchUrl,
-                              child: Container(
-                                height: screenHeight * 0.065,
-                                width: screenWidth * 0.4,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/WhatsAppButtonWhiteSmall.png'),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ),
                           CustomElevatedButton(
                             text: 'Actualizar',
                             onPressed: updateQuotation,
                             height: screenHeight * 0.065,
                             width: userController.role == "cliente"
-                                ? screenWidth * 0.4
+                                ? screenWidth * 0.65
                                 : screenWidth * 0.85,
                             textColor: Colors.white,
                             textSize: screenWidth * 0.04,
                             backgroundColor: Palette.primary,
                             hasBorder: false,
                           ),
+                          if (userController.role == "cliente")
+                            InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              onTap: _launchUrl,
+                              child: Container(
+                                height: screenHeight * 0.065,
+                                width: screenWidth * 0.15,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/logo_whatsapp.png'),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     )
