@@ -64,6 +64,7 @@ class CardMaterialSimple extends StatelessWidget {
             children: [
               Container(
                 width: screenWidth * 0.27,
+                height: double.infinity,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25),

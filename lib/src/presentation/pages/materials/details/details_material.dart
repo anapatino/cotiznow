@@ -24,11 +24,11 @@ class MaterialDetails extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SizedBox(
-        height: screenHeight * 1,
+        height: screenHeight,
         child: Stack(
           children: [
             Container(
-              width: screenWidth * 1,
+              width: screenWidth,
               height: screenHeight * 0.58,
               decoration: const BoxDecoration(),
               clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -51,7 +51,7 @@ class MaterialDetails extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: Colors.black54,
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -60,7 +60,7 @@ class MaterialDetails extends StatelessWidget {
               top: screenHeight * 0.48,
               child: Container(
                 width: screenWidth * 1,
-                height: screenHeight * 0.8,
+                height: screenHeight * 0.58,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(

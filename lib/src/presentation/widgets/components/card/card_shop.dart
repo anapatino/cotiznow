@@ -75,7 +75,7 @@ class _CardShopState extends State<CardShop> {
                   ? Image.network(
                       widget.material.urlPhoto,
                       fit: BoxFit.cover,
-                      height: 110,
+                      height: double.infinity,
                     )
                   : const Center(
                       child: Icon(

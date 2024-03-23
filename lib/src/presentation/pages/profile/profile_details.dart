@@ -86,7 +86,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
     } else {
       role = userController.role;
     }
-    if (selectedOption != null) {
+    if (selectedOption == null) {
       account = userController.account;
     }
 

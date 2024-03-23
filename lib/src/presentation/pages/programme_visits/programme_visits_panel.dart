@@ -187,6 +187,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
           backgroundColor: Palette.accent,
           icon: const Icon(Icons.check_circle),
         );
+        setState(() {});
       },
       backgroundConfirmButton: Palette.errorBackground,
       backgroundCancelButton: Palette.error,

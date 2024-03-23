@@ -16,16 +16,12 @@ class QuotationWidget {
 
   List<Quotation> _filterListByOption(
       List<Quotation> quotations, String selectedOption) {
-    if (userController.role != "cliente") {
-      if (selectedOption == "pendiente" ||
-          selectedOption == "aprobada" ||
-          selectedOption == "rechazada") {
-        quotations = quotations
-            .where((quotation) => quotation.status == selectedOption)
-            .toList();
-      }
+    if (selectedOption == "todos" || selectedOption == "") {
+      return quotations;
     }
-    return quotations;
+    return quotations = quotations
+        .where((quotation) => quotation.status == selectedOption)
+        .toList();
   }
 
   Widget buildQuotationList(

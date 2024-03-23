@@ -335,20 +335,23 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                           vertical: screenHeight * 0.03,
                           horizontal: screenWidth * 0.02),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: userController.role == "cliente"
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomElevatedButton(
-                            text: 'Actualizar',
-                            onPressed: updateQuotation,
-                            height: screenHeight * 0.065,
-                            width: userController.role == "cliente"
-                                ? screenWidth * 0.65
-                                : screenWidth * 0.85,
-                            textColor: Colors.white,
-                            textSize: screenWidth * 0.04,
-                            backgroundColor: Palette.primary,
-                            hasBorder: false,
-                          ),
+                          if (userController.role != "cliente")
+                            CustomElevatedButton(
+                              text: 'Actualizar',
+                              onPressed: updateQuotation,
+                              height: screenHeight * 0.065,
+                              width: userController.role == "cliente"
+                                  ? screenWidth * 0.65
+                                  : screenWidth * 0.85,
+                              textColor: Colors.white,
+                              textSize: screenWidth * 0.04,
+                              backgroundColor: Palette.primary,
+                              hasBorder: false,
+                            ),
                           if (userController.role == "cliente")
                             InkWell(
                               splashColor: Colors.transparent,
