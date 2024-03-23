@@ -49,8 +49,6 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> generatePDF() async {
-    print("entre a la funcion general pdf");
-
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       print("el permiso es denegado" + status.toString());
@@ -59,14 +57,23 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
 
     var baseUrl = 'https://pdf-invoicing-app.onrender.com/invoice';
     var quotationJson = quotation.toJson();
-    var quotationJsonString = Uri.encodeComponent(jsonEncode(quotationJson));
+    var quotationJsonString = jsonEncode(quotationJson);
 
-    var url = Uri.parse(
-        '$baseUrl?name=${userController.name}&address=${userController.address}&phone=${userController.phone}&quotation=$quotationJsonString');
+    var url = Uri.parse(baseUrl);
 
     try {
-      if (!status.isGranted) {
-        var response = await http.get(url);
+      if (status.isGranted) {
+        var response = await http.post(
+          url,
+          body: {
+            'name': userController.name,
+            'address': userController.address,
+            'phone': userController.phone,
+            'quotation': quotationJsonString,
+            'methodOfPaymet':
+                jsonEncode(managementController.management?.methodOfPayment)
+          },
+        );
 
         if (response.statusCode == 200) {
           if (response.headers['content-type'] == 'application/pdf') {

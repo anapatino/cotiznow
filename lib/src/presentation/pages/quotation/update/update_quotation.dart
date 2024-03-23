@@ -62,8 +62,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           RxList<Materials>(parameters.materials);
 
       shoppingCartController.updateSelectedServices(parameters.idService);
-      print("viejo material:" +
-          list.map((er) => er.name + er.quantity).toString());
     }
   }
 
@@ -91,11 +89,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       if ((userController.role == "cliente" &&
               parameters.status != "aprobado") ||
           (userController.role != "cliente")) {
-        print("nuevo material:" +
-            newQuotation.materials.map((e) => e.name + e.quantity).toString());
-        print("viejo material:" +
-            list.map((er) => er.name + er.quantity).toString());
-        // confirmationUpdateQuotation(newQuotation, quotation.materials);
+        confirmationUpdateQuotation(newQuotation);
       } else {
         Get.snackbar(
           'Mensaje informativo',
@@ -212,8 +206,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
     );
   }
 
-  Future<void> confirmationUpdateQuotation(
-      Quotation quotation, List<Materials> oldMaterials) async {
+  Future<void> confirmationUpdateQuotation(Quotation quotation) async {
     DialogUtil.showConfirmationDialog(
       title: 'Actualizar  cotización',
       message: '¿Desea actualizar esta cotización?',
@@ -221,8 +214,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          /*String message = await quotationController.updateQuotation(
-              quotation, oldMaterials);
+          String message = await quotationController.updateQuotation(quotation);
           Get.snackbar(
             'Éxito',
             message,
@@ -232,7 +224,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
             icon: const Icon(Icons.check_circle),
           );
           // ignore: use_build_context_synchronously
-          Navigator.pop(context);*/
+          Navigator.pop(context);
         } catch (error) {
           Get.snackbar(
             'Error',

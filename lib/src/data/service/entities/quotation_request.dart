@@ -41,11 +41,20 @@ class QuotationRequest {
     }
   }
 
-  static Future<String> updateQuotation(
-      Quotation updatedQuotation, List<Materials> oldMaterials) async {
+  static Future<String> updateQuotation(Quotation updatedQuotation) async {
     DateTime now = DateTime.now();
-
     try {
+      DocumentSnapshot quotationSnapshot = await database
+          .collection('quotations')
+          .doc(updatedQuotation.id)
+          .get();
+      Map<String, dynamic> quotationData =
+          quotationSnapshot.data() as Map<String, dynamic>;
+      Quotation oldQuotation = Quotation.fromJson(quotationData);
+
+      await MaterialsRequest.calculateNewMaterialValue(
+          updatedQuotation.materials, oldQuotation.materials);
+
       await database
           .collection('quotations')
           .doc(updatedQuotation.id)
@@ -58,8 +67,6 @@ class QuotationRequest {
       );
 
       await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
-      await MaterialsRequest.calculateNewMaterialValue(
-          updatedQuotation.materials, oldMaterials);
 
       return "Se ha actualizado la cotización y registrado en el historial";
     } catch (e) {

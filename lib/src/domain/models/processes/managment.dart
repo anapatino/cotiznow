@@ -29,7 +29,7 @@ class Contact {
 }
 
 class MethodOfPayment {
-  final String bancolombia;
+  final Bancolombia bancolombia;
   final String nequi;
   final String daviplata;
 
@@ -41,9 +41,32 @@ class MethodOfPayment {
 
   factory MethodOfPayment.fromFirestore(Map<String, dynamic>? data) {
     return MethodOfPayment(
-      bancolombia: data?['bancolombia'] ?? '',
+      bancolombia: Bancolombia.fromMap(data?['bancolombia']),
       nequi: data?['nequi'] ?? '',
       daviplata: data?['daviplata'] ?? '',
+    );
+  }
+}
+
+class Bancolombia {
+  final String name;
+  final String cc;
+  final String account;
+  final String number;
+
+  Bancolombia({
+    required this.name,
+    required this.cc,
+    required this.account,
+    required this.number,
+  });
+
+  factory Bancolombia.fromMap(Map<String, dynamic>? data) {
+    return Bancolombia(
+      name: data?['name'] ?? '',
+      cc: data?['cc'] ?? '',
+      account: data?['account'] ?? '',
+      number: data?['number'] ?? '',
     );
   }
 }

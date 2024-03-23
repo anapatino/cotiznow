@@ -240,7 +240,6 @@ class MaterialsRequest {
   static Future<void> subtractMaterialQuantity(
       Materials material, bool isAdd) async {
     try {
-      print("entre en el segundo metodo");
       List<Materials> allMaterials = await getAllMaterials();
 
       Materials materialToUpdate = allMaterials.firstWhere(
@@ -252,10 +251,8 @@ class MaterialsRequest {
       int quantityChange = int.parse(material.quantity);
 
       if (isAdd) {
-        print("estoy agregando");
         currentQuantity += quantityChange;
       } else {
-        print("estoy disminuyendo");
         currentQuantity -= quantityChange;
       }
 
@@ -269,25 +266,34 @@ class MaterialsRequest {
   static Future<void> calculateNewMaterialValue(
       List<Materials> newMaterials, List<Materials> oldMaterials) async {
     try {
-      print("entre a calcular nuevo material");
-      print("nuevo material:" +
-          newMaterials.map((e) => e.name + e.quantity).toString());
-      print("viejo material:" +
-          newMaterials.map((e) => e.name + e.quantity).toString());
       for (int i = 0; i < newMaterials.length; i++) {
         Materials newMaterial = newMaterials[i];
         Materials oldMaterial = oldMaterials.firstWhere(
             (oldMaterial) => oldMaterial.id == newMaterial.id,
             orElse: () => throw Future.error(
                 'El material con ID ${newMaterial.id} no existe en la colección materials.'));
-
         int quantityInNewMaterial = int.parse(newMaterial.quantity);
         int quantityInOldMaterial = int.parse(oldMaterial.quantity);
 
-        if (quantityInNewMaterial != quantityInOldMaterial) {
-          print("entre en la primera condicion de calcular material");
-          await subtractMaterialQuantity(
-              newMaterial, quantityInNewMaterial > quantityInOldMaterial);
+        DocumentSnapshot quotationSnapshot =
+            await database.collection('materials').doc(newMaterial.id).get();
+        Map<String, dynamic> materialData =
+            quotationSnapshot.data() as Map<String, dynamic>;
+
+        Materials databaseMaterial = Materials.fromJson(materialData);
+        databaseMaterial.id = newMaterial.id;
+        int databaseQuantity = int.parse(databaseMaterial.quantity);
+
+        if (quantityInNewMaterial > quantityInOldMaterial) {
+          databaseQuantity -= quantityInNewMaterial - quantityInOldMaterial;
+          databaseMaterial.quantity = databaseQuantity.toString();
+          await updateMaterialQuantityInDatabase(databaseMaterial);
+        }
+
+        if (quantityInNewMaterial < quantityInOldMaterial) {
+          databaseQuantity += quantityInOldMaterial - quantityInNewMaterial;
+          databaseMaterial.quantity = databaseQuantity.toString();
+          await updateMaterialQuantityInDatabase(databaseMaterial);
         }
       }
     } catch (e) {

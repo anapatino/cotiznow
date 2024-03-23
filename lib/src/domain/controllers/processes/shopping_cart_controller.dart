@@ -4,6 +4,7 @@ import 'package:cotiznow/src/domain/models/entities/entities.dart';
 
 class ShoppingCartController extends GetxController {
   RxList<Materials> cartItems = <Materials>[].obs;
+  RxList<Materials> previousMaterials = <Materials>[].obs;
   RxList<Service> selectService = <Service>[].obs;
   ServicesController serviceController = Get.find();
   Service serviceNotFound = Service(

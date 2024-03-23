@@ -37,7 +37,6 @@ dependencies:
   firebase_core: ^2.25.3
   firebase_auth: ^4.17.3
   cloud_firestore: ^4.15.3
-  flutter_native_splash: ^2.3.10
   get: ^4.6.5
   google_fonts: ^4.0.4
   animate_do: ^3.3.3
