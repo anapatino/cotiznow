@@ -2,6 +2,7 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/entities/service.dart';
 import 'package:cotiznow/src/presentation/utils/utils.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 
 class RegisterServiceForm extends StatefulWidget {
@@ -58,34 +59,15 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
           status: status,
           price: price);
       serviceController.registerService(service).then((value) async {
-        Get.snackbar(
-          'Registro de servicio exitoso',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess(
+            'Registro de servicio exitoso', value);
       }).catchError((error) {
-        Get.snackbar(
-          'Error al registrar servicio',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageError('Error al registrar servicio', error);
       });
       _onCancelForm();
     } else {
-      Get.snackbar(
-        'Error al registrar servicio',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error_outline_rounded),
-      );
+      MessageHandler.showMessageWarning('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

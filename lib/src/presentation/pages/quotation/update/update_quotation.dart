@@ -91,13 +91,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           (userController.role != "cliente")) {
         confirmationUpdateQuotation(newQuotation);
       } else {
-        Get.snackbar(
-          'Mensaje informativo',
-          "No puedes actualizar la cotización en estado aprobada",
-          colorText: Colors.white,
-          backgroundColor: Palette.warning,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageError('Validación de campos',
+            'Ingrese los campos requeridos para poder actualizar la cotización');
       }
     }
   }
@@ -215,24 +210,13 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       onConfirm: () async {
         try {
           String message = await quotationController.updateQuotation(quotation);
-          Get.snackbar(
-            'Éxito',
-            message,
-            colorText: Colors.white,
-            duration: const Duration(seconds: 5),
-            backgroundColor: Palette.accent,
-            icon: const Icon(Icons.check_circle),
-          );
+          MessageHandler.showMessageSuccess(
+              'Actualizacion realizada con exito', message);
           // ignore: use_build_context_synchronously
           Navigator.pop(context);
         } catch (error) {
-          Get.snackbar(
-            'Error',
-            error.toString(),
-            colorText: Colors.white,
-            backgroundColor: Colors.red,
-            icon: const Icon(Icons.error),
-          );
+          MessageHandler.showMessageError(
+              'Error al actualizar cotización', error);
         }
       },
       backgroundConfirmButton: Palette.accentBackground,

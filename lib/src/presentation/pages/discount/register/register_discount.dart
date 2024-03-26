@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../../domain/domain.dart';
 import '../../../widgets/components/components.dart';
@@ -54,7 +55,7 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
         }
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showMessageWarning("Error al carga las secciones", error);
     }
   }
 
@@ -72,7 +73,13 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
           return SizedBox(
               width: screenWidth * 0.86,
               height: screenHeight * 0.15,
-              child: Center(child: Text(snapshot.error.toString())));
+              child: Center(
+                child: Text(snapshot.error.toString(),
+                    style: GoogleFonts.varelaRound(
+                      color: Colors.black,
+                      fontSize: screenWidth * 0.04,
+                    )),
+              ));
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
@@ -122,7 +129,13 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
           return SizedBox(
               width: screenWidth * 0.86,
               height: screenHeight * 0.15,
-              child: Center(child: Text(snapshot.error.toString())));
+              child: Center(
+                child: Text(snapshot.error.toString(),
+                    style: GoogleFonts.varelaRound(
+                      color: Colors.black,
+                      fontSize: screenWidth * 0.04,
+                    )),
+              ));
         }
         final materials = snapshot.data!;
         filteredMaterials =

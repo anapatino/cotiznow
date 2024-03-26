@@ -4,7 +4,6 @@ import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../domain/controllers/controllers.dart';
 import '../../../domain/models/entities/entities.dart';
 import '../../routes/routes.dart';
-import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
 class CustomerDashboard extends StatefulWidget {
@@ -46,7 +45,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
         }
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showMessageWarning("Error al carga las secciones", error);
     }
   }
 
@@ -79,7 +78,13 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+            child: Text(snapshot.error.toString(),
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                )),
+          );
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =

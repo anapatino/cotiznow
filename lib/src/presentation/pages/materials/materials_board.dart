@@ -61,7 +61,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         }
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showMessageWarning("Error al carga las secciones", error);
     }
   }
 
@@ -99,7 +99,13 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+            child: Text(snapshot.error.toString(),
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                )),
+          );
         }
         final sections = snapshot.data!;
         filteredSections =
@@ -143,7 +149,13 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+            child: Text(snapshot.error.toString(),
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                )),
+          );
         }
         final materials = snapshot.data!;
         filteredMaterials =
@@ -332,16 +344,15 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        String message = await widget.materialController
-            .deleteMaterial(material.id, material.urlPhoto);
-        Get.snackbar(
-          'Éxito',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        try {
+          String message = await widget.materialController
+              .deleteMaterial(material.id, material.urlPhoto);
+          MessageHandler.showMessageSuccess(
+              "Se ha realizado con exito la operación", message);
+        } catch (e) {
+          MessageHandler.showMessageError(
+              "Error al realizar esta operación", e);
+        }
       },
       backgroundConfirmButton: Palette.errorBackground,
       backgroundCancelButton: Palette.error,

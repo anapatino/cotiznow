@@ -105,16 +105,14 @@ class _QuotationPanelState extends State<QuotationPanel> {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        String message =
-            await widget.quotationController.deleteQuotation(quotation);
-        Get.snackbar(
-          'Éxito',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        try {
+          String message =
+              await widget.quotationController.deleteQuotation(quotation);
+          MessageHandler.showMessageSuccess(
+              'Eliminación de cotizacion exitosa', message);
+        } catch (e) {
+          MessageHandler.showMessageError('Error al eliminar cotización', e);
+        }
       },
       backgroundConfirmButton: Palette.errorBackground,
       backgroundCancelButton: Palette.error,

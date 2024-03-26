@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../routes/routes.dart';
 import '../../../widgets/components/components.dart';
@@ -24,26 +25,13 @@ class _VisitDetailsState extends State<VisitDetails> {
     try {
       await programmeVisitsController.updateVisitStatus(
           programmeVisit.id, selectedOption!);
+      MessageHandler.showMessageSuccess('Visita actualizada correctamente',
+          "Se ha actualizado en la base de datos con exito");
 
-      Get.snackbar(
-        'Visita actualizada correctamente',
-        "Se ha actualizado en la base de datos con exito",
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.check_circle),
-      );
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (error) {
-      Get.snackbar(
-        'Error al actualizar visita',
-        error.toString(),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.error,
-        icon: const Icon(Icons.error_rounded),
-      );
+      MessageHandler.showMessageError('Error al actualizar visita', error);
     }
   }
 

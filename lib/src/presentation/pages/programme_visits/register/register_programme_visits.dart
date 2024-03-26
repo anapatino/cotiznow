@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import '../../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
@@ -44,34 +45,14 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
       widget.programmeVisitsController
           .registerVisit(programmeVisit)
           .then((value) async {
-        Get.snackbar(
-          'Registro de visita exitosa',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess('Registro de visita exitosa', value);
       }).catchError((error) {
-        Get.snackbar(
-          'Error al registrar visita',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageError('Error al registrar visita', error);
       });
       _onCancelForm();
     } else {
-      Get.snackbar(
-        'Error al registrar visita',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMessageError('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

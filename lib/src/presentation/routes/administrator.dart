@@ -95,7 +95,7 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: visitDetails,
-      page: () => VisitDetails(),
+      page: () => const VisitDetails(),
     ),
     GetPage(
       name: exit,

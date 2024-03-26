@@ -39,8 +39,12 @@ class _CustomerState extends State<Customer> {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error al cargar la lista de usuarios'),
+          return Center(
+            child: Text('Error al cargar la lista de usuarios',
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                )),
           );
         } else {
           List<Users> filteredList = snapshot.data ?? [];

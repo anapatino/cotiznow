@@ -145,13 +145,15 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         discount: '',
       );
       materialController.registerMaterial(material).then((value) async {
-        MessageHandler.showMaterialSuccess(value);
+        MessageHandler.showMessageSuccess(
+            'Registro realizada con exito', value);
       }).catchError((error) {
-        MessageHandler.showMaterialError(error);
+        MessageHandler.showMessageError('Error al registrar material', error);
       });
       _onCancelForm();
     } else {
-      MessageHandler.showMaterialRegistrationError();
+      MessageHandler.showMessageError('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

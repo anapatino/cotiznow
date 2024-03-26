@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../../domain/domain.dart';
 import '../../../utils/utils.dart';
@@ -54,34 +55,16 @@ class _UpdateSectionFormState extends State<UpdateSectionForm> {
         status: status);
     if (name.isNotEmpty && description.isNotEmpty && icon.isNotEmpty) {
       sectionsController.updateSection(section).then((value) async {
-        Get.snackbar(
-          'Actualización de sección exitoso',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess(
+            'Actualización de sección exitosa', value);
       }).catchError((error) {
-        Get.snackbar(
-          'Error al actualizar sección',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageError(
+            'Error al actualizar la sección', error);
       });
       _onCancelForm();
     } else {
-      Get.snackbar(
-        'Error al actualizar sección',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMessageWarning('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

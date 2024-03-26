@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../../domain/domain.dart';
 import '../../../widgets/components/components.dart';
@@ -33,34 +34,17 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
       materialController
           .updateMaterialStatus(widget.material.id, status)
           .then((value) async {
-        Get.snackbar(
-          'Actualizacion de material exitoso',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess(
+            'Actualizacion de material exitoso', value);
+
         _onCancelForm();
       }).catchError((error) {
-        Get.snackbar(
-          'Error al actualizar estado material',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageError(
+            'Error al actualizar estado material', error);
       });
     } else {
-      Get.snackbar(
-        'Error al actualizar estado material',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMessageWarning('Error al actualizar estado material',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

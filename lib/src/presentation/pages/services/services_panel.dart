@@ -2,7 +2,6 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/pages/services/services.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
-import '../../widgets/components/components.dart';
 import '../../widgets/widgets.dart';
 
 // ignore: must_be_immutable
@@ -171,7 +170,12 @@ class _ServicesPanel extends State<ServicesPanel> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+              child: Text(snapshot.error.toString(),
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.04,
+                  )));
         }
         final services = snapshot.data!;
         List<Service> filteredServices =
@@ -234,20 +238,19 @@ class _ServicesPanel extends State<ServicesPanel> {
   void showDisableServiceAlert(Service service) {
     DialogUtil.showConfirmationDialog(
       title: 'Deshabilitar Servicio',
-      message: '¿Desea eliminar este servicio?',
+      message: '¿Desea desahabilitar este servicio?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        String message = await widget.serviceController
-            .updateServiceStatus(service.id, 'inactivo');
-        Get.snackbar(
-          'Éxito',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        try {
+          String message = await widget.serviceController
+              .updateServiceStatus(service.id, 'inactivo');
+          MessageHandler.showMessageSuccess(
+              'Actualización de estado del servicio exitoso', message);
+        } catch (e) {
+          MessageHandler.showMessageError(
+              'Error al deshabilitar el servicio', e);
+        }
       },
       backgroundConfirmButton: Palette.accentBackground,
       backgroundCancelButton: Palette.accent,

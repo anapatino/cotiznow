@@ -149,13 +149,15 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
       materialController
           .updateMaterial(material, widget.material.urlPhoto)
           .then((value) async {
-        MessageHandler.showMaterialSuccess(value);
+        MessageHandler.showMessageSuccess(
+            'Actualizacion realizada con exito', value);
       }).catchError((error) {
-        MessageHandler.showMaterialError(error);
+        MessageHandler.showMessageError('Error al actualizar material', error);
       });
       _onCancelForm();
     } else {
-      MessageHandler.showMaterialRegistrationError();
+      MessageHandler.showMessageError('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

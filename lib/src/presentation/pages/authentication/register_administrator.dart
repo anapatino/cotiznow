@@ -1,7 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
-
-import '../../../domain/controllers/controllers.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import '../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
@@ -61,35 +60,16 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
       );
       userController.register(user, password, false).then((value) async {
         if (userController.userEmail.isNotEmpty) {
-          Get.snackbar(
-            'Registro de usuario exitoso',
-            'Se ha registrado correctamente en el sistema',
-            colorText: Colors.white,
-            duration: const Duration(seconds: 5),
-            backgroundColor: Palette.accent,
-            icon: const Icon(Icons.supervised_user_circle_sharp),
-          );
+          MessageHandler.showMessageSuccess('Registro de usuario exitoso',
+              'Se ha registrado correctamente en el sistema');
         }
       }).catchError((error) {
-        Get.snackbar(
-          'Validacion de usuario',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error_rounded),
-        );
+        MessageHandler.showMessageSuccess('Validacion de usuario', error);
       });
       _onCancelRegistration();
     } else {
-      Get.snackbar(
-        'Error al registrar usuario',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error_outline_rounded),
-      );
+      MessageHandler.showMessageWarning('Mensaje informativo',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 

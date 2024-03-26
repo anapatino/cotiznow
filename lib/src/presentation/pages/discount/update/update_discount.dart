@@ -1,6 +1,7 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/entities/material.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import '../../../widgets/components/components.dart';
 
 // ignore: must_be_immutable
@@ -22,36 +23,17 @@ class UpdateDiscount extends StatelessWidget {
         double newDiscount = discount / 100;
         String message = await materialController.updateDiscount(
             material.id, newDiscount.toString());
-        Get.snackbar(
-          'Actualización de descuento',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess(
+            'Actualización de descuento', message);
         materialController.getAllMaterials();
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } else {
-        Get.snackbar(
-          'Validar campos',
-          'Intente ingresar un numero mayor a 0',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageSuccess(
+            'Validación de campos', 'Intente ingresar un numero mayor a 0');
       }
     } catch (e) {
-      Get.snackbar(
-        'Error al actualizar descuento',
-        '$e',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.error,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMessageError('Error al actualizar descuento', e);
     }
   }
 

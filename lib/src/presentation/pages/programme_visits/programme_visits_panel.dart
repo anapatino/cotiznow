@@ -23,16 +23,12 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
   bool isContainerVisible = false;
   String? selectedOption;
 
-  List<ProgrammeVisits> _filterListByOption(List<ProgrammeVisits> list) {
-    if (selectedOption == "pendiente" ||
-        selectedOption == "aprobada" ||
-        selectedOption == "rechazada") {
-      list = list
-          .where((quotation) => quotation.status == selectedOption)
-          .toList();
+  List<ProgrammeVisits> _filterListByOption(
+      List<ProgrammeVisits> list, String selectedOption) {
+    if (selectedOption == "todos" || selectedOption == "") {
+      return list;
     }
-
-    return list;
+    return list.where((visit) => visit.status == selectedOption).toList();
   }
 
   Widget _buildProgrammeVisitsList() {
@@ -48,12 +44,17 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
           );
         }
         if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error al cargar la lista de cotizaciones'),
+          return Center(
+            child: Text('Error al cargar la lista de cotizaciones',
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                )),
           );
         }
         List<ProgrammeVisits> list = snapshot.data!;
-        list = _filterListByOption(list);
+        list = _filterListByOption(
+            list, selectedOption != null ? selectedOption! : "");
         return _buildCardProgrammeVisits(list);
       },
     );
@@ -173,21 +174,21 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
 
   Future<void> showDeleteAlert(ProgrammeVisits visit) async {
     DialogUtil.showConfirmationDialog(
-      title: 'Eliminar cotización',
-      message: '¿Desea eliminar esta cotización?',
+      title: 'Eliminar visita',
+      message: '¿Desea eliminar esta visita?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        await widget.programmeVisitsController.deleteVisit(visit.id);
-        Get.snackbar(
-          'Éxito',
-          "Se ha eliminado con exito la visita",
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
-        setState(() {});
+        try {
+          await widget.programmeVisitsController.deleteVisit(visit.id);
+          MessageHandler.showMessageSuccess(
+              'Se ha realizado con exito la operación',
+              "Se ha eliminado con exito la visita");
+
+          setState(() {});
+        } catch (e) {
+          MessageHandler.showMessageError('Error al eliminar la visita', e);
+        }
       },
       backgroundConfirmButton: Palette.errorBackground,
       backgroundCancelButton: Palette.error,

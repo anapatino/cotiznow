@@ -121,9 +121,10 @@ class _DiscountPanelState extends State<DiscountPanel> {
         try {
           String message =
               await materialController.updateDiscount(material.id, "");
-          MessageHandler.showDescountSuccess(message);
+          MessageHandler.showMessageSuccess(
+              'Se ha eliminado el descuento con exito', message);
         } catch (e) {
-          MessageHandler.showDescountError(e);
+          MessageHandler.showMessageError('Error al eliminar descuento', e);
         }
       },
       backgroundConfirmButton: Palette.errorBackground,

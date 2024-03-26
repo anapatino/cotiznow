@@ -180,24 +180,14 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
         try {
           String message =
               await quotationController.registerQuotation(quotation);
-          Get.snackbar(
-            'Éxito',
-            message,
-            colorText: Colors.white,
-            duration: const Duration(seconds: 5),
-            backgroundColor: Palette.accent,
-            icon: const Icon(Icons.check_circle),
-          );
+          MessageHandler.showMessageSuccess(
+              'Registro realizado con exito', message);
+
           // ignore: use_build_context_synchronously
           Navigator.pop(context);
         } catch (error) {
-          Get.snackbar(
-            'Error',
-            'Hubo un problema al registrar la cotización.',
-            colorText: Colors.white,
-            backgroundColor: Colors.red,
-            icon: const Icon(Icons.error),
-          );
+          MessageHandler.showMessageError(
+              'Error al registrar cotización', error);
         }
       },
       backgroundConfirmButton: Palette.accentBackground,

@@ -91,15 +91,16 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        await widget.quotationController.deleteQuotationHistory(quotation.id);
-        Get.snackbar(
-          'Éxito',
-          "Se ha eliminado la cotización satisfactoriamente",
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        try {
+          await widget.quotationController.deleteQuotationHistory(quotation.id);
+          MessageHandler.showMessageSuccess(
+            'Eliminación de historial exitosa',
+            "Se ha eliminado el historial de la cotización",
+          );
+        } catch (e) {
+          MessageHandler.showMessageError(
+              'Error al eliminar historial cotización', e);
+        }
       },
       backgroundConfirmButton: Palette.errorBackground,
       backgroundCancelButton: Palette.error,

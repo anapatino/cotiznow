@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../domain/controllers/controllers.dart';
 import '../../widgets/components/components.dart';
@@ -35,27 +36,14 @@ class Login extends StatelessWidget {
             }
           }
         }).catchError((error) {
-          Get.snackbar(
-            'Validacion de usuario',
-            '$error',
-            colorText: Colors.white,
-            duration: const Duration(seconds: 5),
-            backgroundColor: Palette.error,
-            icon: const Icon(Icons.error_outline_rounded),
-          );
+          MessageHandler.showMessageError('Validacion de usuario', error);
         });
 
         controllerEmail.clear();
         controllerPassword.clear();
       } else {
-        Get.snackbar(
-          'Error al ingresar',
-          'Ingrese los campos requeridos para poder ingresar',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.error_outline_rounded),
-        );
+        MessageHandler.showMessageWarning('Mensaje informativo',
+            'Ingrese los campos requeridos para poder ingresar');
       }
     }
 

@@ -24,7 +24,8 @@ class _RedirectToWhatsappState extends State<RedirectToWhatsapp> {
     final Uri url = Uri.parse(
         'https://wa.me/${managementController.phone}?text=${managementController.messageWhatsApp}');
     if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
+      MessageHandler.showMessageWarning(
+          'No se puede redirigir a WhatsApp en estos momentos', url);
     }
   }
 

@@ -35,30 +35,31 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   String account = "";
 
   UserController userController = Get.find();
-  final parameters = Get.arguments as Users;
+  Users? parameters;
   String? selectedOption;
   String? selectedOptionRole;
 
   @override
   void initState() {
     super.initState();
+    parameters = Get.arguments as Users?;
     validateFields();
   }
 
   void validateFields() {
     if (mounted) {
       if (parameters != null) {
-        controllerName.text = parameters.name;
-        controllerLastName.text = parameters.lastName;
-        controllerPhone.text = parameters.phone;
-        controllerAddress.text = parameters.address;
-        controllerEmail.text = parameters.email;
-        controllerRole.text = parameters.role;
-        controllerAccount.text = parameters.account;
-        id = parameters.id;
-        authId = parameters.authId;
-        role = parameters.role;
-        account = parameters.account;
+        controllerName.text = parameters!.name;
+        controllerLastName.text = parameters!.lastName;
+        controllerPhone.text = parameters!.phone;
+        controllerAddress.text = parameters!.address;
+        controllerEmail.text = parameters!.email;
+        controllerRole.text = parameters!.role;
+        controllerAccount.text = parameters!.account;
+        id = parameters!.id;
+        authId = parameters!.authId;
+        role = parameters!.role;
+        account = parameters!.account;
       } else {
         controllerName.text = userController.name;
         controllerLastName.text = userController.lastName;
@@ -78,7 +79,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   void checkAccessAndUpdateUser() {
     if (userController.role == "administrador" &&
         controllerRole.text == "super administrador") {
-      MessageHandler.showWarning('Acceso denegado',
+      MessageHandler.showMessageWarning('Acceso denegado',
           'No tiene acceso para modificar a otro administrador.');
     } else {
       updateUser();

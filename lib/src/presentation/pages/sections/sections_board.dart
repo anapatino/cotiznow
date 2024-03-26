@@ -162,7 +162,12 @@ class _SectionsState extends State<Sections> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+              child: Text(snapshot.error.toString(),
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.04,
+                  )));
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
@@ -229,16 +234,15 @@ class _SectionsState extends State<Sections> {
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
-        String message = await widget.sectionsController
-            .updateSectionStatus(section.id, 'inactivo');
-        Get.snackbar(
-          'Éxito',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        try {
+          String message = await widget.sectionsController
+              .updateSectionStatus(section.id, 'inactivo');
+          MessageHandler.showMessageSuccess(
+              'Actualización de sección exitosa', message);
+        } catch (e) {
+          MessageHandler.showMessageError(
+              'Error al deshabilitar la sección', e);
+        }
       },
       backgroundConfirmButton: Palette.accentBackground,
       backgroundCancelButton: Palette.accent,

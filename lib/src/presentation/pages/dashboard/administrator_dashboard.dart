@@ -43,7 +43,7 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
         }
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showMessageWarning("Error al carga las secciones", error);
     }
   }
 
@@ -76,7 +76,13 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+            child: Text(snapshot.error.toString(),
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                )),
+          );
         }
         final sections = snapshot.data!;
         List<Section> filteredSections =
