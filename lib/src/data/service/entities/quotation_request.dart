@@ -51,9 +51,13 @@ class QuotationRequest {
       Map<String, dynamic> quotationData =
           quotationSnapshot.data() as Map<String, dynamic>;
       Quotation oldQuotation = Quotation.fromJson(quotationData);
-
-      await MaterialsRequest.calculateNewMaterialValue(
-          updatedQuotation.materials, oldQuotation.materials);
+      if (oldQuotation.materials.isNotEmpty) {
+        await MaterialsRequest.calculateNewMaterialValue(
+            updatedQuotation.materials, oldQuotation.materials);
+      } else {
+        MaterialsRequest.subtractMaterialsQuantity(
+            updatedQuotation.materials, false);
+      }
 
       await database
           .collection('quotations')

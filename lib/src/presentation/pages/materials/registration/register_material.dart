@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 
 import '../../../../domain/models/models.dart';
@@ -67,7 +68,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         options = unitsList.map((unit) => unit.name).toList();
       });
     } catch (error) {
-      print("Error loading units: $error");
+      MessageHandler.showUnitsLoadingError(error);
     }
   }
 
@@ -75,10 +76,13 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     try {
       sections = await sectionsController.getAllSections();
       setState(() {
-        optionsSection = sections.map((section) => section.name).toList();
+        optionsSection = sections
+            .where((section) => section.status == "activo")
+            .map((section) => section.name)
+            .toList();
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showSectionLoadingError(error);
     }
   }
 
@@ -141,34 +145,13 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         discount: '',
       );
       materialController.registerMaterial(material).then((value) async {
-        Get.snackbar(
-          'Registro de material exitoso',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMaterialSuccess(value);
       }).catchError((error) {
-        Get.snackbar(
-          'Error al registrar material',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMaterialError(error);
       });
       _onCancelForm();
     } else {
-      Get.snackbar(
-        'Error al registrar material',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMaterialRegistrationError();
     }
   }
 

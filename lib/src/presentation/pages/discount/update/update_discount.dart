@@ -30,6 +30,7 @@ class UpdateDiscount extends StatelessWidget {
           backgroundColor: Palette.accent,
           icon: const Icon(Icons.check_circle),
         );
+        materialController.getAllMaterials();
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } else {

@@ -107,13 +107,13 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.15),
+                          child: Text(
                             "Elige un icono",
                             style: GoogleFonts.varelaRound(
                               color: Colors.white,
@@ -122,27 +122,27 @@ class _RegisterSectionFormState extends State<RegisterSectionForm> {
                               letterSpacing: 1,
                             ),
                           ),
-                          SizedBox(
-                            height: screenHeight * 0.15,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: IconList.icons.length,
-                              itemBuilder: (context, index) {
-                                return RoundIconButton(
-                                  icon: "${IconList.icons[index]["icon"]}",
-                                  title: "${IconList.icons[index]["title"]}",
-                                  onClick: () {
-                                    handleIconClick(index,
-                                        "${IconList.icons[index]["icon"]}");
-                                  },
-                                  onLongPress: () {},
-                                  isActive: activeIndex == index,
-                                );
-                              },
-                            ),
+                        ),
+                        SizedBox(
+                          height: screenHeight * 0.15,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: IconList.icons.length,
+                            itemBuilder: (context, index) {
+                              return RoundIconButton(
+                                icon: "${IconList.icons[index]["icon"]}",
+                                title: "${IconList.icons[index]["title"]}",
+                                onClick: () {
+                                  handleIconClick(index,
+                                      "${IconList.icons[index]["icon"]}");
+                                },
+                                onLongPress: () {},
+                                isActive: activeIndex == index,
+                              );
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     CustomTextField(
                       icon: Icons.dehaze_rounded,

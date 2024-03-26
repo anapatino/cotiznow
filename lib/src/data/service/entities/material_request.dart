@@ -172,9 +172,15 @@ class MaterialsRequest {
 
   static Future<String> updateMaterial(
       Materials material, String urlOld) async {
+    String urlNew;
     try {
-      await deleteMaterialPhoto(urlOld);
-      final urlNew = await _uploadImageToFirebase(material.urlPhoto);
+      if (urlOld == material.urlPhoto) {
+        await deleteMaterialPhoto(urlOld);
+        urlNew = await _uploadImageToFirebase(material.urlPhoto);
+      } else {
+        urlNew = material.urlPhoto;
+      }
+
       await database.collection('materials').doc(material.id).update({
         'urlPhoto': urlNew,
         'name': material.name,
@@ -211,25 +217,20 @@ class MaterialsRequest {
           int quantityInQuotation = int.parse(quotationMaterial.quantity);
           int quantityInMaterial = int.parse(matchingMaterial.quantity);
 
-          if (quantityInMaterial >= quantityInQuotation) {
-            if (add) {
-              matchingMaterial.quantity =
-                  (quantityInMaterial + quantityInQuotation).toString();
-            } else {
-              matchingMaterial.quantity =
-                  (quantityInMaterial - quantityInQuotation).toString();
-            }
-
-            updatedMaterials.add(matchingMaterial);
+          if (add) {
+            matchingMaterial.quantity =
+                (quantityInMaterial + quantityInQuotation).toString();
           } else {
-            throw Future.error(
-                'Error, la cantidad elegida del material no está disponible');
+            matchingMaterial.quantity =
+                (quantityInMaterial - quantityInQuotation).toString();
           }
-        }
-      }
 
-      for (var updatedMaterial in updatedMaterials) {
-        await updateMaterialQuantityInDatabase(updatedMaterial);
+          updatedMaterials.add(matchingMaterial);
+        }
+
+        for (var updatedMaterial in updatedMaterials) {
+          await updateMaterialQuantityInDatabase(updatedMaterial);
+        }
       }
     } catch (e) {
       throw Future.error(
@@ -268,30 +269,27 @@ class MaterialsRequest {
     try {
       for (int i = 0; i < newMaterials.length; i++) {
         Materials newMaterial = newMaterials[i];
-        Materials oldMaterial = oldMaterials.firstWhere(
-            (oldMaterial) => oldMaterial.id == newMaterial.id,
-            orElse: () => throw Future.error(
-                'El material con ID ${newMaterial.id} no existe en la colección materials.'));
-        int quantityInNewMaterial = int.parse(newMaterial.quantity);
-        int quantityInOldMaterial = int.parse(oldMaterial.quantity);
+        Materials oldMaterial = _findOldMaterial(oldMaterials, newMaterial.id);
+        if (oldMaterial.id == "") {
+          subtractMaterialQuantity(newMaterial, false);
+        } else {
+          int quantityInNewMaterial = int.parse(newMaterial.quantity);
+          int quantityInOldMaterial = int.parse(oldMaterial.quantity);
 
-        DocumentSnapshot quotationSnapshot =
-            await database.collection('materials').doc(newMaterial.id).get();
-        Map<String, dynamic> materialData =
-            quotationSnapshot.data() as Map<String, dynamic>;
+          Materials databaseMaterial = await _findMaterialById(newMaterial.id);
+          databaseMaterial.id = newMaterial.id;
+          int databaseQuantity = int.parse(databaseMaterial.quantity);
 
-        Materials databaseMaterial = Materials.fromJson(materialData);
-        databaseMaterial.id = newMaterial.id;
-        int databaseQuantity = int.parse(databaseMaterial.quantity);
+          if (quantityInNewMaterial > quantityInOldMaterial) {
+            databaseQuantity -= quantityInNewMaterial - quantityInOldMaterial;
+          }
 
-        if (quantityInNewMaterial > quantityInOldMaterial) {
-          databaseQuantity -= quantityInNewMaterial - quantityInOldMaterial;
-          databaseMaterial.quantity = databaseQuantity.toString();
-          await updateMaterialQuantityInDatabase(databaseMaterial);
-        }
-
-        if (quantityInNewMaterial < quantityInOldMaterial) {
-          databaseQuantity += quantityInOldMaterial - quantityInNewMaterial;
+          if (quantityInNewMaterial < quantityInOldMaterial) {
+            databaseQuantity += quantityInOldMaterial - quantityInNewMaterial;
+          }
+          if (quantityInNewMaterial == 0) {
+            databaseQuantity += quantityInOldMaterial;
+          }
           databaseMaterial.quantity = databaseQuantity.toString();
           await updateMaterialQuantityInDatabase(databaseMaterial);
         }
@@ -300,6 +298,22 @@ class MaterialsRequest {
       throw Future.error(
           'Error: Al intentar hacer los cambios en la cantidad de materiales');
     }
+  }
+
+  static Materials _findOldMaterial(List<Materials> oldMaterials, String id) {
+    return oldMaterials.firstWhere(
+      (oldMaterial) => oldMaterial.id == id,
+      orElse: () => material,
+    );
+  }
+
+  static Future<Materials> _findMaterialById(String id) async {
+    DocumentSnapshot quotationSnapshot =
+        await database.collection('materials').doc(id).get();
+    Map<String, dynamic> materialData =
+        quotationSnapshot.data() as Map<String, dynamic>;
+
+    return Materials.fromJson(materialData);
   }
 
   static Future<void> updateMaterialQuantityInDatabase(

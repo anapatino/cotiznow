@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../widgets/components/components.dart';
 
@@ -29,9 +30,11 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   List<Section> sections = [];
   MaterialsController materialController = Get.find();
   SectionsController sectionsController = Get.find();
+  UnitsController unitsController = Get.find();
   String urlPhoto = "";
   String? selectedOption;
   String? selectedOptionSectionId;
+  List<String> options = [];
 
   @override
   void initState() {
@@ -44,6 +47,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     controllerPurchasePrice.text = widget.material.purchasePrice;
     controllerCode.text = widget.material.code;
     loadSections();
+    loadUnits();
   }
 
   void _resetForm() {
@@ -62,14 +66,31 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     _resetForm();
   }
 
+  Future<void> loadUnits() async {
+    try {
+      List<Units> unitsList = await unitsController.getAllUnits();
+      setState(() {
+        options = unitsList.map((unit) => unit.name).toList();
+      });
+    } catch (error) {
+      MessageHandler.showUnitsLoadingError(error);
+
+      _onCancelForm();
+    }
+  }
+
   Future<void> loadSections() async {
     try {
       sections = await sectionsController.getAllSections();
       setState(() {
-        optionsSection = sections.map((section) => section.name).toList();
+        optionsSection = sections
+            .where((section) => section.status == "activo")
+            .map((section) => section.name)
+            .toList();
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showSectionLoadingError(error);
+      _onCancelForm();
     }
   }
 
@@ -101,11 +122,14 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
         purchasePrice.isNotEmpty) {
-      if (selectedOption != null) {
-        size = selectedOption!;
-      }
-      if (selectedOptionSectionId != null) {
-        sectionId = selectedOptionSectionId!;
+      size = selectedOption != null ? selectedOption! : widget.material.size;
+
+      sectionId = selectedOptionSectionId != null
+          ? selectedOptionSectionId!
+          : widget.material.sectionId;
+
+      if (urlPhoto.isEmpty) {
+        urlPhoto = widget.material.urlPhoto;
       }
       Materials material = Materials(
         urlPhoto: urlPhoto,
@@ -125,34 +149,13 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
       materialController
           .updateMaterial(material, widget.material.urlPhoto)
           .then((value) async {
-        Get.snackbar(
-          'Actualizacion de material exitoso',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMaterialSuccess(value);
       }).catchError((error) {
-        Get.snackbar(
-          'Error al registrar material',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMaterialError(error);
       });
       _onCancelForm();
     } else {
-      Get.snackbar(
-        'Error al registrar material',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMaterialRegistrationError();
     }
   }
 
@@ -160,7 +163,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    List<String> options = ['m2', 'm'];
 
     return BounceInUp(
       duration: const Duration(microseconds: 10),
