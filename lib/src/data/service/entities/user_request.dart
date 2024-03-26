@@ -90,16 +90,25 @@ class UserRequest {
   }
 
   static Future<Users> findUser(String authId) async {
-    Users? user;
+    Users user = Users(
+        name: "",
+        lastName: "",
+        phone: "",
+        address: "",
+        email: "",
+        role: "",
+        account: "",
+        id: "",
+        authId: "");
     await database.collection('users').get().then((value) {
       for (var doc in value.docs) {
         if (doc.data()['authId'] == authId) {
           user = Users.fromJson(doc.data());
-          user!.id = doc.id;
+          user.id = doc.id;
         }
       }
     });
-    return user!;
+    return user;
   }
 
   static Future<List<Users>> getUsersList() async {

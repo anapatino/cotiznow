@@ -1,6 +1,7 @@
 // ignore: must_be_immutable
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/routes/customer.dart';
+import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../domain/controllers/entities/user_controller.dart';
 import '../../../domain/models/entities/user.dart';
@@ -28,9 +29,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   final TextEditingController controllerRole = TextEditingController();
   final TextEditingController controllerAddress = TextEditingController();
   final TextEditingController controllerAccount = TextEditingController();
+  String id = "";
+  String authId = "";
+  String role = "";
+  String account = "";
 
   UserController userController = Get.find();
-  Map<String, dynamic>? parameters = Get.arguments;
+  final parameters = Get.arguments as Users;
   String? selectedOption;
   String? selectedOptionRole;
 
@@ -43,13 +48,17 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   void validateFields() {
     if (mounted) {
       if (parameters != null) {
-        controllerName.text = parameters?['name'];
-        controllerLastName.text = parameters?['lastName'];
-        controllerPhone.text = parameters?['phone'];
-        controllerAddress.text = parameters?['address'];
-        controllerEmail.text = parameters?['email'];
-        controllerRole.text = parameters?['role'];
-        controllerAccount.text = parameters?['account'];
+        controllerName.text = parameters.name;
+        controllerLastName.text = parameters.lastName;
+        controllerPhone.text = parameters.phone;
+        controllerAddress.text = parameters.address;
+        controllerEmail.text = parameters.email;
+        controllerRole.text = parameters.role;
+        controllerAccount.text = parameters.account;
+        id = parameters.id;
+        authId = parameters.authId;
+        role = parameters.role;
+        account = parameters.account;
       } else {
         controllerName.text = userController.name;
         controllerLastName.text = userController.lastName;
@@ -58,6 +67,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         controllerEmail.text = userController.userEmail;
         controllerRole.text = userController.role;
         controllerAccount.text = userController.account;
+        id = userController.idUser;
+        authId = userController.authId;
+        role = userController.role;
+        account = userController.account;
       }
     }
   }
@@ -65,29 +78,20 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   void checkAccessAndUpdateUser() {
     if (userController.role == "administrador" &&
         controllerRole.text == "super administrador") {
-      Get.snackbar(
-        'Acceso denegado',
-        'No tiene acceso para modificar a otro administrador.',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.warning,
-        icon: const Icon(Icons.error_rounded),
-      );
+      MessageHandler.showWarning('Acceso denegado',
+          'No tiene acceso para modificar a otro administrador.');
     } else {
       updateUser();
     }
   }
 
   Future<void> updateUser() async {
-    String role = "";
-    String account = "";
     if (selectedOptionRole != null) {
       role = selectedOptionRole!;
-    } else {
-      role = userController.role;
     }
-    if (selectedOption == null) {
-      account = userController.account;
+
+    if (selectedOption != null) {
+      account = selectedOption!;
     }
 
     Users updatedUser = Users(
@@ -98,30 +102,17 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       email: controllerEmail.text,
       role: role,
       account: account,
-      id: userController.idUser,
-      authId: userController.authId,
+      id: id,
+      authId: authId,
     );
 
     try {
       String message = await userController.updateUser(updatedUser);
-
-      Get.snackbar(
-        'Usuario actualizado correctamente',
-        message,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.check_circle),
-      );
+      userController.findUser(userController.authId);
+      MessageHandler.showMessageSuccess(
+          'Usuario actualizado correctamente', message);
     } catch (error) {
-      Get.snackbar(
-        'Error al actualizar usuario',
-        error.toString(),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.error,
-        icon: const Icon(Icons.error_rounded),
-      );
+      MessageHandler.showMessageError('Error al actualizar usuario', error);
     }
   }
 

@@ -1,25 +1,12 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
 class CardUser extends StatelessWidget {
-  final String name;
-  final String lastName;
-  final String phone;
-  final String email;
-  final String address;
-  final String role;
-  final String account;
+  final Users user;
+
   final Function onLongPress;
 
-  const CardUser(
-      {super.key,
-      required this.name,
-      required this.email,
-      required this.phone,
-      required this.lastName,
-      required this.address,
-      required this.role,
-      required this.account,
-      required this.onLongPress});
+  CardUser({super.key, required this.user, required this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +16,7 @@ class CardUser extends StatelessWidget {
       padding: EdgeInsets.only(bottom: screenHeight * 0.02),
       child: InkWell(
         onTap: () {
-          Get.toNamed('/profiles', arguments: {
-            'name': name,
-            'lastName': lastName,
-            'phone': phone,
-            'password': lastName,
-            'email': email,
-            'address': address,
-            'role': role,
-            'account': account
-          });
+          Get.toNamed('/profiles', arguments: user);
         },
         onLongPress: () {
           onLongPress();
@@ -89,20 +67,20 @@ class CardUser extends StatelessWidget {
                   SizedBox(
                     width: screenWidth * 0.55,
                     child: Text(
-                      name,
+                      user.name,
                       style: GoogleFonts.varelaRound(
                           fontSize: screenWidth * 0.045,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
                   Text(
-                    'Correo: $email',
+                    'Correo: ${user.email}',
                     style: GoogleFonts.varelaRound(
                         fontSize: screenWidth * 0.03,
                         fontWeight: FontWeight.w300),
                   ),
                   Text(
-                    'Teléfono: $phone',
+                    'Teléfono: ${user.phone}',
                     style: GoogleFonts.varelaRound(
                         fontSize: screenWidth * 0.03,
                         fontWeight: FontWeight.w300),

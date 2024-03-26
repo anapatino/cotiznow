@@ -75,11 +75,16 @@ class UserController extends GetxController {
 
   Future<String> updateUser(Users user) async {
     try {
-      String message = await UserRequest.updateUserData(user);
+      return await UserRequest.updateUserData(user);
+    } on FirebaseAuthException catch (e) {
+      return Future.error(e);
+    }
+  }
 
-      Users foundUser = await UserRequest.findUser(user.authId);
+  Future<void> findUser(String id) async {
+    try {
+      Users foundUser = await UserRequest.findUser(id);
       updateController(foundUser);
-      return message;
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
     }

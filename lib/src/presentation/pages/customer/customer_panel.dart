@@ -53,13 +53,7 @@ class _CustomerState extends State<Customer> {
               itemBuilder: (context, index) {
                 Users user = filteredList[index];
                 return CardUser(
-                  name: user.name,
-                  email: user.email,
-                  phone: user.phone,
-                  lastName: user.lastName,
-                  address: user.address,
-                  role: user.role,
-                  account: user.account,
+                  user: user,
                   onLongPress: () {},
                 );
               },
