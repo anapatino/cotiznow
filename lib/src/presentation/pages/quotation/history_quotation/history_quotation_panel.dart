@@ -24,6 +24,13 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
   @override
   void initState() {
     super.initState();
+    refreshList();
+  }
+
+  void refreshList() {
+    setState(() {
+      selectedOption = "";
+    });
   }
 
   @override
@@ -96,6 +103,7 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
             'Eliminación de historial exitosa',
             "Se ha eliminado el historial de la cotización",
           );
+          refreshList();
         } catch (e) {
           MessageHandler.showMessageError(
               'Error al eliminar historial cotización', e);

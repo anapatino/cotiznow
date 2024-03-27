@@ -24,6 +24,13 @@ class _QuotationPanelState extends State<QuotationPanel> {
   @override
   void initState() {
     super.initState();
+    refreshList();
+  }
+
+  void refreshList() {
+    setState(() {
+      selectedOption = "";
+    });
   }
 
   @override
@@ -110,6 +117,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
               await widget.quotationController.deleteQuotation(quotation);
           MessageHandler.showMessageSuccess(
               'Eliminación de cotizacion exitosa', message);
+          refreshList();
         } catch (e) {
           MessageHandler.showMessageError('Error al eliminar cotización', e);
         }

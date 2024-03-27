@@ -17,9 +17,9 @@ class QuotationController extends GetxController {
     }
   }
 
-  Future<String> updateQuotation(Quotation quotation) async {
+  Future<String> updateQuotation(Quotation quotation, String date) async {
     try {
-      return await QuotationRequest.updateQuotation(quotation);
+      return await QuotationRequest.updateQuotation(quotation, date);
     } catch (e) {
       throw Future.error('Error al actualizar cotización en la base de datos');
     }

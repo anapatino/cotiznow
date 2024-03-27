@@ -41,8 +41,8 @@ class QuotationRequest {
     }
   }
 
-  static Future<String> updateQuotation(Quotation updatedQuotation) async {
-    DateTime now = DateTime.now();
+  static Future<String> updateQuotation(
+      Quotation updatedQuotation, String date) async {
     try {
       DocumentSnapshot quotationSnapshot = await database
           .collection('quotations')
@@ -67,7 +67,7 @@ class QuotationRequest {
       QuotationHistory quotationHistory = QuotationHistory(
         id: "",
         quotation: updatedQuotation,
-        date: now.toString(),
+        date: date,
       );
 
       await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
@@ -93,6 +93,10 @@ class QuotationRequest {
         quotation: quotation,
         date: now.toString(),
       );
+
+      if (newStatus == "rechazada") {
+        MaterialsRequest.subtractMaterialsQuantity(quotation.materials, true);
+      }
 
       await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);
       return "Se ha actualizado el estado de la cotización";
@@ -140,7 +144,9 @@ class QuotationRequest {
   static Future<String> deleteQuotation(Quotation quotation) async {
     try {
       await database.collection('quotations').doc(quotation.id).delete();
-      MaterialsRequest.subtractMaterialsQuantity(quotation.materials, true);
+      if (quotation.status != "rechazada") {
+        MaterialsRequest.subtractMaterialsQuantity(quotation.materials, true);
+      }
       return "Se ha eliminado la cotización satisfactoriamente";
     } catch (e) {
       throw Future.error('Error al eliminar la cotización de la base de datos');

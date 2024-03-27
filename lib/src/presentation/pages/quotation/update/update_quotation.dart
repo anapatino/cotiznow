@@ -201,7 +201,14 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
     );
   }
 
+  String _addLeadingZero(int number) {
+    return number.toString().padLeft(2, '0');
+  }
+
   Future<void> confirmationUpdateQuotation(Quotation quotation) async {
+    DateTime now = DateTime.now();
+    String formattedDate =
+        "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     DialogUtil.showConfirmationDialog(
       title: 'Actualizar  cotización',
       message: '¿Desea actualizar esta cotización?',
@@ -209,7 +216,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message = await quotationController.updateQuotation(quotation);
+          String message = await quotationController.updateQuotation(
+              quotation, formattedDate);
           MessageHandler.showMessageSuccess(
               'Actualizacion realizada con exito', message);
           // ignore: use_build_context_synchronously

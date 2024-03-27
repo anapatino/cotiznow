@@ -276,44 +276,55 @@ class MaterialsRequest {
           int quantityInNewMaterial = int.parse(newMaterial.quantity);
           int quantityInOldMaterial = int.parse(oldMaterial.quantity);
 
-          Materials databaseMaterial = await _findMaterialById(newMaterial.id);
-          databaseMaterial.id = newMaterial.id;
-          int databaseQuantity = int.parse(databaseMaterial.quantity);
+          bool isAdd = false;
+          int difference = 0;
 
           if (quantityInNewMaterial > quantityInOldMaterial) {
-            databaseQuantity -= quantityInNewMaterial - quantityInOldMaterial;
+            difference = quantityInNewMaterial - quantityInOldMaterial;
+            isAdd = false;
           }
 
-          if (quantityInNewMaterial < quantityInOldMaterial) {
-            databaseQuantity += quantityInOldMaterial - quantityInNewMaterial;
+          if (quantityInOldMaterial > quantityInNewMaterial) {
+            difference = quantityInOldMaterial - quantityInNewMaterial;
+            isAdd = true;
           }
-          if (quantityInNewMaterial == 0) {
-            databaseQuantity += quantityInOldMaterial;
+          if (quantityInOldMaterial != quantityInNewMaterial) {
+            newMaterial.quantity = difference.toString();
+            subtractMaterialQuantity(newMaterial, isAdd);
           }
-          databaseMaterial.quantity = databaseQuantity.toString();
-          await updateMaterialQuantityInDatabase(databaseMaterial);
         }
       }
+      verifyDeletedMaterial(newMaterials, oldMaterials);
     } catch (e) {
       throw Future.error(
           'Error: Al intentar hacer los cambios en la cantidad de materiales');
     }
   }
 
-  static Materials _findOldMaterial(List<Materials> oldMaterials, String id) {
-    return oldMaterials.firstWhere(
-      (oldMaterial) => oldMaterial.id == id,
+  static Materials _findOldMaterial(List<Materials> listMaterials, String id) {
+    return listMaterials.firstWhere(
+      (m) => m.id == id,
       orElse: () => material,
     );
   }
 
-  static Future<Materials> _findMaterialById(String id) async {
-    DocumentSnapshot quotationSnapshot =
-        await database.collection('materials').doc(id).get();
-    Map<String, dynamic> materialData =
-        quotationSnapshot.data() as Map<String, dynamic>;
-
-    return Materials.fromJson(materialData);
+  static Future<void> verifyDeletedMaterial(
+    List<Materials> newMaterials,
+    List<Materials> oldMaterials,
+  ) async {
+    try {
+      for (int i = 0; i < oldMaterials.length; i++) {
+        Materials oldMaterial = oldMaterials[i];
+        Materials materialFound =
+            _findOldMaterial(newMaterials, oldMaterial.id);
+        if (materialFound.id == "") {
+          subtractMaterialQuantity(oldMaterial, true);
+        }
+      }
+    } catch (e) {
+      throw Future.error(
+          'Error: Al intentar hacer los cambios en la cantidad de materiales');
+    }
   }
 
   static Future<void> updateMaterialQuantityInDatabase(

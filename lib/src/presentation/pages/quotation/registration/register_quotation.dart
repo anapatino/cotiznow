@@ -171,10 +171,14 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
     );
   }
 
+  String _addLeadingZero(int number) {
+    return number.toString().padLeft(2, '0');
+  }
+
   Future<void> confirmationRegistrationQuotation(Quotation quotation) async {
-    DateTime now = DateTime.now()
-        .subtract(Duration(milliseconds: DateTime.now().millisecond));
-    String formattedDate = DateFormat('yy-MM-dd HH:mm:ss').format(now);
+    DateTime now = DateTime.now();
+    String formattedDate =
+        "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     DialogUtil.showConfirmationDialog(
       title: 'Registro de cotización',
       message: '¿Desea registrar esta cotización?',
