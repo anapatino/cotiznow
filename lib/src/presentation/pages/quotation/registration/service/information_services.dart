@@ -51,11 +51,18 @@ class _InformationServicesState extends State<InformationServices> {
       sections = await sectionsController.getAllSections();
       services = await servicesController.getAllServices();
       setState(() {
-        optionsSection = sections.map((section) => section.name).toList();
-        optionsService = services.map((services) => services.name).toList();
+        optionsSection = sections
+            .where((section) => section.status == "activo")
+            .map((section) => section.name)
+            .toList();
+        optionsService = services
+            .where((service) => service.status == "activo")
+            .map((service) => service.name)
+            .toList();
       });
     } catch (error) {
-      print("Error loading sections: $error");
+      MessageHandler.showMessageWarning(
+          "Error al cargar las secciones/servicios", error);
     }
   }
 

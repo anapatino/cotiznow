@@ -2,6 +2,7 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/pages/quotation/registration/registration.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 class RegisterQuotation extends StatefulWidget {
   const RegisterQuotation({super.key});
@@ -171,6 +172,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   }
 
   Future<void> confirmationRegistrationQuotation(Quotation quotation) async {
+    DateTime now = DateTime.now()
+        .subtract(Duration(milliseconds: DateTime.now().millisecond));
+    String formattedDate = DateFormat('yy-MM-dd HH:mm:ss').format(now);
     DialogUtil.showConfirmationDialog(
       title: 'Registro de cotización',
       message: '¿Desea registrar esta cotización?',
@@ -178,8 +182,8 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message =
-              await quotationController.registerQuotation(quotation);
+          String message = await quotationController.registerQuotation(
+              quotation, formattedDate);
           MessageHandler.showMessageSuccess(
               'Registro realizado con exito', message);
 

@@ -100,61 +100,101 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   Future<void> registerMaterial() async {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String unit = controllerUnit.text;
-    String size = "";
     String quantity = controllerQuantity.text;
-    String sectionId = selectedOptionSectionId!;
+    String sectionId =
+        selectedOptionSectionId != null ? selectedOptionSectionId! : "";
     String salePrice = controllerSalePrice.text;
     String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
     String status = "activo";
-    String newUnit = controllerRegisterUnit.text;
-    if (selectedOption != null) {
-      size = selectedOption!;
+    String unit = controllerUnit.text;
+    String newSize =
+        selectedOption != null ? selectedOption! : controllerRegisterUnit.text;
+    if (newSize.isNotEmpty) {
+      await registerNewUnitIfNeeded(newSize);
+    }
+
+    if (validateFields(name, description, quantity, sectionId, salePrice,
+        purchasePrice, code, unit, newSize)) {
+      registerMaterialInDatabase(name, description, quantity, sectionId,
+          salePrice, purchasePrice, code, status, unit, newSize);
     } else {
-      size = "";
+      MessageHandler.showMessageWarning('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
-    if (newUnit.isNotEmpty) {
-      size = newUnit;
-      String message = await unitsController.registerUnit(newUnit);
+  }
+
+  Future<void> registerNewUnitIfNeeded(String newUnit) async {
+    if (selectedOption == null || selectedOption == "") {
+      bool nameExists =
+          unitsController.unitsList!.any((unit) => unit.name == newUnit);
+      if (!nameExists) {
+        await unitsController.registerUnit(newUnit);
+      } else {
+        MessageHandler.showMessageWarning('Nombre de la unidad duplicado',
+            'La unidad ya existe en la lista. No volvera a registrase');
+      }
     }
-    if (name.isNotEmpty &&
+  }
+
+  bool validateFields(
+      String name,
+      String description,
+      String quantity,
+      String sectionId,
+      String salePrice,
+      String purchasePrice,
+      String code,
+      String unit,
+      String size) {
+    return name.isNotEmpty &&
         description.isNotEmpty &&
         quantity.isNotEmpty &&
         sectionId.isNotEmpty &&
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
-        purchasePrice.isNotEmpty) {
-      Section sectionFound = sections.firstWhere(
-        (section) => section.name == selectedOptionSectionId,
-        orElse: () => throw "Sección no encontrada",
-      );
-      Materials material = Materials(
-        urlPhoto: url_photo,
-        name: name,
-        unit: unit,
-        size: size,
-        purchasePrice: purchasePrice,
-        salePrice: salePrice,
-        sectionId: sectionFound.id,
-        quantity: quantity,
-        description: description,
-        status: status,
-        id: "",
-        code: code,
-        discount: '',
-      );
-      materialController.registerMaterial(material).then((value) async {
-        MessageHandler.showMessageSuccess(
-            'Registro realizada con exito', value);
-      }).catchError((error) {
-        MessageHandler.showMessageError('Error al registrar material', error);
-      });
-      _onCancelForm();
-    } else {
-      MessageHandler.showMessageError('Validación de campos',
-          'Ingrese los campos requeridos para poder registrar');
-    }
+        purchasePrice.isNotEmpty &&
+        unit.isNotEmpty &&
+        size.isNotEmpty &&
+        url_photo.isNotEmpty;
+  }
+
+  void registerMaterialInDatabase(
+      String name,
+      String description,
+      String quantity,
+      String sectionId,
+      String salePrice,
+      String purchasePrice,
+      String code,
+      String status,
+      String unit,
+      String newSize) {
+    Section sectionFound = sections.firstWhere(
+      (section) => section.name == selectedOptionSectionId,
+      orElse: () => throw "Sección no encontrada",
+    );
+    Materials material = Materials(
+      urlPhoto: url_photo,
+      name: name,
+      unit: unit,
+      size: newSize,
+      purchasePrice: purchasePrice,
+      salePrice: salePrice,
+      sectionId: sectionFound.id,
+      quantity: quantity,
+      description: description,
+      status: status,
+      id: "",
+      code: code,
+      discount: '',
+    );
+    materialController.registerMaterial(material).then((value) async {
+      MessageHandler.showMessageSuccess('Registro realizada con exito', value);
+    }).catchError((error) {
+      MessageHandler.showMessageError('Error al registrar material', error);
+    });
+    _onCancelForm();
   }
 
   @override
@@ -300,39 +340,42 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                                     });
                                   },
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showControllerRegister =
-                                          !showControllerRegister;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    showControllerRegister
-                                        ? Icons.remove
-                                        : Icons.add,
-                                    color: Palette.accentBackground,
-                                    size: 40,
+                                if (selectedOption == null ||
+                                    selectedOption == "")
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        showControllerRegister =
+                                            !showControllerRegister;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      showControllerRegister
+                                          ? Icons.remove
+                                          : Icons.add,
+                                      color: Palette.accentBackground,
+                                      size: 40,
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
-                          Visibility(
-                            visible: showControllerRegister,
-                            child: CustomTextField(
-                              icon: Icons.dehaze_rounded,
-                              hintText: 'Nueva unidad',
-                              isPassword: false,
-                              width: screenWidth * 0.75,
-                              height: screenHeight * 0.075,
-                              inputColor: Colors.white,
-                              textColor: Colors.black,
-                              onChanged: (value) {},
-                              controller: controllerRegisterUnit,
-                              showIcon: false,
+                          if (selectedOption == null || selectedOption == "")
+                            Visibility(
+                              visible: showControllerRegister,
+                              child: CustomTextField(
+                                icon: Icons.dehaze_rounded,
+                                hintText: 'Nueva unidad',
+                                isPassword: false,
+                                width: screenWidth * 0.75,
+                                height: screenHeight * 0.075,
+                                inputColor: Colors.white,
+                                textColor: Colors.black,
+                                onChanged: (value) {},
+                                controller: controllerRegisterUnit,
+                                showIcon: false,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

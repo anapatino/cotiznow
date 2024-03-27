@@ -12,7 +12,7 @@ class MessageHandler {
           : type == "success"
               ? Palette.accent
               : Palette.warning,
-      icon: type == "error"
+      icon: type != "success"
           ? const Icon(Icons.error)
           : const Icon(Icons.check_circle),
     );

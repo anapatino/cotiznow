@@ -6,8 +6,8 @@ import '../../../domain/domain.dart';
 class QuotationRequest {
   static final FirebaseFirestore database = FirebaseFirestore.instance;
 
-  static Future<String> quoteRegistration(Quotation quotation) async {
-    DateTime now = DateTime.now();
+  static Future<String> quoteRegistration(
+      Quotation quotation, String date) async {
     try {
       DocumentReference newQuotation =
           await database.collection('quotations').add({
@@ -27,7 +27,7 @@ class QuotationRequest {
       QuotationHistory quotationHistory = QuotationHistory(
         id: "",
         quotation: quotation,
-        date: now.toString(),
+        date: date,
       );
 
       await QuotationHistoryRequest.addToQuotationsHistory(quotationHistory);

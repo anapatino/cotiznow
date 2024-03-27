@@ -175,10 +175,10 @@ class MaterialsRequest {
     String urlNew;
     try {
       if (urlOld == material.urlPhoto) {
+        urlNew = material.urlPhoto;
+      } else {
         await deleteMaterialPhoto(urlOld);
         urlNew = await _uploadImageToFirebase(material.urlPhoto);
-      } else {
-        urlNew = material.urlPhoto;
       }
 
       await database.collection('materials').doc(material.id).update({

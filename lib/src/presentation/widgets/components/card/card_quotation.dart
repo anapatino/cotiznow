@@ -12,20 +12,25 @@ class CardQuotation extends StatelessWidget {
   final bool showDescription;
   final bool showIcon;
   final Function icon;
+  final bool isHistory;
+  final String? date;
 
-  const CardQuotation(
-      {super.key,
-      required this.onLongPress,
-      required this.backgroundColor,
-      this.showDescription = false,
-      this.showIcon = false,
-      required this.title,
-      required this.description,
-      required this.status,
-      required this.total,
-      required this.onTap,
-      required this.icon,
-      required this.onDoubleTap});
+  const CardQuotation({
+    super.key,
+    required this.onLongPress,
+    required this.backgroundColor,
+    this.showDescription = false,
+    this.showIcon = false,
+    required this.title,
+    required this.description,
+    required this.status,
+    required this.total,
+    required this.onTap,
+    required this.icon,
+    required this.onDoubleTap,
+    this.isHistory = false,
+    this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +62,15 @@ class CardQuotation extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                if (isHistory)
+                  Text(
+                    'Fecha: $date',
+                    style: GoogleFonts.varelaRound(
+                      fontSize: screenWidth * 0.04,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
                 SizedBox(
                   width: screenWidth * 0.7,
                   child: Text(

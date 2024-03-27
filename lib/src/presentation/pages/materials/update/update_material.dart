@@ -105,32 +105,36 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     }
   }
 
-  Future<void> updateMaterial() async {
-    String name = controllerName.text;
-    String description = controllerDescription.text;
-    String unit = controllerUnit.text;
-    String quantity = controllerQuantity.text;
-    String sectionId = "";
-    String salePrice = controllerSalePrice.text;
-    String purchasePrice = controllerPurchasePrice.text;
-    String code = controllerCode.text;
-    String size = "";
-    if (name.isNotEmpty &&
+  bool validateFields(String name, String description, String unit,
+      String quantity, String salePrice, String purchasePrice, String code) {
+    return name.isNotEmpty &&
         description.isNotEmpty &&
         unit.isNotEmpty &&
         quantity.isNotEmpty &&
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
-        purchasePrice.isNotEmpty) {
-      size = selectedOption != null ? selectedOption! : widget.material.size;
+        purchasePrice.isNotEmpty;
+  }
 
-      sectionId = selectedOptionSectionId != null
-          ? selectedOptionSectionId!
-          : widget.material.sectionId;
-
+  Future<void> updateMaterial() async {
+    String name = controllerName.text;
+    String description = controllerDescription.text;
+    String unit = controllerUnit.text;
+    String quantity = controllerQuantity.text;
+    String sectionId = selectedOptionSectionId != null
+        ? selectedOptionSectionId!
+        : widget.material.sectionId;
+    String salePrice = controllerSalePrice.text;
+    String purchasePrice = controllerPurchasePrice.text;
+    String code = controllerCode.text;
+    String size =
+        selectedOption != null ? selectedOption! : widget.material.size;
+    if (validateFields(
+        name, description, unit, quantity, salePrice, purchasePrice, code)) {
       if (urlPhoto.isEmpty) {
         urlPhoto = widget.material.urlPhoto;
       }
+
       Materials material = Materials(
         urlPhoto: urlPhoto,
         name: name,
@@ -146,18 +150,19 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         code: code,
         discount: widget.material.discount,
       );
-      materialController
-          .updateMaterial(material, widget.material.urlPhoto)
-          .then((value) async {
+
+      try {
+        String message = await materialController.updateMaterial(
+            material, widget.material.urlPhoto);
         MessageHandler.showMessageSuccess(
-            'Actualizacion realizada con exito', value);
-      }).catchError((error) {
+            'Actualización realizada con éxito', message);
+        _onCancelForm();
+      } catch (error) {
         MessageHandler.showMessageError('Error al actualizar material', error);
-      });
-      _onCancelForm();
+      }
     } else {
-      MessageHandler.showMessageError('Validación de campos',
-          'Ingrese los campos requeridos para poder registrar');
+      MessageHandler.showMessageWarning('Validación de campos',
+          'Ingrese los campos requeridos para poder actualizar');
     }
   }
 
@@ -246,43 +251,33 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                       onChanged: (value) {},
                       controller: controllerName,
                     ),
+                    CustomTextField(
+                      icon: Icons.dehaze_rounded,
+                      hintText: 'Unidad',
+                      isPassword: false,
+                      width: screenWidth * 0.75,
+                      height: screenHeight * 0.075,
+                      inputColor: Colors.white,
+                      textColor: Colors.black,
+                      onChanged: (value) {},
+                      controller: controllerUnit,
+                      showIcon: false,
+                      type: TextInputType.number,
+                    ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.12),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(0),
-                            child: CustomTextField(
-                              icon: Icons.dehaze_rounded,
-                              hintText: 'Unidad',
-                              isPassword: false,
-                              width: screenWidth * 0.34,
-                              height: screenHeight * 0.075,
-                              inputColor: Colors.white,
-                              textColor: Colors.black,
-                              onChanged: (value) {},
-                              controller: controllerUnit,
-                              showIcon: false,
-                              type: TextInputType.number,
-                            ),
-                          ),
-                          CustomDropdown(
-                            padding: 0,
-                            border: 10,
-                            options: options,
-                            width: 0.39,
-                            height: 0.075,
-                            widthItems: 0.18,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedOption = newValue;
-                              });
-                            },
-                          ),
-                        ],
+                      padding: EdgeInsets.only(bottom: screenHeight * 0.035),
+                      child: CustomDropdown(
+                        padding: 0,
+                        border: 10,
+                        options: options,
+                        width: 0.75,
+                        height: 0.075,
+                        widthItems: 0.55,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedOption = newValue;
+                          });
+                        },
                       ),
                     ),
                     CustomTextField(

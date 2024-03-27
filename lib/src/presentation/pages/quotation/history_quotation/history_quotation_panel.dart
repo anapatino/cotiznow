@@ -54,7 +54,7 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                " Historial de cotizaciones",
+                "Historial de cotizaciones",
                 style: GoogleFonts.varelaRound(
                   color: Colors.black,
                   fontSize: screenWidth * 0.06,
@@ -73,9 +73,8 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
                 },
               ),
               SizedBox(height: screenHeight * 0.02),
-              quotationWidget.buildQuotationList(
+              quotationWidget.buildHistoryQuotationList(
                   selectedOption != null ? selectedOption! : "",
-                  false,
                   showDeleteAlert),
             ],
           ),

@@ -8,9 +8,11 @@ class QuotationHistoryRequest {
   static Future<String> addToQuotationsHistory(
       QuotationHistory quotationHistory) async {
     try {
-      DocumentReference docRef =
-          await database.collection('quotations_history').add({
+      DocumentReference docRef = await database
+          .collection('quotations_history')
+          .add({
         'quotation': quotationHistory.quotation.toJson(),
+        'date': quotationHistory.date
       });
 
       await docRef.update({'id': docRef.id});
