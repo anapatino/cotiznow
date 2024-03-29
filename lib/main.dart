@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/controllers/processes/invoice_controller.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'src/domain/controllers/controllers.dart';
@@ -19,6 +20,7 @@ void main() async {
     Get.put(QuotationHistoryController());
     Get.put(ShoppingCartController());
     Get.put(ManagementController());
+    Get.put(InvoiceController());
 
     runApp(const App());
   } catch (e) {

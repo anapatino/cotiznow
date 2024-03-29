@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
@@ -21,17 +20,18 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   ServicesController servicesController = Get.find();
   MaterialsController materialsController = Get.find();
   ManagementController managementController = Get.find();
+  InvoiceController invoiceController = Get.find();
 
   double screenWidth = 0;
   double screenHeight = 0;
   String? selectOption;
   List<String> serviceNames = [];
+
   @override
   void initState() {
     super.initState();
     loadService();
     ManagementController.fetchManagement();
-    requestStoragePermission();
   }
 
   Future<void> loadService() async {
@@ -41,56 +41,59 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     serviceNames = filteredServices.map((service) => service.name).toList();
   }
 
-  Future<void> requestStoragePermission() async {
-    var status = await Permission.storage.request();
-    if (!status.isGranted) {
-      print('Permiso de escritura en el almacenamiento externo denegado.');
-    }
-  }
-
   Future<void> generatePDF() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      print("el permiso es denegado" + status.toString());
-      await Permission.storage.request();
-    }
-
-    var baseUrl = 'https://pdf-invoicing-app.onrender.com/invoice';
     var quotationJson = quotation.toJson();
+    Management? management = managementController.management;
+    var methodJson = management!.methodOfPayment.toJson();
     var quotationJsonString = jsonEncode(quotationJson);
-
-    var url = Uri.parse(baseUrl);
-
+    var methodJsonString = jsonEncode(methodJson);
+    var url = Uri.parse('https://pdf-invoicing-app.onrender.com/invoice');
+    print(quotationJsonString);
+    print(methodJsonString);
     try {
-      if (status.isGranted) {
-        var response = await http.post(
-          url,
-          body: {
-            'name': userController.name,
+      var responseRequest = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({
+            'name': '${userController.name} ${userController.lastName}',
             'address': userController.address,
             'phone': userController.phone,
             'quotation': quotationJsonString,
-            'methodOfPaymet':
-                jsonEncode(managementController.management?.methodOfPayment)
-          },
-        );
+            'methodOfPayment': methodJsonString
+          }));
 
-        if (response.statusCode == 200) {
-          if (response.headers['content-type'] == 'application/pdf') {
-            String path = (await getExternalStorageDirectory())!.path;
-            File file = File('$path/invoice.pdf');
-            await file.writeAsBytes(response.bodyBytes);
-            print('PDF descargado correctamente.');
-          } else {
-            print('La respuesta no es un PDF.');
-          }
-        } else {
-          print('Error en la solicitud: ${response.statusCode}');
-        }
+      if (responseRequest.statusCode == 200) {
+        String downloadURL =
+            await invoiceController.uploadPDF(responseRequest.bodyBytes);
+
+        await downloadAndDeletePDF(downloadURL);
+      } else {
+        print('Error en la solicitud: ${responseRequest.statusCode}');
       }
     } catch (e) {
       print('Error en la solicitud: $e');
     }
+  }
+
+  Future<void> downloadAndDeletePDF(String downloadURL) async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    FileDownloader.downloadFile(
+        url: downloadURL,
+        name: "factura-${quotation.id}",
+        onProgress: (fileName, progress) {
+          print('FILE $fileName HAS PROGRESS $progress');
+        },
+        onDownloadCompleted: (String path) async {
+          print('FILE DOWNLOADED TO PATH: $path');
+          await OpenFile.open(path);
+          invoiceController.deletePDF();
+        },
+        onDownloadError: (String error) {
+          print('DOWNLOAD ERROR: $error');
+        });
   }
 
   Future<void> _launchUrl() async {

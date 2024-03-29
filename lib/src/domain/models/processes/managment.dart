@@ -6,6 +6,13 @@ class Management {
     required this.contact,
     required this.methodOfPayment,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'contact': contact.toJson(),
+      'methodOfPayment': methodOfPayment.toJson(),
+    };
+  }
 }
 
 class Contact {
@@ -26,6 +33,14 @@ class Contact {
       email: data?['email'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'phone': phone,
+      'messageWhatsApp': messageWhatsApp,
+      'email': email,
+    };
+  }
 }
 
 class MethodOfPayment {
@@ -45,6 +60,14 @@ class MethodOfPayment {
       nequi: data?['nequi'] ?? '',
       daviplata: data?['daviplata'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'bancolombia': bancolombia.toJson(),
+      'nequi': nequi,
+      'daviplata': daviplata,
+    };
   }
 }
 
@@ -68,5 +91,14 @@ class Bancolombia {
       account: data?['account'] ?? '',
       number: data?['number'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'cc': cc,
+      'account': account,
+      'number': number,
+    };
   }
 }
