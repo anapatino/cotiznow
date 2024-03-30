@@ -70,10 +70,11 @@ class _InformationServicesState extends State<InformationServices> {
     double materialsTotal = shoppingCartController.calculateMaterialsTotal();
 
     int servicesTotal = shoppingCartController.calculateServicesTotal();
+    int iva = 19;
     int total = materialsTotal.round() + servicesTotal;
-
+    int newTotal = (total + (total * iva / 100)).toInt();
     widget.onSelected(
-      total.toString(),
+      newTotal.toString(),
     );
   }
 

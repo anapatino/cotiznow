@@ -42,58 +42,14 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> generatePDF() async {
-    var quotationJson = quotation.toJson();
-    Management? management = managementController.management;
-    var methodJson = management!.methodOfPayment.toJson();
-    var quotationJsonString = jsonEncode(quotationJson);
-    var methodJsonString = jsonEncode(methodJson);
-    var url = Uri.parse('https://pdf-invoicing-app.onrender.com/invoice');
-    print(quotationJsonString);
-    print(methodJsonString);
     try {
-      var responseRequest = await http.post(url,
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode({
-            'name': '${userController.name} ${userController.lastName}',
-            'address': userController.address,
-            'phone': userController.phone,
-            'quotation': quotationJsonString,
-            'methodOfPayment': methodJsonString
-          }));
-
-      if (responseRequest.statusCode == 200) {
-        String downloadURL =
-            await invoiceController.uploadPDF(responseRequest.bodyBytes);
-
-        await downloadAndDeletePDF(downloadURL);
-      } else {
-        print('Error en la solicitud: ${responseRequest.statusCode}');
-      }
+      String downloadPath = await invoiceController.generatePDF(
+          quotation, userController.user!, managementController.management!);
+      MessageHandler.showMessageSuccess('Descarga de factura exitosa',
+          "La factura se ha descargado en: $downloadPath");
     } catch (e) {
-      print('Error en la solicitud: $e');
+      MessageHandler.showMessageError('Error al generar factura', e);
     }
-  }
-
-  Future<void> downloadAndDeletePDF(String downloadURL) async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-
-    FileDownloader.downloadFile(
-        url: downloadURL,
-        name: "factura-${quotation.id}",
-        onProgress: (fileName, progress) {
-          print('FILE $fileName HAS PROGRESS $progress');
-        },
-        onDownloadCompleted: (String path) async {
-          print('FILE DOWNLOADED TO PATH: $path');
-          await OpenFile.open(path);
-          invoiceController.deletePDF();
-        },
-        onDownloadError: (String error) {
-          print('DOWNLOAD ERROR: $error');
-        });
   }
 
   Future<void> _launchUrl() async {
@@ -143,26 +99,14 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
       if (selectOption != null) {
         String message = await quotationController.updateQuotationStatus(
             quotation, selectOption!);
-        Get.snackbar(
-          'Actualización de cotización',
-          message,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess(
+            'Actualización de cotización', message);
+
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       }
     } catch (e) {
-      Get.snackbar(
-        'Error al actualizar cotización',
-        '$e',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.error,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMessageError('Error al actualizar cotización', e);
     }
   }
 

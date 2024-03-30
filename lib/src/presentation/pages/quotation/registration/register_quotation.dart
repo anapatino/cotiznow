@@ -2,7 +2,6 @@ import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/pages/quotation/registration/registration.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
-import 'package:intl/intl.dart';
 
 class RegisterQuotation extends StatefulWidget {
   const RegisterQuotation({super.key});
