@@ -68,7 +68,7 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
-        height: screenHeight * 0.5,
+        height: screenHeight * 0.6,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(

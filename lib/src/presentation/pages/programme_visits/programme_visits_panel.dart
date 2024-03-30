@@ -147,7 +147,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
             Visibility(
               visible: isContainerVisible,
               child: Positioned(
-                top: screenHeight * 0.42,
+                top: screenHeight * 0.39,
                 child: RegisterProgrammeVisits(
                   onCancelForm: () {
                     toggleRegisterFormVisibility();
