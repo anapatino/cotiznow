@@ -23,7 +23,7 @@ class InvoiceController extends GetxController {
       Quotation quotation, Users user, Management management) async {
     try {
       await InvoiceRequest.generatePDF(quotation, user, management);
-      return Future.value('PDF generated successfully');
+      return Future.value('Ingrese al explorador de archivos para ver el PDF');
     } catch (e) {
       throw Future.error('Error al generar el PDF: $e');
     }

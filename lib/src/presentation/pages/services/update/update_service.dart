@@ -4,6 +4,8 @@ import 'package:cotiznow/src/domain/models/entities/service.dart';
 import 'package:cotiznow/src/presentation/utils/utils.dart';
 import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 
+import '../../../widgets/class/class.dart';
+
 class UpdateServiceForm extends StatefulWidget {
   final Function onCancelForm;
   final Service service;
@@ -69,34 +71,16 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
         icon.isNotEmpty &&
         price.isNotEmpty) {
       serviceController.updateService(service).then((value) async {
-        Get.snackbar(
-          'Actualización de servicio exitoso',
-          value,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.accent,
-          icon: const Icon(Icons.check_circle),
-        );
+        MessageHandler.showMessageSuccess(
+            'Actualización de servicio exitos0', value);
       }).catchError((error) {
-        Get.snackbar(
-          'Error al actualizar servicio',
-          '$error',
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Palette.error,
-          icon: const Icon(Icons.error),
-        );
+        MessageHandler.showMessageError(
+            'Error al actualizar la servicio', error);
       });
       _onCancelForm();
     } else {
-      Get.snackbar(
-        'Error al actualizar servicio',
-        'Ingrese los campos requeridos para poder registrar',
-        colorText: Colors.white,
-        duration: const Duration(seconds: 5),
-        backgroundColor: Palette.accent,
-        icon: const Icon(Icons.error),
-      );
+      MessageHandler.showMessageWarning('Validación de campos',
+          'Ingrese los campos requeridos para poder registrar');
     }
   }
 
@@ -138,13 +122,13 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.15),
+                          child: Text(
                             "Elige un icono",
                             style: GoogleFonts.varelaRound(
                               color: Colors.white,
@@ -153,27 +137,27 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                               letterSpacing: 1,
                             ),
                           ),
-                          SizedBox(
-                            height: screenHeight * 0.15,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: IconList.icons.length,
-                              itemBuilder: (context, index) {
-                                return RoundIconButton(
-                                  icon: "${IconList.icons[index]["icon"]}",
-                                  title: "${IconList.icons[index]["title"]}",
-                                  onClick: () {
-                                    handleIconClick(index,
-                                        "${IconList.icons[index]["icon"]}");
-                                  },
-                                  onLongPress: () {},
-                                  isActive: activeIndex == index,
-                                );
-                              },
-                            ),
+                        ),
+                        SizedBox(
+                          height: screenHeight * 0.15,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: IconList.icons.length,
+                            itemBuilder: (context, index) {
+                              return RoundIconButton(
+                                icon: "${IconList.icons[index]["icon"]}",
+                                title: "${IconList.icons[index]["title"]}",
+                                onClick: () {
+                                  handleIconClick(index,
+                                      "${IconList.icons[index]["icon"]}");
+                                },
+                                onLongPress: () {},
+                                isActive: activeIndex == index,
+                              );
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     CustomTextField(
                       icon: Icons.dehaze_rounded,

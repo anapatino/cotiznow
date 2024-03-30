@@ -227,10 +227,9 @@ class MaterialsRequest {
 
           updatedMaterials.add(matchingMaterial);
         }
-
-        for (var updatedMaterial in updatedMaterials) {
-          await updateMaterialQuantityInDatabase(updatedMaterial);
-        }
+      }
+      for (var updatedMaterial in updatedMaterials) {
+        await updateMaterialQuantityInDatabase(updatedMaterial);
       }
     } catch (e) {
       throw Future.error(
