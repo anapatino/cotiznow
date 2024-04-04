@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/components/components.dart';
 import '../dashboard/dashboard.dart';
 
@@ -19,6 +20,20 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    void registerDataCache() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('name', userController.name.toString());
+      await prefs.setString('lastName', userController.lastName.toString());
+      await prefs.setString('phone', userController.phone.toString());
+      await prefs.setString('address', userController.address.toString());
+      await prefs.setString('email', userController.userEmail.toString());
+      await prefs.setString('role', userController.role.toString());
+      await prefs.setString('account', userController.account.toString());
+      await prefs.setString('id', userController.idUser.toString());
+      await prefs.setString('authId', userController.authId.toString());
+    }
 
     Future<void> registerUser() async {
       String name = controllerName.text;
@@ -48,7 +63,7 @@ class Register extends StatelessWidget {
         );
         userController.register(user, password, true).then((value) async {
           if (userController.userEmail.isNotEmpty) {
-            //await publicityController.viewPublicity();
+            registerDataCache();
             Get.offAll(() => CustomerDashboard());
           }
         }).catchError((error) {

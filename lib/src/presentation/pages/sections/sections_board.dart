@@ -227,6 +227,13 @@ class _SectionsState extends State<Sections> {
     toggleUpdateFormVisibility(sectionNew);
   }
 
+  void loadSections() {
+    setState(() {
+      widget.sectionsController.getAllSections();
+      filterSections(controllerSearch.text);
+    });
+  }
+
   void showDisableSectionAlert(Section section) {
     DialogUtil.showConfirmationDialog(
       title: 'Deshabilitar Sección',
@@ -239,6 +246,7 @@ class _SectionsState extends State<Sections> {
               .updateSectionStatus(section.id, 'inactivo');
           MessageHandler.showMessageSuccess(
               'Actualización de sección exitosa', message);
+          loadSections();
         } catch (e) {
           MessageHandler.showMessageError(
               'Error al deshabilitar la sección', e);

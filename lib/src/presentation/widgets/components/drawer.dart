@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
   final String name;
@@ -136,6 +137,20 @@ class DrawerItemConfig {
     required this.routeName,
   });
 
+  void clearCache() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+    await prefs.setString('name', "");
+    await prefs.setString('lastName', "");
+    await prefs.setString('phone', "");
+    await prefs.setString('address', "");
+    await prefs.setString('email', "");
+    await prefs.setString('role', "");
+    await prefs.setString('account', "");
+    await prefs.setString('id', "");
+    await prefs.setString('authId', "");
+  }
+
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon, color: Colors.white),
@@ -144,6 +159,9 @@ class DrawerItemConfig {
         style: GoogleFonts.varelaRound(color: Colors.white),
       ),
       onTap: () {
+        if (routeName == "/principal") {
+          clearCache();
+        }
         Get.offAllNamed(routeName);
       },
     );

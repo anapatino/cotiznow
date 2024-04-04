@@ -162,6 +162,13 @@ class _ServicesPanel extends State<ServicesPanel> {
         }));
   }
 
+  void loadService() {
+    setState(() {
+      widget.serviceController.getAllServices();
+      filterService(controllerSearch.text);
+    });
+  }
+
   Widget _buildServiceList() {
     return FutureBuilder<List<Service>>(
       future: widget.serviceController.getAllServices(),
@@ -247,6 +254,7 @@ class _ServicesPanel extends State<ServicesPanel> {
               .updateServiceStatus(service.id, 'inactivo');
           MessageHandler.showMessageSuccess(
               'Actualización de estado del servicio exitoso', message);
+          loadService();
         } catch (e) {
           MessageHandler.showMessageError(
               'Error al deshabilitar el servicio', e);

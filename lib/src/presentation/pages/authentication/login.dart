@@ -1,21 +1,96 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/class/class.dart';
-
-import '../../../domain/controllers/controllers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/components/components.dart';
 import '../dashboard/dashboard.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
+  UserController userController = Get.find();
 
-  Login({super.key});
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  void checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      print('Usuario logueado');
+      String? name = prefs.getString('name');
+      String? lastName = prefs.getString('lastName');
+      String? phone = prefs.getString('phone');
+      String? address = prefs.getString('address');
+      String? email = prefs.getString('email');
+      String? role = prefs.getString('role');
+      String? account = prefs.getString('account');
+      String? id = prefs.getString('id');
+      String? authId = prefs.getString('authId');
+
+      if (name!.isNotEmpty &&
+          lastName!.isNotEmpty &&
+          phone!.isNotEmpty &&
+          address!.isNotEmpty &&
+          email!.isNotEmpty &&
+          role!.isNotEmpty &&
+          account!.isNotEmpty &&
+          id!.isNotEmpty &&
+          authId!.isNotEmpty) {
+        Users user = Users(
+            name: name,
+            lastName: lastName,
+            phone: phone,
+            address: address,
+            email: email,
+            role: role,
+            account: account,
+            id: id,
+            authId: authId);
+        userController.updateController(user);
+      }
+
+      if (userController.role == "cliente" &&
+          userController.account == "activa") {
+        Get.offAll(() => CustomerDashboard());
+      }
+      if (userController.role == "administrador" ||
+          userController.role == "super administrador" &&
+              userController.account == "activa") {
+        Get.offAll(() => AdministratorDashboard());
+      }
+    }
+  }
+
+  void registerDataCache() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+    await prefs.setString('name', userController.name.toString());
+    await prefs.setString('lastName', userController.lastName.toString());
+    await prefs.setString('phone', userController.phone.toString());
+    await prefs.setString('address', userController.address.toString());
+    await prefs.setString('email', userController.userEmail.toString());
+    await prefs.setString('role', userController.role.toString());
+    await prefs.setString('account', userController.account.toString());
+    await prefs.setString('id', userController.idUser.toString());
+    await prefs.setString('authId', userController.authId.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    UserController userController = Get.find();
 
     Future<void> authenticateUser() async {
       String email = controllerEmail.text;
@@ -24,7 +99,8 @@ class Login extends StatelessWidget {
       if (email.isNotEmpty && password.isNotEmpty) {
         userController.login(email, password).then((value) async {
           if (userController.userEmail.isNotEmpty) {
-            //await publicityController.viewPublicity();
+            registerDataCache();
+
             if (userController.role == "cliente" &&
                 userController.account == "activa") {
               Get.offAll(() => CustomerDashboard());
