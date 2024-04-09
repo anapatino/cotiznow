@@ -57,7 +57,7 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
       duration: const Duration(microseconds: 10),
       child: Container(
         width: screenWidth * 1,
-        height: screenHeight * 0.9,
+        height: screenHeight * 1,
         decoration: const BoxDecoration(
           color: Palette.accent,
           borderRadius: BorderRadius.only(

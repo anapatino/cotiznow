@@ -42,7 +42,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
       screenHeight: screenHeight,
       screenWidth: screenWidth,
     );
-
+    selectedOption = "";
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(

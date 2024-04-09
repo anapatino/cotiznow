@@ -103,6 +103,7 @@ class _CustomerState extends State<Customer> {
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           actions: const [],
         ),
@@ -111,50 +112,56 @@ class _CustomerState extends State<Customer> {
           email: widget.userController.userEmail,
           itemConfigs: AdministratorRoutes().itemConfigs,
         ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Clientes",
-                    style: GoogleFonts.varelaRound(
-                      color: Colors.black,
-                      fontSize: screenWidth * 0.06,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: screenHeight * 1,
+            child: Stack(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Clientes",
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.06,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      CustomDropdown(
+                        options: options,
+                        width: 0.9,
+                        height: 0.06,
+                        widthItems: 0.65,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedOption = newValue;
+                          });
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      _buildUserList(),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: isContainerVisible
+                      ? screenHeight * 0.02
+                      : screenHeight * 0.97,
+                  child: SingleChildScrollView(
+                    child: AdministratorRegistration(
+                      onCancelRegistration: () {
+                        _toggleContainerVisibility();
+                      },
                     ),
                   ),
-                  SizedBox(height: screenHeight * 0.02),
-                  CustomDropdown(
-                    options: options,
-                    width: 0.9,
-                    height: 0.06,
-                    widthItems: 0.65,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedOption = newValue;
-                      });
-                    },
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  _buildUserList(),
-                ],
-              ),
-            ),
-            Positioned(
-              top: isContainerVisible
-                  ? screenHeight * 0.02
-                  : screenHeight * 0.97,
-              child: SingleChildScrollView(
-                child: AdministratorRegistration(
-                  onCancelRegistration: () {
-                    _toggleContainerVisibility();
-                  },
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
         floatingActionButton: isContainerVisible
             ? const SizedBox()

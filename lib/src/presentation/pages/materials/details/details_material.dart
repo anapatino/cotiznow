@@ -1,13 +1,26 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/entities/material.dart';
+import 'package:cotiznow/src/presentation/pages/materials/materials.dart';
 
-// ignore: must_be_immutable
-class MaterialDetails extends StatelessWidget {
+class MaterialDetails extends StatefulWidget {
+  const MaterialDetails({super.key});
+
+  @override
+  State<MaterialDetails> createState() => _MaterialDetailsState();
+}
+
+class _MaterialDetailsState extends State<MaterialDetails> {
   final material = Get.arguments as Materials;
   UserController userController = Get.find();
 
-  MaterialDetails({super.key});
+  bool isUpdateFormVisible = false;
+
+  void toggleUpdateFormVisibility() {
+    setState(() {
+      isUpdateFormVisible = !isUpdateFormVisible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,7 @@ class MaterialDetails extends StatelessWidget {
                   : const Center(
                       child: Icon(
                         Icons.broken_image,
-                        color: Palette.accent,
+                        color: Colors.blue,
                         size: 40.0,
                       ),
                     ),
@@ -61,12 +74,20 @@ class MaterialDetails extends StatelessWidget {
               child: Container(
                 width: screenWidth * 1,
                 height: screenHeight * 0.58,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(29),
                     topRight: Radius.circular(29),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -124,6 +145,7 @@ class MaterialDetails extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: screenHeight * 0.02),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 'Precio: ${material.salePrice}',
@@ -134,19 +156,6 @@ class MaterialDetails extends StatelessWidget {
                                   letterSpacing: 0.1,
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.only(left: screenWidth * 0.01),
-                                child: Text(
-                                  material.size,
-                                  style: GoogleFonts.varelaRound(
-                                    color: Colors.black,
-                                    fontSize: screenWidth * 0.055,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.1,
-                                  ),
-                                ),
-                              ),
                               if (percentage > 0)
                                 Padding(
                                   padding:
@@ -154,7 +163,7 @@ class MaterialDetails extends StatelessWidget {
                                   child: Text(
                                     '${(percentage * 100).round()}% descuento',
                                     style: GoogleFonts.varelaRound(
-                                      color: Palette.accent,
+                                      color: Colors.blue,
                                       fontSize: screenWidth * 0.041,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.1,
@@ -168,7 +177,7 @@ class MaterialDetails extends StatelessWidget {
                           Text(
                             'Total: ${discount.round()}',
                             style: GoogleFonts.varelaRound(
-                              color: Palette.accent,
+                              color: Colors.blue,
                               fontSize: screenWidth * 0.069,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
@@ -179,10 +188,33 @@ class MaterialDetails extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+            Visibility(
+              visible: isUpdateFormVisible,
+              child: Positioned(
+                top: screenHeight * 0.15,
+                child: UpdateFormMaterial(
+                  onCancelForm: () {
+                    toggleUpdateFormVisibility();
+                  },
+                  material: material,
+                ),
+              ),
+            ),
           ],
         ),
       ),
+      floatingActionButton: isUpdateFormVisible
+          ? const SizedBox()
+          : FloatingActionButton(
+              onPressed: toggleUpdateFormVisibility,
+              backgroundColor: Palette.accent,
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
+              shape: const CircleBorder(),
+            ),
     );
   }
 }

@@ -55,6 +55,7 @@ class _ServicesPanel extends State<ServicesPanel> {
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           actions: const [],
         ),
@@ -63,69 +64,74 @@ class _ServicesPanel extends State<ServicesPanel> {
           email: widget.userController.userEmail,
           itemConfigs: AdministratorRoutes().itemConfigs,
         ),
-        body: Stack(children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Servicios",
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.black,
-                    fontSize: screenWidth * 0.06,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: screenHeight * 1,
+            child: Stack(children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Servicios",
+                      style: GoogleFonts.varelaRound(
+                        color: Colors.black,
+                        fontSize: screenWidth * 0.06,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    CustomTextField(
+                      icon: Icons.search_rounded,
+                      hintText: 'Buscar',
+                      isPassword: false,
+                      width: screenWidth * 0.9,
+                      height: screenHeight * 0.06,
+                      inputColor: Palette.grey,
+                      textColor: Colors.black,
+                      border: 30,
+                      onChanged: (value) {
+                        filterService(value);
+                      },
+                      controller: controllerSearch,
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    _buildServiceList(),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: isUpdateFormVisible,
+                child: Positioned(
+                  top: screenHeight * 0.17,
+                  child: Opacity(
+                    opacity: isUpdateFormVisible ? 1 : 0.0,
+                    child: UpdateServiceForm(
+                      onCancelForm: () {
+                        toggleUpdateFormVisibility(service);
+                      },
+                      service: service,
+                    ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.02),
-                CustomTextField(
-                  icon: Icons.search_rounded,
-                  hintText: 'Buscar',
-                  isPassword: false,
-                  width: screenWidth * 0.9,
-                  height: screenHeight * 0.06,
-                  inputColor: Palette.grey,
-                  textColor: Colors.black,
-                  border: 30,
-                  onChanged: (value) {
-                    filterService(value);
-                  },
-                  controller: controllerSearch,
-                ),
-                SizedBox(height: screenHeight * 0.01),
-                _buildServiceList(),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: isUpdateFormVisible,
-            child: Positioned(
-              top: screenHeight * 0.17,
-              child: Opacity(
-                opacity: isUpdateFormVisible ? 1 : 0.0,
-                child: UpdateServiceForm(
-                  onCancelForm: () {
-                    toggleUpdateFormVisibility(service);
-                  },
-                  service: service,
+              ),
+              Visibility(
+                visible: isRegisterFormVisible,
+                child: Positioned(
+                  top: screenHeight * 0.17,
+                  child: Opacity(
+                    opacity: isRegisterFormVisible ? 1 : 0.0,
+                    child: RegisterServiceForm(
+                      onCancelForm: () {
+                        toggleRegisterFormVisibility();
+                      },
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ]),
           ),
-          Visibility(
-            visible: isRegisterFormVisible,
-            child: Positioned(
-              top: screenHeight * 0.17,
-              child: Opacity(
-                opacity: isRegisterFormVisible ? 1 : 0.0,
-                child: RegisterServiceForm(
-                  onCancelForm: () {
-                    toggleRegisterFormVisibility();
-                  },
-                ),
-              ),
-            ),
-          ),
-        ]),
+        ),
         floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
             ? const SizedBox()
             : FloatingActionButton(

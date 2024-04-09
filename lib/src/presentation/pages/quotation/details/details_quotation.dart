@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ui';
+import 'package:cotiznow/src/presentation/widgets/components/loading/loading_page.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cotiznow/lib.dart';
@@ -43,11 +45,23 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
 
   Future<void> generatePDF() async {
     try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const LoadingScreen();
+        },
+      );
       String downloadPath = await invoiceController.generatePDF(
           quotation, userController.user!, managementController.management!);
-      MessageHandler.showMessageSuccess('Descarga de factura exitosa',
-          "La factura se ha descargado en: $downloadPath");
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+
+      MessageHandler.showMessageSuccess(
+          'Descarga de factura exitosa', downloadPath);
     } catch (e) {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
       MessageHandler.showMessageError('Error al generar factura', e);
     }
   }

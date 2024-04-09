@@ -116,7 +116,7 @@ class AdministratorRoutes {
     ),
     DrawerItemConfig(
       icon: Icons.people,
-      title: 'Clientes',
+      title: 'Usuarios',
       routeName: customers,
     ),
     DrawerItemConfig(

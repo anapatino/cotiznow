@@ -21,7 +21,6 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   String sectionId = "";
   double screenWidth = 0;
   double screenHeight = 0;
-  bool isUpdateFormVisible = false;
   bool isUpdateStatusVisible = false;
   bool isRegisterFormVisible = false;
   List<Section> listSections = [];
@@ -65,29 +64,15 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
     }
   }
 
-  void toggleUpdateFormVisibility(Materials selectMaterial) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          isUpdateFormVisible = !isUpdateFormVisible;
-          material = selectMaterial;
-          if (!isUpdateFormVisible) {
-            activeIndex = -1;
-          }
-        }));
-  }
-
-  void toggleUpdateStatusVisibility(Materials selectMaterial) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          isUpdateStatusVisible = !isUpdateStatusVisible;
-          material = selectMaterial;
-          if (!isUpdateStatusVisible) {
-            activeIndex = -1;
-          }
-        }));
-  }
-
   void toggleRegisterFormVisibility() {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
           isRegisterFormVisible = !isRegisterFormVisible;
+        }));
+  }
+
+  void toggleStatusFormVisibility() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          isUpdateStatusVisible = !isUpdateStatusVisible;
         }));
   }
 
@@ -198,7 +183,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
                   showDeleteAlert(material);
                 },
                 onDoubleTap: () {
-                  toggleUpdateFormVisibility(material);
+                  toggleStatusFormVisibility();
                 });
           },
         ),
@@ -234,6 +219,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           actions: const [],
         ),
@@ -242,87 +228,79 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
           email: widget.userController.userEmail,
           itemConfigs: AdministratorRoutes().itemConfigs,
         ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Materiales",
-                    style: GoogleFonts.varelaRound(
-                      color: Colors.black,
-                      fontSize: screenWidth * 0.06,
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  Row(
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: screenHeight * 1,
+            child: Stack(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomTextField(
-                        icon: Icons.search_rounded,
-                        hintText: 'Buscar',
-                        isPassword: false,
-                        width: screenWidth * 0.85,
-                        height: screenHeight * 0.06,
-                        inputColor: Palette.grey,
-                        textColor: Colors.black,
-                        border: 30,
-                        onChanged: (value) {
-                          filterMaterials(value);
-                        },
-                        controller: controllerSearch,
+                      Text(
+                        "Materiales",
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.06,
+                        ),
                       ),
+                      SizedBox(height: screenHeight * 0.02),
+                      Row(
+                        children: [
+                          CustomTextField(
+                            icon: Icons.search_rounded,
+                            hintText: 'Buscar',
+                            isPassword: false,
+                            width: screenWidth * 0.85,
+                            height: screenHeight * 0.06,
+                            inputColor: Palette.grey,
+                            textColor: Colors.black,
+                            border: 30,
+                            onChanged: (value) {
+                              filterMaterials(value);
+                            },
+                            controller: controllerSearch,
+                          ),
+                        ],
+                      ),
+                      _buildSectionsList(),
+                      SizedBox(
+                        height: screenHeight * 0.03,
+                      ),
+                      _buildMaterialsBySectionId(sectionId),
                     ],
                   ),
-                  _buildSectionsList(),
-                  SizedBox(
-                    height: screenHeight * 0.03,
+                ),
+                Visibility(
+                  visible: isRegisterFormVisible,
+                  child: Positioned(
+                    top: screenHeight * 0.05,
+                    child: RegisterMaterialForm(
+                      onCancelForm: () {
+                        toggleRegisterFormVisibility();
+                      },
+                    ),
                   ),
-                  _buildMaterialsBySectionId(sectionId),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: isRegisterFormVisible,
-              child: Positioned(
-                top: screenHeight * 0.05,
-                child: RegisterMaterialForm(
-                  onCancelForm: () {
-                    toggleRegisterFormVisibility();
-                  },
                 ),
-              ),
-            ),
-            Visibility(
-              visible: isUpdateFormVisible,
-              child: Positioned(
-                top: screenHeight * 0.05,
-                child: UpdateFormMaterial(
-                  onCancelForm: () {
-                    toggleUpdateFormVisibility(material);
-                  },
-                  material: material,
+                Visibility(
+                  visible: isUpdateStatusVisible,
+                  child: Positioned(
+                    top: screenHeight * 0.55,
+                    child: ChangeMaterialStatus(
+                      onCancelForm: () {
+                        toggleStatusFormVisibility();
+                      },
+                      material: material,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            Visibility(
-              visible: isUpdateStatusVisible,
-              child: Positioned(
-                top: screenHeight * 0.57,
-                child: ChangeMaterialStatus(
-                  onCancelForm: () {
-                    toggleUpdateStatusVisibility(material);
-                  },
-                  material: material,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-        floatingActionButton: isRegisterFormVisible ||
-                isUpdateFormVisible ||
-                isUpdateStatusVisible
+        floatingActionButton: isRegisterFormVisible || isUpdateStatusVisible
             ? const SizedBox()
             : FloatingActionButton(
                 onPressed: toggleRegisterFormVisibility,
