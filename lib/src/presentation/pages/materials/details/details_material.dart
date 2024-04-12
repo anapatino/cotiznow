@@ -35,173 +35,176 @@ class _MaterialDetailsState extends State<MaterialDetails> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      body: SizedBox(
-        height: screenHeight,
-        child: Stack(
-          children: [
-            Container(
-              width: screenWidth,
-              height: screenHeight * 0.58,
-              decoration: const BoxDecoration(),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: material.urlPhoto.isNotEmpty
-                  ? Image.network(
-                      material.urlPhoto,
-                      fit: BoxFit.cover,
-                    )
-                  : const Center(
-                      child: Icon(
-                        Icons.broken_image,
-                        color: Colors.blue,
-                        size: 40.0,
-                      ),
-                    ),
-            ),
-            Positioned(
-              top: screenHeight * 0.04,
-              left: screenWidth * 0.05,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black54,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            Positioned(
-              top: screenHeight * 0.48,
-              child: Container(
-                width: screenWidth * 1,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: screenHeight * 1,
+          child: Stack(
+            children: [
+              Container(
+                width: screenWidth,
                 height: screenHeight * 0.58,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(29),
-                    topRight: Radius.circular(29),
+                decoration: const BoxDecoration(),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: material.urlPhoto.isNotEmpty
+                    ? Image.network(
+                        material.urlPhoto,
+                        fit: BoxFit.cover,
+                      )
+                    : const Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.blue,
+                          size: 40.0,
+                        ),
+                      ),
+              ),
+              Positioned(
+                top: screenHeight * 0.04,
+                left: screenWidth * 0.05,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.black54,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
+                  onPressed: () => Navigator.pop(context),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.11,
-                      vertical: screenHeight * 0.06),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          material.name,
-                          style: GoogleFonts.varelaRound(
-                            color: Colors.black,
-                            fontSize: screenWidth * 0.064,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.1,
-                          ),
-                        ),
-                        Text(
-                          'Codigo: ${material.code}',
-                          style: GoogleFonts.varelaRound(
-                            color: Colors.black,
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w300,
-                            letterSpacing: 0.1,
-                          ),
-                        ),
-                        Text(
-                          'Cantidad disponible: ${material.quantity}',
-                          style: GoogleFonts.varelaRound(
-                            color: Colors.black,
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w300,
-                            letterSpacing: 0.1,
-                          ),
-                        ),
-                        Text(
-                          'Descripción',
-                          style: GoogleFonts.varelaRound(
-                            color: Colors.black,
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.1,
-                          ),
-                        ),
-                        Text(
-                          material.description,
-                          style: GoogleFonts.varelaRound(
-                            color: Colors.black,
-                            fontSize: screenWidth * 0.045,
-                            fontWeight: FontWeight.w300,
-                            letterSpacing: 0.1,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: screenHeight * 0.02),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Precio: ${material.salePrice}',
-                                style: GoogleFonts.varelaRound(
-                                  color: Colors.black,
-                                  fontSize: screenWidth * 0.055,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.1,
-                                ),
-                              ),
-                              if (percentage > 0)
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: screenWidth * 0.02),
-                                  child: Text(
-                                    '${(percentage * 100).round()}% descuento',
-                                    style: GoogleFonts.varelaRound(
-                                      color: Colors.blue,
-                                      fontSize: screenWidth * 0.041,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.1,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        if (material.discount != "")
+              ),
+              Positioned(
+                top: screenHeight * 0.48,
+                child: Container(
+                  width: screenWidth * 1,
+                  height: screenHeight * 0.58,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(29),
+                      topRight: Radius.circular(29),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.11,
+                        vertical: screenHeight * 0.06),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            'Total: ${discount.round()}',
+                            material.name,
                             style: GoogleFonts.varelaRound(
-                              color: Colors.blue,
-                              fontSize: screenWidth * 0.069,
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.064,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
                             ),
                           ),
-                      ],
+                          Text(
+                            'Codigo: ${material.code}',
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.w300,
+                              letterSpacing: 0.1,
+                            ),
+                          ),
+                          Text(
+                            'Cantidad disponible: ${material.quantity}',
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.w300,
+                              letterSpacing: 0.1,
+                            ),
+                          ),
+                          Text(
+                            'Descripción',
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.1,
+                            ),
+                          ),
+                          Text(
+                            material.description,
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.black,
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.w300,
+                              letterSpacing: 0.1,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: screenHeight * 0.02),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Precio: ${material.salePrice}',
+                                  style: GoogleFonts.varelaRound(
+                                    color: Colors.black,
+                                    fontSize: screenWidth * 0.055,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.1,
+                                  ),
+                                ),
+                                if (percentage > 0)
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: screenWidth * 0.02),
+                                    child: Text(
+                                      '${(percentage * 100).round()}% descuento',
+                                      style: GoogleFonts.varelaRound(
+                                        color: Palette.accent,
+                                        fontSize: screenWidth * 0.041,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.1,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          if (material.discount != "")
+                            Text(
+                              'Total: ${discount.round()}',
+                              style: GoogleFonts.varelaRound(
+                                color: Palette.accent,
+                                fontSize: screenWidth * 0.069,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: isUpdateFormVisible,
-              child: Positioned(
-                top: screenHeight * 0.15,
-                child: UpdateFormMaterial(
-                  onCancelForm: () {
-                    toggleUpdateFormVisibility();
-                  },
-                  material: material,
+              Visibility(
+                visible: isUpdateFormVisible,
+                child: Positioned(
+                  top: screenHeight * 0.15,
+                  child: UpdateFormMaterial(
+                    onCancelForm: () {
+                      toggleUpdateFormVisibility();
+                    },
+                    material: material,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: isUpdateFormVisible

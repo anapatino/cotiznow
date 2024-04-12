@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
     if (isLoggedIn) {
-      print('Usuario logueado');
       String? name = prefs.getString('name');
       String? lastName = prefs.getString('lastName');
       String? phone = prefs.getString('phone');

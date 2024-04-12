@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/class/class.dart';
 
 import '../../../widgets/components/components.dart';
+import '../../../widgets/components/loading/loading_page.dart';
 
 class UpdateFormMaterial extends StatefulWidget {
   final Function onCancelForm;
@@ -26,6 +29,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   TextEditingController controllerSalePrice = TextEditingController();
   TextEditingController controllerPurchasePrice = TextEditingController();
   TextEditingController controllerCode = TextEditingController();
+  TextEditingController controllerSectionInitial = TextEditingController();
   List<String> optionsSection = [];
   List<Section> sections = [];
   MaterialsController materialController = Get.find();
@@ -35,19 +39,34 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   String? selectedOption;
   String? selectedOptionSectionId;
   List<String> options = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    controllerName.text = widget.material.name;
-    controllerUnit.text = widget.material.unit;
-    controllerDescription.text = widget.material.description;
-    controllerQuantity.text = widget.material.quantity;
-    controllerSalePrice.text = widget.material.salePrice;
-    controllerPurchasePrice.text = widget.material.purchasePrice;
-    controllerCode.text = widget.material.code;
-    loadSections();
-    loadUnits();
+    loadMaterial();
+  }
+
+  Future<void> loadMaterial() async {
+    try {
+      await loadSections();
+      await loadSectionName();
+      await loadUnits();
+      controllerName.text = widget.material.name;
+      controllerUnit.text = widget.material.unit;
+      controllerDescription.text = widget.material.description;
+      controllerQuantity.text = widget.material.quantity;
+      controllerSalePrice.text = widget.material.salePrice;
+      controllerPurchasePrice.text = widget.material.purchasePrice;
+      controllerCode.text = widget.material.code;
+      selectedOption = widget.material.size;
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      MessageHandler.showMessageError(
+          'Error al cargar información del material', e);
+    }
   }
 
   void _resetForm() {
@@ -87,6 +106,20 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
             .where((section) => section.status == "activo")
             .map((section) => section.name)
             .toList();
+      });
+    } catch (error) {
+      MessageHandler.showSectionLoadingError(error);
+      _onCancelForm();
+    }
+  }
+
+  Future<void> loadSectionName() async {
+    try {
+      setState(() {
+        Section section = sections
+            .firstWhere((section) => section.id == widget.material.sectionId);
+        controllerSectionInitial.text = section.name;
+        print("seccion name: ${controllerSectionInitial.text}");
       });
     } catch (error) {
       MessageHandler.showSectionLoadingError(error);
@@ -170,7 +203,9 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
+    if (isLoading) {
+      return const LoadingScreen();
+    }
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(
@@ -266,7 +301,8 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(bottom: screenHeight * 0.035),
-                      child: CustomDropdown(
+                      child: CustomDropdownInitial(
+                        initialValue: selectedOption!,
                         padding: 0,
                         border: 10,
                         options: options,
@@ -314,9 +350,10 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                               fontWeight: FontWeight.w400,
                               letterSpacing: 1,
                             )),
-                        CustomDropdown(
+                        CustomDropdownInitial(
                           padding: 0,
                           border: 10,
+                          initialValue: controllerSectionInitial.text,
                           options: optionsSection,
                           width: 0.75,
                           height: 0.075,

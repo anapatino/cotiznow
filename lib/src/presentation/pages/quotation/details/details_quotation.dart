@@ -118,6 +118,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
 
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
+      } else {
+        MessageHandler.showMessageError('Validación de campos',
+            'Ingrese los campos requeridos para poder actualizar la cotización');
       }
     } catch (e) {
       MessageHandler.showMessageError('Error al actualizar cotización', e);

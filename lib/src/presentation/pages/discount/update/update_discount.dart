@@ -89,7 +89,7 @@ class UpdateDiscount extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: screenHeight * 0.35,
+                top: screenHeight * 0.3,
                 child: Container(
                   width: screenWidth * 1,
                   height: screenHeight * 0.8,
@@ -232,8 +232,8 @@ class UpdateDiscount extends StatelessWidget {
                                     controller: controllerDiscount,
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        top: screenHeight * 0.03),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: screenHeight * 0.03),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,

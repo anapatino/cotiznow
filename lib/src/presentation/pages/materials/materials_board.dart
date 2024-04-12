@@ -230,7 +230,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         ),
         body: SingleChildScrollView(
           child: SizedBox(
-            height: screenHeight * 1,
+            height: screenHeight,
             child: Stack(
               children: [
                 Padding(

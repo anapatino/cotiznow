@@ -1,4 +1,5 @@
 import 'package:cotiznow/lib.dart';
+import 'package:cotiznow/src/presentation/presentation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -151,6 +152,22 @@ class DrawerItemConfig {
     await prefs.setString('authId', "");
   }
 
+  void showLogoutConfirmation() {
+    DialogUtil.showConfirmationDialog(
+      title: 'Cerrar sesión',
+      message: '¿Está seguro de que desea cerrar sesión?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onConfirm: () {
+        clearCache();
+        Get.offAllNamed(routeName);
+      },
+      backgroundConfirmButton: Palette.primaryBackground,
+      backgroundCancelButton: Palette.primary,
+      backgroundColor: Palette.primary,
+    );
+  }
+
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon, color: Colors.white),
@@ -160,9 +177,10 @@ class DrawerItemConfig {
       ),
       onTap: () {
         if (routeName == "/principal") {
-          clearCache();
+          showLogoutConfirmation();
+        } else {
+          Get.offAllNamed(routeName);
         }
-        Get.offAllNamed(routeName);
       },
     );
   }
