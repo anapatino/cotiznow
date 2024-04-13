@@ -3,7 +3,6 @@ import 'package:cotiznow/src/domain/controllers/controllers.dart';
 import 'package:cotiznow/src/domain/models/entities/service.dart';
 import 'package:cotiznow/src/presentation/utils/utils.dart';
 import 'package:cotiznow/src/presentation/widgets/components/components.dart';
-
 import '../../../widgets/class/class.dart';
 
 class UpdateServiceForm extends StatefulWidget {
@@ -28,6 +27,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
   ServicesController serviceController = Get.find();
   int activeIndex = -1;
   String icon = "";
+  String? selectedOption;
 
   @override
   void initState() {
@@ -35,6 +35,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
     controllerDescription.text = widget.service.description;
     controllerName.text = widget.service.name;
     controllerPrice.text = widget.service.price;
+    selectedOption = widget.service.measures == "yes" ? "si" : "no";
   }
 
   @override
@@ -59,20 +60,24 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
     String description = controllerDescription.text;
     String price = controllerPrice.text;
     String status = "activo";
+    String measures = selectedOption == "si" ? "yes" : "no";
+
     Service service = Service(
         id: widget.service.id,
         icon: icon,
         name: name,
         description: description,
         status: status,
-        price: price);
+        price: price,
+        measures: measures);
     if (name.isNotEmpty &&
         description.isNotEmpty &&
         icon.isNotEmpty &&
-        price.isNotEmpty) {
+        price.isNotEmpty &&
+        measures.isNotEmpty) {
       serviceController.updateService(service).then((value) async {
         MessageHandler.showMessageSuccess(
-            'Actualización de servicio exitos0', value);
+            'Actualización de servicio exitoso', value);
       }).catchError((error) {
         MessageHandler.showMessageError(
             'Error al actualizar la servicio', error);
@@ -88,7 +93,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
+    List<String> options = ["si", "no"];
     return BounceInUp(
       duration: const Duration(microseconds: 10),
       child: Container(
@@ -193,9 +198,41 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                       onChanged: (value) {},
                       controller: controllerPrice,
                     ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                          child: Text(
+                            "El servicio requiere medidas?",
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.white,
+                              fontSize: screenWidth * 0.03,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                        CustomDropdownInitial(
+                          initialValue: selectedOption!,
+                          padding: 0,
+                          border: 10,
+                          options: options,
+                          width: 0.75,
+                          height: 0.075,
+                          widthItems: 0.55,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOption = newValue;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.07,
+                        vertical: screenHeight * 0.05,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +249,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                             hasBorder: true,
                           ),
                           CustomElevatedButton(
-                            text: 'Registrar',
+                            text: 'Actualizar',
                             onPressed: updateService,
                             height: screenHeight * 0.065,
                             width: screenWidth * 0.35,
@@ -224,9 +261,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: screenHeight * 0.22,
-                    ),
+                    SizedBox(height: screenHeight * 0.15)
                   ],
                 ),
               ),

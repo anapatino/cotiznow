@@ -25,6 +25,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
   ServicesController serviceController = Get.find();
   int activeIndex = -1;
   String icon = "";
+  String selectMeasures = "";
   @override
   void dispose() {
     super.dispose();
@@ -47,17 +48,20 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
     String description = controllerDescription.text;
     String price = controllerPrice.text;
     String status = "activo";
+    String measures = selectMeasures == "si" ? "yes" : "no";
     if (name.isNotEmpty &&
         description.isNotEmpty &&
         icon.isNotEmpty &&
-        price.isNotEmpty) {
+        price.isNotEmpty &&
+        measures.isNotEmpty) {
       Service service = Service(
           id: '',
           icon: icon,
           name: name,
           description: description,
           status: status,
-          price: price);
+          price: price,
+          measures: measures);
       serviceController.registerService(service).then((value) async {
         MessageHandler.showMessageSuccess(
             'Registro de servicio exitoso', value);
@@ -75,6 +79,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    List<String> options = ["si", "no"];
 
     return BounceInUp(
       duration: const Duration(microseconds: 10),
@@ -181,9 +186,40 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
                       onChanged: (value) {},
                       controller: controllerPrice,
                     ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                          child: Text(
+                            "El servicio requiere medidas?",
+                            style: GoogleFonts.varelaRound(
+                              color: Colors.white,
+                              fontSize: screenWidth * 0.03,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                        CustomDropdown(
+                          padding: 0,
+                          border: 10,
+                          options: options,
+                          width: 0.75,
+                          height: 0.075,
+                          widthItems: 0.55,
+                          onChanged: (value) {
+                            setState(() {
+                              selectMeasures = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.07,
+                        vertical: screenHeight * 0.05,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,9 +248,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: screenHeight * 0.22,
-                    ),
+                    SizedBox(height: screenHeight * 0.15)
                   ],
                 ),
               ),

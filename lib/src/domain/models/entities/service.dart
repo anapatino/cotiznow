@@ -1,5 +1,5 @@
 class Service {
-  String icon, name, description, status, id, price;
+  String icon, name, description, status, id, price, measures;
 
   Service({
     required this.id,
@@ -8,6 +8,7 @@ class Service {
     required this.description,
     required this.status,
     required this.price,
+    required this.measures,
   });
 
   factory Service.fromJson(Map<String, dynamic>? json) {
@@ -18,6 +19,7 @@ class Service {
       description: json?['description'] ?? '',
       status: json?['status'] ?? '',
       price: json?['price'] ?? '',
+      measures: json?['measures'] ?? '',
     );
   }
 }

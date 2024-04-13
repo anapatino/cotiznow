@@ -12,6 +12,7 @@ class ServicesRequest {
         'description': service.description,
         'status': service.status,
         'price': service.price,
+        'measures': service.measures,
       });
       return "Registro del servicio exitoso";
     } catch (e) {
@@ -43,6 +44,7 @@ class ServicesRequest {
         'description': service.description,
         'status': service.status,
         'price': service.price,
+        'measures': service.measures,
       });
 
       return "Servicio actualizado exitosamente";
@@ -65,6 +67,7 @@ class ServicesRequest {
           description: data['description'] ?? '',
           status: data['status'] ?? '',
           price: data['price'] ?? '',
+          measures: data['measures'] ?? '',
         );
       }).toList();
 

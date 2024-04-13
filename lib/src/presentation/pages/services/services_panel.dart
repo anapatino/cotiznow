@@ -24,7 +24,13 @@ class _ServicesPanel extends State<ServicesPanel> {
   bool isRegisterFormVisible = false;
   List<Service> filteredServices = [];
   Service service = Service(
-      id: "", icon: "", name: "", description: "", status: "", price: '');
+      id: "",
+      icon: "",
+      name: "",
+      description: "",
+      status: "",
+      price: '',
+      measures: '');
 
   @override
   void initState() {

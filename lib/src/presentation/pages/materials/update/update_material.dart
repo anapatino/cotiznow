@@ -119,7 +119,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         Section section = sections
             .firstWhere((section) => section.id == widget.material.sectionId);
         controllerSectionInitial.text = section.name;
-        print("seccion name: ${controllerSectionInitial.text}");
       });
     } catch (error) {
       MessageHandler.showSectionLoadingError(error);

@@ -7,7 +7,13 @@ class ShoppingCartController extends GetxController {
   RxList<Service> selectService = <Service>[].obs;
   ServicesController serviceController = Get.find();
   Service serviceNotFound = Service(
-      id: "-1", icon: "", name: "", description: "", status: "", price: "");
+      id: "-1",
+      icon: "",
+      name: "",
+      description: "",
+      status: "",
+      price: "",
+      measures: '');
   Materials materialNotFound = Materials(
       urlPhoto: "",
       name: "",
