@@ -4,25 +4,21 @@ class Quotation {
   String id;
   String name;
   String description;
-  List<String> idService;
-  String length;
   List<Materials> materials;
+  List<CustomizedService> customizedServices;
   String status;
   String total;
-  String width;
   String userId;
 
   Quotation({
     required this.id,
     required this.name,
     required this.description,
-    required this.idService,
-    required this.length,
     required this.materials,
     required this.status,
     required this.total,
-    required this.width,
     required this.userId,
+    required this.customizedServices,
   });
 
   factory Quotation.fromJson(Map<String, dynamic>? json) {
@@ -30,18 +26,18 @@ class Quotation {
       id: json?['id'] ?? '',
       name: json?['name'] ?? '',
       description: json?['description'] ?? '',
-      idService: json?['idService'] != null
-          ? List<String>.from(json?['idService'])
-          : [],
-      length: json?['length'] ?? '',
       materials: (json?['materials'] as List<dynamic>?)
               ?.map((materialJson) => Materials.fromJson(materialJson))
               .toList() ??
           [],
       status: json?['status'] ?? '',
       total: json?['total'] ?? '',
-      width: json?['width'] ?? '',
       userId: json?['userId'] ?? '',
+      customizedServices: (json?['customizedServices'] as List<dynamic>?)
+              ?.map((customizedServices) =>
+                  CustomizedService.fromJson(customizedServices))
+              .toList() ??
+          [],
     );
   }
 
@@ -49,14 +45,13 @@ class Quotation {
     return {
       "name": name,
       "description": description,
-      "idService": idService,
-      "length": length,
       "materials": materials.map((material) => material.toJson()).toList(),
       "status": status,
       "total": total,
-      "width": width,
       "id": id,
       "userId": userId,
+      "customizedServices":
+          customizedServices.map((service) => service.toJson()).toList(),
     };
   }
 }

@@ -55,13 +55,11 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
       list = List<Materials>.from(parameters.materials);
       controllerName.text = parameters.name;
       controllerDescription.text = parameters.description;
-      controllerLength.text = parameters.length;
-      controllerWidth.text = parameters.width;
       totalQuotation = parameters.total;
       shoppingCartController.cartItems =
           RxList<Materials>(parameters.materials);
 
-      shoppingCartController.updateSelectedServices(parameters.idService);
+      //shoppingCartController.updateSelectedServices(parameters.idService);
     }
   }
 
@@ -79,13 +77,11 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           id: parameters.id,
           name: name,
           description: description,
-          idService: shoppingCartController.extractSelectedServiceIds(),
-          length: length,
           materials: shoppingCartController.cartItems,
           status: parameters.status,
           total: totalQuotation,
-          width: width,
-          userId: parameters.userId);
+          userId: parameters.userId,
+          customizedServices: []);
       if ((userController.role == "cliente" &&
               parameters.status != "aprobado") ||
           (userController.role != "cliente")) {
@@ -130,8 +126,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
             )),
         content: InformationServices(
           onBack: handleBack,
-          controllerLength: controllerLength,
-          controllerWidth: controllerWidth,
           onSelected: (total) {
             setState(() {
               totalQuotation = total;

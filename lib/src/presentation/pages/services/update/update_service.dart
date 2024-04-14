@@ -60,7 +60,7 @@ class _UpdateServiceFormState extends State<UpdateServiceForm> {
     String description = controllerDescription.text;
     String price = controllerPrice.text;
     String status = "activo";
-    String measures = selectedOption == "si" ? "yes" : "no";
+    String measures = selectedOption == "si" ? "true" : "false";
 
     Service service = Service(
         id: widget.service.id,

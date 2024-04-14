@@ -4,17 +4,14 @@ import 'package:cotiznow/src/presentation/widgets/widgets.dart';
 import '../../../../../domain/domain.dart';
 
 class InformationServices extends StatefulWidget {
-  final TextEditingController controllerLength;
-  final TextEditingController controllerWidth;
   final VoidCallback onBack;
   final Function(String) onSelected;
 
-  const InformationServices(
-      {super.key,
-      required this.onBack,
-      required this.controllerLength,
-      required this.controllerWidth,
-      required this.onSelected});
+  const InformationServices({
+    super.key,
+    required this.onBack,
+    required this.onSelected,
+  });
 
   @override
   State<InformationServices> createState() => _InformationServicesState();
@@ -30,15 +27,16 @@ class _InformationServicesState extends State<InformationServices> {
 
   double screenWidth = 0;
   double screenHeight = 0;
-  List<String> optionsService = [];
   List<Service> services = [];
   List<String> optionsSection = [];
   List<Section> sections = [];
   List<Materials> filteredMaterials = [];
 
   String? selectedOptionSection;
-  String? selectedOptionService;
   String sectionId = "";
+
+  Map<String, TextEditingController> heightControllers = {};
+  Map<String, TextEditingController> widthControllers = {};
 
   @override
   void initState() {
@@ -55,10 +53,6 @@ class _InformationServicesState extends State<InformationServices> {
             .where((section) => section.status == "activo")
             .map((section) => section.name)
             .toList();
-        optionsService = services
-            .where((service) => service.status == "activo")
-            .map((service) => service.name)
-            .toList();
       });
     } catch (error) {
       MessageHandler.showMessageWarning(
@@ -68,24 +62,31 @@ class _InformationServicesState extends State<InformationServices> {
 
   void saveQuotation() {
     double materialsTotal = shoppingCartController.calculateMaterialsTotal();
-
+    shoppingCartController.createCustomizedService(
+        heightControllers, widthControllers);
     int servicesTotal = shoppingCartController.calculateServicesTotal();
     int iva = 19;
     int total = materialsTotal.round() + servicesTotal;
     int newTotal = (total + (total * iva / 100)).toInt();
+
     widget.onSelected(
       newTotal.toString(),
     );
   }
 
-  void _onServiceDropdownChanged(String? newValue) {
+  void _onServiceDropdownChanged(Service? service) {
     setState(() {
-      selectedOptionService = newValue;
-      if (selectedOptionService != null) {
-        Service service = services.firstWhere(
-          (service) => service.name == selectedOptionService,
-        );
+      if (service != null) {
         controllerPrice.text = service.price;
+        if (shoppingCartController.selectService.contains(service)) {
+          heightControllers.remove(service.id);
+          widthControllers.remove(service.id);
+        } else {
+          if (service.measures == "true") {
+            heightControllers[service.id] = TextEditingController();
+            widthControllers[service.id] = TextEditingController();
+          }
+        }
         shoppingCartController.toggleSelectedService(service);
       }
     });
@@ -112,10 +113,10 @@ class _InformationServicesState extends State<InformationServices> {
               fontWeight: FontWeight.w400,
               letterSpacing: 1,
             )),
-        CustomDropdown(
+        CustomDropdownService(
           padding: 0,
           border: 10,
-          options: optionsService,
+          options: services,
           width: 0.75,
           height: 0.075,
           widthItems: 0.55,
@@ -168,63 +169,6 @@ class _InformationServicesState extends State<InformationServices> {
         ),
         if (sectionId.isNotEmpty)
           materialWidgets.buildMaterialsBySectionId(sectionId),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-          child: Text("Medidas de la sección",
-              style: GoogleFonts.varelaRound(
-                color: Palette.textColor,
-                fontSize: screenWidth * 0.035,
-                fontWeight: FontWeight.w400,
-                letterSpacing: 1,
-              )),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text("Largo",
-                style: GoogleFonts.varelaRound(
-                  color: Palette.textColor,
-                  fontSize: screenWidth * 0.035,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1,
-                )),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.015,
-              ),
-              child: CompactTextField(
-                hintText: '',
-                width: screenWidth * 0.23,
-                height: 0.075,
-                inputColor: Palette.grey,
-                textColor: Palette.textColor,
-                onChanged: (value) {},
-                controller: widget.controllerLength,
-              ),
-            ),
-            Text("Ancho",
-                style: GoogleFonts.varelaRound(
-                  color: Palette.textColor,
-                  fontSize: screenWidth * 0.035,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1,
-                )),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.015,
-              ),
-              child: CompactTextField(
-                hintText: '',
-                width: screenWidth * 0.23,
-                height: 0.075,
-                inputColor: Palette.grey,
-                textColor: Palette.textColor,
-                onChanged: (value) {},
-                controller: widget.controllerWidth,
-              ),
-            ),
-          ],
-        ),
         SizedBox(
           height: screenHeight * 0.02,
         ),
@@ -250,6 +194,80 @@ class _InformationServicesState extends State<InformationServices> {
             fontWeight: FontWeight.w400,
             letterSpacing: 1,
           ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: shoppingCartController.selectService.map((option) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (heightControllers.containsKey(option.id) &&
+                    widthControllers.containsKey(option.id))
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                    child: Text("Medidas(M) ${option.name}",
+                        style: GoogleFonts.varelaRound(
+                          color: Palette.textColor,
+                          fontSize: screenWidth * 0.035,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 1,
+                        )),
+                  ),
+                if (heightControllers.containsKey(option.id) &&
+                    widthControllers.containsKey(option.id))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Largo",
+                          style: GoogleFonts.varelaRound(
+                            color: Palette.textColor,
+                            fontSize: screenWidth * 0.035,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 1,
+                          )),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.015,
+                        ),
+                        child: CompactTextField(
+                          type: TextInputType.number,
+                          hintText: '',
+                          width: screenWidth * 0.23,
+                          height: 0.075,
+                          inputColor: Palette.grey,
+                          textColor: Palette.textColor,
+                          onChanged: (value) {},
+                          controller: heightControllers[option.id]!,
+                        ),
+                      ),
+                      Text("Ancho",
+                          style: GoogleFonts.varelaRound(
+                            color: Palette.textColor,
+                            fontSize: screenWidth * 0.035,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 1,
+                          )),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.015,
+                        ),
+                        child: CompactTextField(
+                          type: TextInputType.number,
+                          hintText: '',
+                          width: screenWidth * 0.23,
+                          height: 0.075,
+                          inputColor: Palette.grey,
+                          textColor: Palette.textColor,
+                          onChanged: (value) {},
+                          controller: widthControllers[option.id]!,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            );
+          }).toList(),
         ),
         SizedBox(
           height: screenHeight * 0.02,

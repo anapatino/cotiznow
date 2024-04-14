@@ -42,10 +42,11 @@ class InvoiceRequest {
     return serviceDetailsList;
   }
 
+//modificar como se va a enviar la informacion de service
   static Future<String> generatePDF(
       Quotation quotation, Users user, Management management) async {
-    List<Map<String, dynamic>> serviceDetailsList =
-        await loadService(quotation.idService);
+    List<Map<String, dynamic>> serviceDetailsList = await loadService(
+        quotation.customizedServices.map((service) => service.id).toList());
     var quotationJson = quotation.toJson();
     quotationJson['idService'] = serviceDetailsList;
 

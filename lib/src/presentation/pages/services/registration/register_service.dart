@@ -48,7 +48,7 @@ class _RegisterServiceFormState extends State<RegisterServiceForm> {
     String description = controllerDescription.text;
     String price = controllerPrice.text;
     String status = "activo";
-    String measures = selectMeasures == "si" ? "yes" : "no";
+    String measures = selectMeasures == "si" ? "true" : "false";
     if (name.isNotEmpty &&
         description.isNotEmpty &&
         icon.isNotEmpty &&

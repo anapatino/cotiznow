@@ -13,14 +13,14 @@ class QuotationRequest {
           await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
-        'idService': quotation.idService,
-        'length': quotation.length,
         'materials':
             quotation.materials.map((material) => material.toJson()).toList(),
         'status': quotation.status,
         'total': quotation.total,
-        'width': quotation.width,
         'userId': quotation.userId,
+        'customizedServices': quotation.customizedServices
+            .map((service) => service.toJson())
+            .toList(),
       });
       await newQuotation.update({'id': newQuotation.id});
       quotation.id = newQuotation.id;

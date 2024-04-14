@@ -1,12 +1,7 @@
-import 'dart:convert';
-import 'dart:ui';
 import 'package:cotiznow/src/presentation/widgets/components/loading/loading_page.dart';
-import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
-import 'package:http/http.dart' as http;
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -37,10 +32,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> loadService() async {
-    final filteredServices = servicesController.servicesList!
-        .where((service) => quotation.idService.contains(service.id));
-
-    serviceNames = filteredServices.map((service) => service.name).toList();
+    serviceNames =
+        quotation.customizedServices.map((service) => service.name).toList();
   }
 
   Future<void> generatePDF() async {
@@ -224,7 +217,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Ancho: ${quotation.width}',
+                            'Ancho: ',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
                               fontSize: screenWidth * 0.045,
@@ -233,7 +226,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                             ),
                           ),
                           Text(
-                            'Largo: ${quotation.length}',
+                            'Largo:',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
                               fontSize: screenWidth * 0.045,
