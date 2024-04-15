@@ -25,29 +25,17 @@ class InvoiceRequest {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> loadService(
-      List<String> idServices) async {
-    servicesController.getAllServices();
-    List<Map<String, dynamic>> serviceDetailsList = [];
-    for (String id in idServices) {
-      Service? service = servicesController.servicesList
-          ?.firstWhere((service) => service.id == id);
-      if (service != null) {
-        serviceDetailsList.add({
-          'name': service.name,
-          'price': service.price,
-        });
-      }
-    }
-    return serviceDetailsList;
-  }
-
-//modificar como se va a enviar la informacion de service
   static Future<String> generatePDF(
       Quotation quotation, Users user, Management management) async {
-    List<Map<String, dynamic>> serviceDetailsList = await loadService(
-        quotation.customizedServices.map((service) => service.id).toList());
+    List<Map<String, dynamic>> serviceDetailsList =
+        quotation.customizedServices.map((service) {
+      return {
+        'name': service.name,
+        'price': service.price,
+      };
+    }).toList();
     var quotationJson = quotation.toJson();
+    quotationJson.remove('customizedServices');
     quotationJson['idService'] = serviceDetailsList;
 
     var url = Uri.parse('https://pdf-invoicing-app.onrender.com/invoice');
@@ -71,11 +59,9 @@ class InvoiceRequest {
 
         return await downloadAndDeletePDF(downloadURL, quotation.id);
       } else {
-        print('Error en la solicitud: ${responseRequest.statusCode}');
         throw Exception('Error en la solicitud: ${responseRequest.statusCode}');
       }
     } catch (e) {
-      print('Error en la solicitud: $e');
       throw Exception('Error en la solicitud: $e');
     }
   }
