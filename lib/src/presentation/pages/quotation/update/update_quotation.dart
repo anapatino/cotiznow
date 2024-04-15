@@ -14,8 +14,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   final parameters = Get.arguments as Quotation;
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
-  TextEditingController controllerLength = TextEditingController();
-  TextEditingController controllerWidth = TextEditingController();
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
   ShoppingCartController shoppingCartController = Get.find();
@@ -24,7 +22,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   List<Materials> list = [];
   String totalQuotation = "";
   int _activeCurrentStep = 0;
-
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -34,8 +32,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   void clearControllers() {
     controllerName.clear();
     controllerDescription.clear();
-    controllerLength.clear();
-    controllerWidth.clear();
   }
 
   void handleContinue() {
@@ -50,28 +46,32 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
     });
   }
 
-  void loadControllers() {
+  Future<void> loadControllers() async {
     if (parameters != null) {
+      print(
+          "customizedService update: ${parameters.customizedServices.length}");
+      await shoppingCartController
+          .updateSelectedServices(parameters.customizedServices)
+          .then((value) => {
+                setState(() {
+                  isLoading = false;
+                })
+              });
       list = List<Materials>.from(parameters.materials);
       controllerName.text = parameters.name;
       controllerDescription.text = parameters.description;
       totalQuotation = parameters.total;
       shoppingCartController.cartItems =
           RxList<Materials>(parameters.materials);
-
-      //shoppingCartController.updateSelectedServices(parameters.idService);
     }
   }
 
   void updateQuotation() {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String length = controllerLength.text;
-    String width = controllerWidth.text;
+
     if (name.isNotEmpty &&
         description.isNotEmpty &&
-        length.isNotEmpty &&
-        width.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation newQuotation = Quotation(
           id: parameters.id,
@@ -81,7 +81,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           status: parameters.status,
           total: totalQuotation,
           userId: parameters.userId,
-          customizedServices: []);
+          customizedServices: shoppingCartController.selectCustomizedService);
       if ((userController.role == "cliente" &&
               parameters.status != "aprobado") ||
           (userController.role != "cliente")) {
@@ -171,23 +171,28 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
                       onTap: () {},
                       icon: () {},
                       onDoubleTap: () {}),
-                  SizedBox(
-                    width: screenWidth * 1,
-                    height: screenHeight * 0.65,
-                    child: Stepper(
-                      controlsBuilder: (context, controller) {
-                        return const SizedBox.shrink();
-                      },
-                      physics: const ScrollPhysics(),
-                      type: StepperType.horizontal,
-                      currentStep: _activeCurrentStep,
-                      steps: steps,
-                      onStepTapped: (int index) {
-                        setState(() => _activeCurrentStep = index);
-                      },
-                      elevation: 0,
+                  if (!isLoading)
+                    SizedBox(
+                      width: screenWidth * 1,
+                      height: screenHeight * 0.65,
+                      child: Stepper(
+                        controlsBuilder: (context, controller) {
+                          return const SizedBox.shrink();
+                        },
+                        physics: const ScrollPhysics(),
+                        type: StepperType.horizontal,
+                        currentStep: _activeCurrentStep,
+                        steps: steps,
+                        onStepTapped: (int index) {
+                          setState(() => _activeCurrentStep = index);
+                        },
+                        elevation: 0,
+                      ),
                     ),
-                  )
+                  if (isLoading)
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Palette.accent),
+                    )
                 ]),
           ),
         ),

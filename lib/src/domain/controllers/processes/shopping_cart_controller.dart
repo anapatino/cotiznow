@@ -132,14 +132,17 @@ class ShoppingCartController extends GetxController {
     });
   }
 
-  void updateSelectedServices(List<String> serviceIds) async {
+  Future<void> updateSelectedServices(
+      List<CustomizedService> customService) async {
     selectService.clear();
+    selectCustomizedService.clear();
     List<Service> services = await serviceController.getAllServices();
-    for (String id in serviceIds) {
-      Service service =
-          services.firstWhere((s) => s.id == id, orElse: () => serviceNotFound);
+    for (CustomizedService custom in customService) {
+      Service service = services.firstWhere((s) => s.id == custom.id,
+          orElse: () => serviceNotFound);
       if (service.id != "-1") {
         selectService.add(service);
+        selectCustomizedService.add(custom);
       }
     }
   }

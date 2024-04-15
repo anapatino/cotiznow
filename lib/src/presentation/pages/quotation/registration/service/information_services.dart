@@ -42,6 +42,22 @@ class _InformationServicesState extends State<InformationServices> {
   void initState() {
     super.initState();
     loadSectionsAndServices();
+    loadControllers();
+  }
+
+  Future<void> loadControllers() async {
+    setState(() {
+      if (shoppingCartController.selectCustomizedService.isNotEmpty) {
+        shoppingCartController.selectCustomizedService.forEach((service) {
+          if (service.measures.height != "0" && service.measures.width != "0") {
+            heightControllers[service.id] =
+                TextEditingController(text: service.measures.height);
+            widthControllers[service.id] =
+                TextEditingController(text: service.measures.width);
+          }
+        });
+      }
+    });
   }
 
   Future<void> loadSectionsAndServices() async {
