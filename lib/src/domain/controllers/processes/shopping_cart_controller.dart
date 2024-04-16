@@ -82,6 +82,7 @@ class ShoppingCartController extends GetxController {
   void clearCart() {
     cartItems.clear();
     selectService.clear();
+    selectCustomizedService.clear();
   }
 
   void createCustomizedService(
@@ -119,8 +120,16 @@ class ShoppingCartController extends GetxController {
   }
 
   void toggleSelectedService(Service service) {
-    if (selectService.contains(service)) {
-      selectService.remove(service);
+    bool found = false;
+    for (Service serviceList in selectService) {
+      if (serviceList.id == service.id) {
+        serviceNotFound = serviceList;
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      selectService.remove(serviceNotFound);
     } else {
       selectService.add(service);
     }

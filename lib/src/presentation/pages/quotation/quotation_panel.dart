@@ -29,7 +29,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
 
   void refreshList() {
     setState(() {
-      selectedOption = "";
+      selectedOption = "todos";
     });
   }
 
@@ -43,6 +43,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
       screenWidth: screenWidth,
     );
     selectedOption = "";
+    refreshList();
     return SlideInLeft(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(

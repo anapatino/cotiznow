@@ -90,7 +90,30 @@ class _InformationServicesState extends State<InformationServices> {
     );
   }
 
-  void _onServiceDropdownChanged(Service? service) {
+  void _onServiceDropdownChangedRegister(Service? service) {
+    setState(() {
+      if (service != null) {
+        controllerPrice.text = service.price;
+        if (shoppingCartController.selectCustomizedService.isNotEmpty) {
+          shoppingCartController.toggleSelectedService(service);
+        }
+        if (shoppingCartController.selectService.contains(service)) {
+          heightControllers.remove(service.id);
+          widthControllers.remove(service.id);
+        } else {
+          if (service.measures == "true") {
+            heightControllers[service.id] = TextEditingController();
+            widthControllers[service.id] = TextEditingController();
+          }
+        }
+        if (shoppingCartController.selectCustomizedService.isEmpty) {
+          shoppingCartController.toggleSelectedService(service);
+        }
+      }
+    });
+  }
+
+  void _onServiceDropdownChangedUpdate(Service? service) {
     setState(() {
       if (service != null) {
         controllerPrice.text = service.price;
@@ -136,7 +159,7 @@ class _InformationServicesState extends State<InformationServices> {
           width: 0.75,
           height: 0.075,
           widthItems: 0.55,
-          onChanged: _onServiceDropdownChanged,
+          onChanged: _onServiceDropdownChangedRegister,
         ),
         if (controllerPrice.text.isNotEmpty)
           Padding(
