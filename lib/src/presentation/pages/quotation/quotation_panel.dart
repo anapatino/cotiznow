@@ -19,11 +19,17 @@ class _QuotationPanelState extends State<QuotationPanel> {
   double screenWidth = 0;
   double screenHeight = 0;
   bool isContainerVisible = false;
-  String? selectedOption;
+  String selectedOption = "";
 
   @override
   void initState() {
     super.initState();
+    refreshList();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     refreshList();
   }
 
@@ -42,7 +48,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
       screenHeight: screenHeight,
       screenWidth: screenWidth,
     );
-    selectedOption = "";
+    selectedOption = "todos";
     refreshList();
     return PopScope(
       canPop: false,
@@ -79,15 +85,13 @@ class _QuotationPanelState extends State<QuotationPanel> {
                   widthItems: 0.65,
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedOption = newValue;
+                      selectedOption = newValue!;
                     });
                   },
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 quotationWidget.buildQuotationList(
-                    selectedOption != null ? selectedOption! : "",
-                    true,
-                    showDeleteAlert),
+                    selectedOption, true, showDeleteAlert),
               ],
             ),
           ),

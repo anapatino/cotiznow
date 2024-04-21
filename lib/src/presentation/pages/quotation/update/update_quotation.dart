@@ -219,11 +219,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
               quotation, formattedDate);
           MessageHandler.showMessageSuccess(
               'Actualizacion realizada con exito', message);
-          await quotationController
-              .getQuotationsByUserId(userController.idUser);
-          await quotationController.getAllQuotations();
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+          Get.offAllNamed("/quotations");
         } catch (error) {
           MessageHandler.showMessageError(
               'Error al actualizar cotización', error);
