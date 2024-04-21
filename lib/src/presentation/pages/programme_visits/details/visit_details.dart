@@ -39,6 +39,7 @@ class _VisitDetailsState extends State<VisitDetails> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     UserController userController = Get.find();
 
     return Scaffold(
@@ -61,7 +62,8 @@ class _VisitDetailsState extends State<VisitDetails> {
                   "Detalles visita",
                   style: GoogleFonts.varelaRound(
                     color: Colors.black,
-                    fontSize: screenWidth * 0.06,
+                    fontSize:
+                        isTablet ? screenWidth * 0.045 : screenWidth * 0.06,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1,
                   ),
@@ -93,7 +95,9 @@ class _VisitDetailsState extends State<VisitDetails> {
                           'Información de la visita',
                           style: GoogleFonts.varelaRound(
                             color: Colors.white,
-                            fontSize: screenWidth * 0.05,
+                            fontSize: isTablet
+                                ? screenWidth * 0.04
+                                : screenWidth * 0.05,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.1,
                           ),
@@ -103,20 +107,20 @@ class _VisitDetailsState extends State<VisitDetails> {
                         'Codigo:',
                         programmeVisit.id,
                         screenWidth,
-                        0.04,
+                        isTablet ? 0.035 : 0.04,
                         fontWeight: FontWeight.normal,
                       ),
                       customText(
                         'Fecha de registro:',
                         programmeVisit.date,
                         screenWidth,
-                        0.04,
+                        isTablet ? 0.035 : 0.04,
                       ),
                       customText(
                         'Motivo:',
                         programmeVisit.motive,
                         screenWidth,
-                        0.042,
+                        isTablet ? 0.037 : 0.042,
                       ),
                       Padding(
                         padding: EdgeInsets.only(
@@ -127,7 +131,9 @@ class _VisitDetailsState extends State<VisitDetails> {
                           'Información del solicitante',
                           style: GoogleFonts.varelaRound(
                             color: Colors.white,
-                            fontSize: screenWidth * 0.05,
+                            fontSize: isTablet
+                                ? screenWidth * 0.04
+                                : screenWidth * 0.05,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.1,
                           ),
@@ -137,25 +143,25 @@ class _VisitDetailsState extends State<VisitDetails> {
                         'Nombre:',
                         '${programmeVisit.user.name} ${programmeVisit.user.lastName}',
                         screenWidth,
-                        0.042,
+                        isTablet ? 0.035 : 0.042,
                       ),
                       customText(
                         'Correo:',
                         programmeVisit.user.email,
                         screenWidth,
-                        0.042,
+                        isTablet ? 0.035 : 0.042,
                       ),
                       customText(
                         'Dirección:',
                         programmeVisit.user.address,
                         screenWidth,
-                        0.042,
+                        isTablet ? 0.035 : 0.042,
                       ),
                       customText(
                         'Telefono:',
                         programmeVisit.user.phone,
                         screenWidth,
-                        0.042,
+                        isTablet ? 0.035 : 0.042,
                       ),
                       SizedBox(height: screenHeight * 0.015),
                       if (userController.role != "cliente")
@@ -170,7 +176,9 @@ class _VisitDetailsState extends State<VisitDetails> {
                                 "Cambiar estado",
                                 style: GoogleFonts.varelaRound(
                                   color: Colors.white,
-                                  fontSize: screenWidth * 0.04,
+                                  fontSize: isTablet
+                                      ? screenWidth * 0.032
+                                      : screenWidth * 0.04,
                                   fontWeight: FontWeight.w400,
                                   letterSpacing: 1,
                                 ),
@@ -178,7 +186,7 @@ class _VisitDetailsState extends State<VisitDetails> {
                               CustomDropdown(
                                 options: options,
                                 width: 0.75,
-                                widthItems: 0.55,
+                                widthItems: isTablet ? 0.6 : 0.55,
                                 height: 0.073,
                                 border: 10,
                                 onChanged: (String? newValue) {
@@ -201,7 +209,9 @@ class _VisitDetailsState extends State<VisitDetails> {
                             height: screenHeight * 0.065,
                             width: screenWidth * 0.75,
                             textColor: Colors.white,
-                            textSize: screenWidth * 0.04,
+                            textSize: isTablet
+                                ? screenWidth * 0.035
+                                : screenWidth * 0.04,
                             backgroundColor: Palette.primary,
                             hasBorder: false,
                           ),

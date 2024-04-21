@@ -23,6 +23,9 @@ class CardVisits extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+    double dateRegister =
+        showCardClient ? screenWidth * 0.04 : screenWidth * 0.035;
     return InkWell(
       onTap: () {
         onTap();
@@ -34,7 +37,9 @@ class CardVisits extends StatelessWidget {
         onDoubleTap();
       },
       child: Padding(
-        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+        padding: EdgeInsets.only(
+            bottom: screenHeight * 0.02,
+            right: isTablet ? screenWidth * 0.04 : 0),
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -55,7 +60,9 @@ class CardVisits extends StatelessWidget {
                     child: Text(
                       "Visita programada por ${programmeVisits.user.name} ${programmeVisits.user.lastName}",
                       style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.049,
+                        fontSize: isTablet
+                            ? screenWidth * 0.034
+                            : screenWidth * 0.049,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -66,9 +73,7 @@ class CardVisits extends StatelessWidget {
                   child: Text(
                     'Fecha de registro: ${programmeVisits.date}',
                     style: GoogleFonts.varelaRound(
-                      fontSize: showCardClient
-                          ? screenWidth * 0.04
-                          : screenWidth * 0.035,
+                      fontSize: isTablet ? screenWidth * 0.027 : dateRegister,
                       fontWeight:
                           showCardClient ? FontWeight.w700 : FontWeight.w500,
                       color: Colors.white,
@@ -80,7 +85,8 @@ class CardVisits extends StatelessWidget {
                   child: Text(
                     'Estado: ${programmeVisits.status}',
                     style: GoogleFonts.varelaRound(
-                      fontSize: screenWidth * 0.04,
+                      fontSize:
+                          isTablet ? screenWidth * 0.034 : screenWidth * 0.04,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),

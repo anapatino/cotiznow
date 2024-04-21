@@ -20,6 +20,7 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
   TextEditingController controllerMotive = TextEditingController();
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
 
   void _resetForm() {
     controllerMotive.clear();
@@ -64,6 +65,8 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return PopScope(
       canPop: true,
       onPopInvoked: (bool didPop) {
@@ -90,7 +93,8 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
                   "Registrar Visita",
                   style: GoogleFonts.varelaRound(
                     color: Colors.white,
-                    fontSize: screenWidth * 0.05,
+                    fontSize:
+                        isTablet ? screenWidth * 0.04 : screenWidth * 0.05,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
@@ -110,7 +114,8 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.07,
+                    horizontal:
+                        isTablet ? screenWidth * 0.13 : screenWidth * 0.07,
                     vertical: screenHeight * 0.01),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,9 +124,10 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
                       text: 'Cancelar',
                       onPressed: _onCancelForm,
                       height: screenHeight * 0.065,
-                      width: screenWidth * 0.35,
+                      width: isTablet ? screenWidth * 0.3 : screenWidth * 0.35,
                       textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
+                      textSize:
+                          isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                       borderColor: Palette.accent,
                       backgroundColor: Palette.accent,
                       hasBorder: true,
@@ -130,9 +136,10 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
                       text: 'Registrar',
                       onPressed: registerVisit,
                       height: screenHeight * 0.065,
-                      width: screenWidth * 0.35,
+                      width: isTablet ? screenWidth * 0.3 : screenWidth * 0.35,
                       textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
+                      textSize:
+                          isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                       backgroundColor: Palette.primary,
                       hasBorder: false,
                     ),

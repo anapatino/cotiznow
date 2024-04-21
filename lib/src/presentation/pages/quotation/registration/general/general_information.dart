@@ -16,6 +16,8 @@ class GeneralInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return Column(
       children: [
         CustomTextField(
@@ -55,7 +57,7 @@ class GeneralInformation extends StatelessWidget {
                 height: screenHeight * 0.058,
                 width: screenWidth * 0.33,
                 textColor: Colors.white,
-                textSize: screenWidth * 0.039,
+                textSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.039,
                 backgroundColor: Palette.accent,
                 hasBorder: false,
               ),

@@ -33,8 +33,11 @@ class _CardShopState extends State<CardShop> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    int salePrice = int.parse(widget.material.salePrice);
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
+    int salePrice = int.parse(widget.material.salePrice);
+    double containerColumn =
+        widget.showQuantity ? screenWidth * 0.4 : screenWidth * 0.27;
     double percentage = 0;
     double discount = 0;
     if (widget.material.discount != "") {
@@ -46,7 +49,7 @@ class _CardShopState extends State<CardShop> {
       padding: EdgeInsets.only(bottom: screenHeight * 0.02),
       child: Container(
         width: screenWidth * 0.53,
-        height: screenHeight * 0.14,
+        height: isTablet ? screenHeight * 0.16 : screenHeight * 0.14,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
@@ -93,13 +96,13 @@ class _CardShopState extends State<CardShop> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: widget.showQuantity
-                      ? screenWidth * 0.4
-                      : screenWidth * 0.27,
+                  width: isTablet ? screenWidth * 0.45 : containerColumn,
                   child: Text(
                     '${widget.material.name}-${widget.material.unit} ${widget.material.size}',
                     style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.035,
+                        fontSize: isTablet
+                            ? screenWidth * 0.027
+                            : screenWidth * 0.035,
                         fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -111,13 +114,17 @@ class _CardShopState extends State<CardShop> {
                         Text(
                           'Antes: ${widget.material.salePrice} ${widget.material.size}',
                           style: GoogleFonts.varelaRound(
-                              fontSize: screenWidth * 0.03,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.027
+                                  : screenWidth * 0.03,
                               fontWeight: FontWeight.w300),
                         ),
                       Text(
                         '\$${discount.round()}',
                         style: GoogleFonts.varelaRound(
-                            fontSize: screenWidth * 0.035,
+                            fontSize: isTablet
+                                ? screenWidth * 0.032
+                                : screenWidth * 0.035,
                             fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -126,7 +133,8 @@ class _CardShopState extends State<CardShop> {
                   Text(
                     'cantidad: ${widget.material.quantity}',
                     style: GoogleFonts.varelaRound(
-                      fontSize: screenWidth * 0.038,
+                      fontSize:
+                          isTablet ? screenWidth * 0.03 : screenWidth * 0.038,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -154,16 +162,18 @@ class _CardShopState extends State<CardShop> {
                           }
                         });
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.remove,
                         color: Palette.accentBackground,
-                        size: 15,
+                        size: isTablet ? 35 : 15,
                       ),
                     ),
                     Text(
                       '$quantity',
                       style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.038,
+                        fontSize: isTablet
+                            ? screenWidth * 0.031
+                            : screenWidth * 0.038,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -175,10 +185,10 @@ class _CardShopState extends State<CardShop> {
                           widget.increaseQuantity(widget.material);
                         });
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.add,
                         color: Palette.accentBackground,
-                        size: 15,
+                        size: isTablet ? 35 : 15,
                       ),
                     ),
                   ],

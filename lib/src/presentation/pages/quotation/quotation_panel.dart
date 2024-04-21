@@ -18,6 +18,7 @@ class QuotationPanel extends StatefulWidget {
 class _QuotationPanelState extends State<QuotationPanel> {
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
   bool isContainerVisible = false;
   String selectedOption = "";
 
@@ -43,13 +44,13 @@ class _QuotationPanelState extends State<QuotationPanel> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada'];
     final QuotationWidget quotationWidget = QuotationWidget(
       screenHeight: screenHeight,
       screenWidth: screenWidth,
     );
-    selectedOption = "todos";
-    refreshList();
     return PopScope(
       canPop: false,
       child: SlideInLeft(
@@ -74,15 +75,16 @@ class _QuotationPanelState extends State<QuotationPanel> {
                   "Cotizaciones",
                   style: GoogleFonts.varelaRound(
                     color: Colors.black,
-                    fontSize: screenWidth * 0.06,
+                    fontSize:
+                        isTablet ? screenWidth * 0.04 : screenWidth * 0.06,
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 CustomDropdown(
                   options: options,
-                  width: 0.9,
+                  width: isTablet ? 0.8 : 0.9,
                   height: 0.06,
-                  widthItems: 0.65,
+                  widthItems: isTablet ? 0.67 : 0.65,
                   onChanged: (String? newValue) {
                     setState(() {
                       selectedOption = newValue!;

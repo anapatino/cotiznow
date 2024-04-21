@@ -21,6 +21,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
 
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
   String? selectOption;
   List<String> serviceNames = [];
 
@@ -123,6 +124,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     List<String> options = ['pendiente', 'aprobada', 'rechazada'];
 
     return SlideInRight(
@@ -143,7 +146,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                     "Detalles cotización",
                     style: GoogleFonts.varelaRound(
                       color: Colors.black,
-                      fontSize: screenWidth * 0.064,
+                      fontSize:
+                          isTablet ? screenWidth * 0.045 : screenWidth * 0.064,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.1,
                     ),
@@ -176,7 +180,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                         text: TextSpan(
                           style: GoogleFonts.varelaRound(
                             color: Colors.black,
-                            fontSize: screenWidth * 0.045,
+                            fontSize: isTablet
+                                ? screenWidth * 0.035
+                                : screenWidth * 0.045,
                             letterSpacing: 0.1,
                           ),
                           children: [
@@ -210,7 +216,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                             text: TextSpan(
                               style: GoogleFonts.varelaRound(
                                 color: Colors.black,
-                                fontSize: screenWidth * 0.045,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.035
+                                    : screenWidth * 0.045,
                                 letterSpacing: 0.1,
                               ),
                               children: [
@@ -244,7 +252,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                               'Materiales seleccionados',
                               style: GoogleFonts.varelaRound(
                                 color: Palette.accent,
-                                fontSize: screenWidth * 0.045,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.035
+                                    : screenWidth * 0.045,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.1,
                               ),
@@ -264,15 +274,17 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                             Text("  Cambiar estado",
                                 style: GoogleFonts.varelaRound(
                                   color: Colors.black,
-                                  fontSize: screenWidth * 0.04,
+                                  fontSize: isTablet
+                                      ? screenWidth * 0.03
+                                      : screenWidth * 0.04,
                                   fontWeight: FontWeight.w400,
                                   letterSpacing: 1,
                                 )),
                             CustomDropdown(
                               options: options,
-                              width: 0.87,
-                              widthItems: 0.65,
-                              height: 0.073,
+                              width: isTablet ? 0.8 : 0.87,
+                              height: 0.065,
+                              widthItems: isTablet ? 0.67 : 0.65,
                               border: 10,
                               onChanged: (String? newValue) {
                                 setState(() {
@@ -301,7 +313,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                                   ? screenWidth * 0.65
                                   : screenWidth * 0.85,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.035
+                                  : screenWidth * 0.04,
                               backgroundColor: Palette.primary,
                               hasBorder: false,
                             ),

@@ -61,6 +61,8 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     List<Step> steps = [
       Step(
         state: StepState.indexed,
@@ -68,7 +70,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
         title: Text('Datos generales',
             style: GoogleFonts.varelaRound(
               color: Colors.black,
-              fontSize: screenWidth * 0.036,
+              fontSize: isTablet ? screenWidth * 0.028 : screenWidth * 0.036,
               fontWeight: FontWeight.w400,
               letterSpacing: 0.2,
             )),
@@ -84,7 +86,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
         title: Text('Servicios',
             style: GoogleFonts.varelaRound(
               color: Colors.black,
-              fontSize: screenWidth * 0.036,
+              fontSize: isTablet ? screenWidth * 0.028 : screenWidth * 0.036,
               fontWeight: FontWeight.w400,
               letterSpacing: 0.2,
             )),
@@ -113,12 +115,15 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+                    padding: EdgeInsets.only(
+                      bottom: screenHeight * 0.02,
+                    ),
                     child: Text(
                       "Registrar cotización",
                       style: GoogleFonts.varelaRound(
                         color: Colors.black,
-                        fontSize: screenWidth * 0.064,
+                        fontSize:
+                            isTablet ? screenWidth * 0.04 : screenWidth * 0.064,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.1,
                       ),

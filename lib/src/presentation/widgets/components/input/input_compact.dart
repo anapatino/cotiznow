@@ -34,6 +34,8 @@ class _CompactTextFieldState extends State<CompactTextField> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     double? border = widget.border ?? 10;
 
     return Container(
@@ -53,7 +55,7 @@ class _CompactTextFieldState extends State<CompactTextField> {
           cursorColor: widget.textColor,
           style: GoogleFonts.varelaRound(
             color: widget.textColor,
-            fontSize: screenWidth * 0.04,
+            fontSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
             fontWeight: FontWeight.w400,
             letterSpacing: 1,
           ),
@@ -65,7 +67,7 @@ class _CompactTextFieldState extends State<CompactTextField> {
             labelText: widget.hintText,
             labelStyle: GoogleFonts.varelaRound(
               color: widget.textColor,
-              fontSize: screenWidth * 0.04,
+              fontSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
             ),
             filled: true,
             fillColor: widget.inputColor,

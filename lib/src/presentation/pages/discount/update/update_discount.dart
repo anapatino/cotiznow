@@ -41,6 +41,8 @@ class UpdateDiscount extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     int salePrice = 0;
     double percentage = 0;
     double discount = 0;
@@ -81,9 +83,10 @@ class UpdateDiscount extends StatelessWidget {
                 top: screenHeight * 0.04,
                 left: screenWidth * 0.05,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: Colors.black54,
+                    size: isTablet ? 45.0 : 20.0,
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
@@ -93,12 +96,20 @@ class UpdateDiscount extends StatelessWidget {
                 child: Container(
                   width: screenWidth * 1,
                   height: screenHeight * 0.8,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(25),
                       topRight: Radius.circular(25),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -112,7 +123,9 @@ class UpdateDiscount extends StatelessWidget {
                             material.name,
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.064,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.044
+                                  : screenWidth * 0.064,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
                             ),
@@ -121,7 +134,9 @@ class UpdateDiscount extends StatelessWidget {
                             'Codigo: ${material.code}',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.034
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.1,
                             ),
@@ -130,7 +145,9 @@ class UpdateDiscount extends StatelessWidget {
                             'Cantidad disponible: ${material.quantity}',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.034
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.1,
                             ),
@@ -139,7 +156,9 @@ class UpdateDiscount extends StatelessWidget {
                             'Descripción',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.036
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
                             ),
@@ -148,7 +167,9 @@ class UpdateDiscount extends StatelessWidget {
                             material.description,
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.034
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.1,
                             ),
@@ -161,7 +182,9 @@ class UpdateDiscount extends StatelessWidget {
                                   'Precio: ${material.salePrice}',
                                   style: GoogleFonts.varelaRound(
                                     color: Colors.black,
-                                    fontSize: screenWidth * 0.055,
+                                    fontSize: isTablet
+                                        ? screenWidth * 0.038
+                                        : screenWidth * 0.055,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.1,
                                   ),
@@ -173,7 +196,9 @@ class UpdateDiscount extends StatelessWidget {
                                     material.size,
                                     style: GoogleFonts.varelaRound(
                                       color: Colors.black,
-                                      fontSize: screenWidth * 0.055,
+                                      fontSize: isTablet
+                                          ? screenWidth * 0.038
+                                          : screenWidth * 0.055,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.1,
                                     ),
@@ -187,7 +212,9 @@ class UpdateDiscount extends StatelessWidget {
                                       '${(percentage * 100).round()}% descuento',
                                       style: GoogleFonts.varelaRound(
                                         color: Palette.accent,
-                                        fontSize: screenWidth * 0.041,
+                                        fontSize: isTablet
+                                            ? screenWidth * 0.028
+                                            : screenWidth * 0.041,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 0.1,
                                       ),
@@ -201,7 +228,9 @@ class UpdateDiscount extends StatelessWidget {
                               'Total: ${discount.round()}',
                               style: GoogleFonts.varelaRound(
                                 color: Palette.accent,
-                                fontSize: screenWidth * 0.069,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.05
+                                    : screenWidth * 0.069,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.1,
                               ),
@@ -217,7 +246,9 @@ class UpdateDiscount extends StatelessWidget {
                                   Text("  Modificar descuento",
                                       style: GoogleFonts.varelaRound(
                                         color: Colors.black,
-                                        fontSize: screenWidth * 0.035,
+                                        fontSize: isTablet
+                                            ? screenWidth * 0.025
+                                            : screenWidth * 0.035,
                                         fontWeight: FontWeight.w400,
                                         letterSpacing: 1,
                                       )),
@@ -244,7 +275,9 @@ class UpdateDiscount extends StatelessWidget {
                                           height: screenHeight * 0.059,
                                           width: screenWidth * 0.35,
                                           textColor: Palette.error,
-                                          textSize: screenWidth * 0.033,
+                                          textSize: isTablet
+                                              ? screenWidth * 0.028
+                                              : screenWidth * 0.033,
                                           backgroundColor: Colors.white,
                                           hasBorder: true,
                                           borderColor: Palette.error,
@@ -257,7 +290,9 @@ class UpdateDiscount extends StatelessWidget {
                                           height: screenHeight * 0.059,
                                           width: screenWidth * 0.35,
                                           textColor: Colors.white,
-                                          textSize: screenWidth * 0.033,
+                                          textSize: isTablet
+                                              ? screenWidth * 0.028
+                                              : screenWidth * 0.033,
                                           backgroundColor: Palette.primary,
                                           hasBorder: false,
                                         ),

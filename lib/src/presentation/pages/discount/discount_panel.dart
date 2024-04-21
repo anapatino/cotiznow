@@ -16,6 +16,7 @@ class _DiscountPanelState extends State<DiscountPanel> {
   MaterialsController materialController = Get.find();
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _DiscountPanelState extends State<DiscountPanel> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return PopScope(
       canPop: false,
@@ -57,7 +59,8 @@ class _DiscountPanelState extends State<DiscountPanel> {
                   "Descuentos",
                   style: GoogleFonts.varelaRound(
                     color: Colors.black,
-                    fontSize: screenWidth * 0.06,
+                    fontSize:
+                        isTablet ? screenWidth * 0.04 : screenWidth * 0.06,
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),

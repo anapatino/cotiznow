@@ -36,6 +36,8 @@ class CardQuotation extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return InkWell(
       onTap: () {
         onTap();
@@ -47,7 +49,9 @@ class CardQuotation extends StatelessWidget {
         onDoubleTap();
       },
       child: Padding(
-        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+        padding: EdgeInsets.only(
+            bottom: screenHeight * 0.02,
+            right: isTablet ? screenWidth * 0.1 : 0),
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -66,7 +70,8 @@ class CardQuotation extends StatelessWidget {
                   Text(
                     'Fecha: $date',
                     style: GoogleFonts.varelaRound(
-                      fontSize: screenWidth * 0.04,
+                      fontSize:
+                          isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -76,7 +81,8 @@ class CardQuotation extends StatelessWidget {
                   child: Text(
                     title,
                     style: GoogleFonts.varelaRound(
-                      fontSize: screenWidth * 0.049,
+                      fontSize:
+                          isTablet ? screenWidth * 0.039 : screenWidth * 0.049,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -85,7 +91,8 @@ class CardQuotation extends StatelessWidget {
                 Text(
                   'Estado: $status',
                   style: GoogleFonts.varelaRound(
-                    fontSize: screenWidth * 0.04,
+                    fontSize:
+                        isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
@@ -96,7 +103,9 @@ class CardQuotation extends StatelessWidget {
                     child: Text(
                       description,
                       style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.033,
+                        fontSize: isTablet
+                            ? screenWidth * 0.028
+                            : screenWidth * 0.033,
                         fontWeight: FontWeight.w300,
                         color: Colors.white,
                       ),
@@ -109,7 +118,9 @@ class CardQuotation extends StatelessWidget {
                     Text(
                       'Total: $total',
                       style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.047,
+                        fontSize: isTablet
+                            ? screenWidth * 0.037
+                            : screenWidth * 0.047,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),
@@ -122,7 +133,9 @@ class CardQuotation extends StatelessWidget {
                         icon: Icon(
                           Icons.download_for_offline_rounded,
                           color: Colors.white,
-                          size: screenWidth * 0.098,
+                          size: isTablet
+                              ? screenWidth * 0.07
+                              : screenWidth * 0.098,
                         ),
                       ),
                   ],

@@ -37,7 +37,9 @@ class CardMaterialSimple extends StatelessWidget {
     double heightContainer =
         isLarge ? screenHeight * 0.16 : screenHeight * 0.155;
     return Padding(
-      padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+      padding: EdgeInsets.only(
+          bottom: screenHeight * 0.02,
+          right: isTablet ? screenWidth * 0.04 : 0),
       child: InkWell(
         borderRadius: BorderRadius.circular(25),
         onTap: () {
@@ -110,7 +112,8 @@ class CardMaterialSimple extends StatelessWidget {
                   Text(
                     'Codigo: ${material.code}',
                     style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.03,
+                        fontSize:
+                            isTablet ? screenWidth * 0.025 : screenWidth * 0.03,
                         fontWeight: FontWeight.w300),
                   ),
                   if (percentage > 0)
@@ -118,7 +121,7 @@ class CardMaterialSimple extends StatelessWidget {
                       'Antes: ${material.salePrice} ${material.size}',
                       style: GoogleFonts.varelaRound(
                           fontSize: isTablet
-                              ? screenWidth * 0.025
+                              ? screenWidth * 0.022
                               : screenWidth * 0.028,
                           fontWeight: FontWeight.w300),
                     ),
@@ -127,7 +130,7 @@ class CardMaterialSimple extends StatelessWidget {
                       'Cantidad: ${material.quantity}',
                       style: GoogleFonts.varelaRound(
                           fontSize: isTablet
-                              ? screenWidth * 0.029
+                              ? screenWidth * 0.025
                               : screenWidth * 0.03,
                           fontWeight: FontWeight.w300),
                     ),
@@ -138,7 +141,7 @@ class CardMaterialSimple extends StatelessWidget {
                           : '\$${discount.round()}',
                       style: GoogleFonts.varelaRound(
                           fontSize: isTablet
-                              ? screenWidth * 0.035
+                              ? screenWidth * 0.03
                               : screenWidth * 0.04,
                           fontWeight: FontWeight.w600),
                     ),
@@ -147,7 +150,7 @@ class CardMaterialSimple extends StatelessWidget {
                       '\$${material.salePrice}',
                       style: GoogleFonts.varelaRound(
                           fontSize: isTablet
-                              ? screenWidth * 0.033
+                              ? screenWidth * 0.03
                               : screenWidth * 0.038,
                           fontWeight: FontWeight.w600),
                     ),

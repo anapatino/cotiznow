@@ -196,6 +196,8 @@ class _CustomDropdownService extends State<CustomDropdownService> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return Container(
       width: screenWidth * widget.width,
       height: screenHeight * widget.height,
@@ -229,7 +231,8 @@ class _CustomDropdownService extends State<CustomDropdownService> {
                   value.name,
                   style: GoogleFonts.varelaRound(
                     color: Colors.black,
-                    fontSize: screenWidth * 0.04,
+                    fontSize:
+                        isTablet ? screenWidth * 0.027 : screenWidth * 0.04,
                   ),
                 ),
               ),

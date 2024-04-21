@@ -19,6 +19,7 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
   String sectionId = "";
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
   List<Section> listSections = [];
   List<Materials> filteredMaterials = [];
 
@@ -173,6 +174,8 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return SlideInRight(
       duration: const Duration(milliseconds: 15),
       child: Scaffold(
@@ -188,7 +191,7 @@ class _RegisterDiscountState extends State<RegisterDiscount> {
                 "Registrar Descuento",
                 style: GoogleFonts.varelaRound(
                   color: Colors.black,
-                  fontSize: screenWidth * 0.06,
+                  fontSize: isTablet ? screenWidth * 0.04 : screenWidth * 0.06,
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),

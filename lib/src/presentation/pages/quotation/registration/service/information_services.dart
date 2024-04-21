@@ -27,6 +27,7 @@ class _InformationServicesState extends State<InformationServices> {
 
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
   List<Service> services = [];
   List<String> optionsSection = [];
   List<Section> sections = [];
@@ -135,6 +136,7 @@ class _InformationServicesState extends State<InformationServices> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     final MaterialWidgets materialWidgets = MaterialWidgets(
       screenHeight: screenHeight,
@@ -148,7 +150,7 @@ class _InformationServicesState extends State<InformationServices> {
         Text("  Servicios",
             style: GoogleFonts.varelaRound(
               color: Palette.textColor,
-              fontSize: screenWidth * 0.035,
+              fontSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.035,
               fontWeight: FontWeight.w400,
               letterSpacing: 1,
             )),
@@ -158,7 +160,7 @@ class _InformationServicesState extends State<InformationServices> {
           options: services,
           width: 0.75,
           height: 0.075,
-          widthItems: 0.55,
+          widthItems: isTablet ? 0.6 : 0.55,
           onChanged: _onServiceDropdownChangedRegister,
         ),
         if (controllerPrice.text.isNotEmpty)
@@ -184,7 +186,7 @@ class _InformationServicesState extends State<InformationServices> {
         Text("  Seccion",
             style: GoogleFonts.varelaRound(
               color: Palette.textColor,
-              fontSize: screenWidth * 0.035,
+              fontSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.035,
               fontWeight: FontWeight.w400,
               letterSpacing: 1,
             )),
@@ -194,7 +196,7 @@ class _InformationServicesState extends State<InformationServices> {
           options: optionsSection,
           width: 0.75,
           height: 0.075,
-          widthItems: 0.55,
+          widthItems: isTablet ? 0.6 : 0.55,
           onChanged: (String? newValue) {
             setState(() {
               selectedOptionSection = newValue;
@@ -216,7 +218,7 @@ class _InformationServicesState extends State<InformationServices> {
           child: Text("Servicios seleccionados",
               style: GoogleFonts.varelaRound(
                 color: Palette.accent,
-                fontSize: screenWidth * 0.042,
+                fontSize: isTablet ? screenWidth * 0.034 : screenWidth * 0.042,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
               )),
@@ -229,7 +231,7 @@ class _InformationServicesState extends State<InformationServices> {
                   .join(", "),
           style: GoogleFonts.varelaRound(
             color: Palette.textColor,
-            fontSize: screenWidth * 0.035,
+            fontSize: isTablet ? screenWidth * 0.028 : screenWidth * 0.035,
             fontWeight: FontWeight.w400,
             letterSpacing: 1,
           ),
@@ -248,7 +250,9 @@ class _InformationServicesState extends State<InformationServices> {
                     child: Text("Medidas(M) ${option.name}",
                         style: GoogleFonts.varelaRound(
                           color: Palette.textColor,
-                          fontSize: screenWidth * 0.035,
+                          fontSize: isTablet
+                              ? screenWidth * 0.029
+                              : screenWidth * 0.035,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 1,
                         )),
@@ -261,7 +265,9 @@ class _InformationServicesState extends State<InformationServices> {
                       Text("Largo",
                           style: GoogleFonts.varelaRound(
                             color: Palette.textColor,
-                            fontSize: screenWidth * 0.035,
+                            fontSize: isTablet
+                                ? screenWidth * 0.029
+                                : screenWidth * 0.035,
                             fontWeight: FontWeight.w400,
                             letterSpacing: 1,
                           )),
@@ -283,7 +289,9 @@ class _InformationServicesState extends State<InformationServices> {
                       Text("Ancho",
                           style: GoogleFonts.varelaRound(
                             color: Palette.textColor,
-                            fontSize: screenWidth * 0.035,
+                            fontSize: isTablet
+                                ? screenWidth * 0.029
+                                : screenWidth * 0.035,
                             fontWeight: FontWeight.w400,
                             letterSpacing: 1,
                           )),
@@ -316,7 +324,7 @@ class _InformationServicesState extends State<InformationServices> {
           child: Text("Materiales seleccionados",
               style: GoogleFonts.varelaRound(
                 color: Palette.accent,
-                fontSize: screenWidth * 0.042,
+                fontSize: isTablet ? screenWidth * 0.034 : screenWidth * 0.042,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
               )),
@@ -336,7 +344,7 @@ class _InformationServicesState extends State<InformationServices> {
                 height: screenHeight * 0.058,
                 width: screenWidth * 0.33,
                 textColor: Palette.textColor,
-                textSize: screenWidth * 0.039,
+                textSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.039,
                 borderColor: Colors.white,
                 backgroundColor: Colors.white,
                 hasBorder: true,
@@ -347,7 +355,7 @@ class _InformationServicesState extends State<InformationServices> {
                 height: screenHeight * 0.058,
                 width: screenWidth * 0.33,
                 textColor: Colors.white,
-                textSize: screenWidth * 0.039,
+                textSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.039,
                 backgroundColor: Palette.accent,
                 hasBorder: false,
               ),
