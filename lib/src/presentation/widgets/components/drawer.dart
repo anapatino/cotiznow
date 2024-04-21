@@ -82,6 +82,8 @@ class DrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return Padding(
       padding: EdgeInsets.only(top: 16.0, left: 16.0, bottom: 0.1, right: 16.0),
       child: Column(
@@ -107,14 +109,16 @@ class DrawerHeader extends StatelessWidget {
                 Text(
                   name,
                   style: GoogleFonts.varelaRound(
-                    fontSize: screenWidth * 0.069,
+                    fontSize:
+                        isTablet ? screenWidth * 0.03 : screenWidth * 0.069,
                     color: Colors.white,
                   ),
                 ),
                 Text(
                   email,
                   style: GoogleFonts.varelaRound(
-                    fontSize: screenWidth * 0.04,
+                    fontSize:
+                        isTablet ? screenWidth * 0.02 : screenWidth * 0.04,
                     color: Colors.white,
                   ),
                 ),

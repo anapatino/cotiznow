@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
@@ -122,6 +123,8 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     final MaterialWidgets materialWidgets = MaterialWidgets(
       screenHeight: screenHeight,
       screenWidth: screenWidth,
@@ -180,7 +183,8 @@ class _AdministratorDashboardState extends State<AdministratorDashboard> {
                       'Descuentos',
                       style: GoogleFonts.varelaRound(
                         color: Colors.black,
-                        fontSize: screenWidth * 0.05,
+                        fontSize:
+                            isTablet ? screenWidth * 0.035 : screenWidth * 0.05,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.1,
                       ),

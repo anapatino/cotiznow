@@ -20,6 +20,7 @@ class _ServicesPanel extends State<ServicesPanel> {
   int activeIndex = -1;
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
   bool isUpdateFormVisible = false;
   bool isRegisterFormVisible = false;
   List<Service> filteredServices = [];
@@ -57,6 +58,7 @@ class _ServicesPanel extends State<ServicesPanel> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return PopScope(
       canPop: false,
@@ -86,7 +88,9 @@ class _ServicesPanel extends State<ServicesPanel> {
                         "Servicios",
                         style: GoogleFonts.varelaRound(
                           color: Colors.black,
-                          fontSize: screenWidth * 0.06,
+                          fontSize: isTablet
+                              ? screenWidth * 0.04
+                              : screenWidth * 0.06,
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),

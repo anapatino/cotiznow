@@ -25,9 +25,12 @@ class RoundIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = screenWidth >= 600;
+
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.009, vertical: screenHeight * 0.003),
+          horizontal: isTablet ? 0.0001 : screenWidth * 0.009,
+          vertical: isTablet ? screenHeight * 0.001 : screenHeight * 0.003),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -39,8 +42,8 @@ class RoundIconButton extends StatelessWidget {
               onLongPress();
             },
             child: Container(
-              width: screenWidth * 0.18,
-              height: screenWidth * 0.18,
+              width: isTablet ? screenWidth * 0.09 : screenWidth * 0.18,
+              height: isTablet ? screenWidth * 0.09 : screenWidth * 0.18,
               decoration: BoxDecoration(
                 color: isActive
                     ? Palette.primary
@@ -57,7 +60,7 @@ class RoundIconButton extends StatelessWidget {
                       : isBackgroundImage
                           ? Palette.backgroundImage
                           : Palette.textColor,
-                  size: screenWidth * 0.085,
+                  size: isTablet ? screenWidth * 0.045 : screenWidth * 0.085,
                 ),
               ),
             ),
@@ -70,7 +73,7 @@ class RoundIconButton extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.varelaRound(
                   color: Palette.textColor,
-                  fontSize: screenWidth * 0.03,
+                  fontSize: isTablet ? screenWidth * 0.025 : screenWidth * 0.03,
                   fontWeight: FontWeight.w500),
             ),
           ),

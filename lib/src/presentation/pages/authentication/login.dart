@@ -90,6 +90,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     Future<void> authenticateUser() async {
       String email = controllerEmail.text;
@@ -211,7 +212,9 @@ class _LoginState extends State<Login> {
                           Text("Ingresar",
                               style: GoogleFonts.varelaRound(
                                 color: Colors.white,
-                                fontSize: screenWidth * 0.1,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.07
+                                    : screenWidth * 0.1,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 1,
                               )),
@@ -224,13 +227,17 @@ class _LoginState extends State<Login> {
                                 "Por favor, ingresa los campos para continuar.",
                                 style: GoogleFonts.varelaRound(
                                   color: Colors.white,
-                                  fontSize: screenWidth * 0.04,
+                                  fontSize: isTablet
+                                      ? screenWidth * 0.03
+                                      : screenWidth * 0.04,
                                   fontWeight: FontWeight.normal,
                                   letterSpacing: 1,
                                 )),
                           ),
                           SizedBox(
-                            height: screenHeight * 0.02,
+                            height: isTablet
+                                ? screenWidth * 0.04
+                                : screenHeight * 0.02,
                           ),
                           CustomTextField(
                             type: TextInputType.emailAddress,
@@ -267,7 +274,9 @@ class _LoginState extends State<Login> {
                             height: screenHeight * 0.065,
                             width: screenWidth * 0.75,
                             textColor: Palette.secondary,
-                            textSize: screenWidth * 0.045,
+                            textSize: isTablet
+                                ? screenWidth * 0.035
+                                : screenWidth * 0.045,
                             backgroundColor: Palette.primary,
                             hasBorder: false,
                           ),
@@ -282,7 +291,9 @@ class _LoginState extends State<Login> {
                             height: screenHeight * 0.065,
                             width: screenWidth * 0.75,
                             textColor: Palette.primary,
-                            textSize: screenWidth * 0.035,
+                            textSize: isTablet
+                                ? screenWidth * 0.028
+                                : screenWidth * 0.035,
                             backgroundColor:
                                 Palette.secondary.withOpacity(0.55),
                             hasBorder: false,

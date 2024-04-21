@@ -26,6 +26,8 @@ class _MaterialDetailsState extends State<MaterialDetails> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     int salePrice = int.parse(material.salePrice);
     double percentage = 0;
     double discount = 0;
@@ -64,9 +66,10 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                 top: screenHeight * 0.04,
                 left: screenWidth * 0.05,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
                     color: Colors.black54,
+                    size: isTablet ? 45.0 : 20.0,
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
@@ -103,7 +106,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                             material.name,
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.064,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.044
+                                  : screenWidth * 0.064,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
                             ),
@@ -112,7 +117,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                             'Codigo: ${material.code}',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.034
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.1,
                             ),
@@ -121,7 +128,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                             'Cantidad disponible: ${material.quantity}',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.034
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.1,
                             ),
@@ -130,7 +139,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                             'Descripción',
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.036
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.1,
                             ),
@@ -139,7 +150,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                             material.description,
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.045,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.034
+                                  : screenWidth * 0.045,
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.1,
                             ),
@@ -153,7 +166,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                   'Precio: ${material.salePrice}',
                                   style: GoogleFonts.varelaRound(
                                     color: Colors.black,
-                                    fontSize: screenWidth * 0.055,
+                                    fontSize: isTablet
+                                        ? screenWidth * 0.044
+                                        : screenWidth * 0.055,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.1,
                                   ),
@@ -166,7 +181,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                       '${(percentage * 100).round()}% descuento',
                                       style: GoogleFonts.varelaRound(
                                         color: Palette.accent,
-                                        fontSize: screenWidth * 0.041,
+                                        fontSize: isTablet
+                                            ? screenWidth * 0.033
+                                            : screenWidth * 0.041,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 0.1,
                                       ),
@@ -180,7 +197,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                               'Total: ${discount.round()}',
                               style: GoogleFonts.varelaRound(
                                 color: Palette.accent,
-                                fontSize: screenWidth * 0.069,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.054
+                                    : screenWidth * 0.069,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.1,
                               ),

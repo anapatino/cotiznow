@@ -20,6 +20,7 @@ class _SectionsState extends State<Sections> {
   int activeIndex = -1;
   double screenWidth = 0;
   double screenHeight = 0;
+  bool isTablet = false;
   bool isUpdateFormVisible = false;
   bool isRegisterFormVisible = false;
   List<Section> filteredSections = [];
@@ -51,6 +52,7 @@ class _SectionsState extends State<Sections> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return PopScope(
       canPop: false,
@@ -80,7 +82,9 @@ class _SectionsState extends State<Sections> {
                         "Secciones",
                         style: GoogleFonts.varelaRound(
                           color: Colors.black,
-                          fontSize: screenWidth * 0.06,
+                          fontSize: isTablet
+                              ? screenWidth * 0.04
+                              : screenWidth * 0.06,
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
@@ -204,8 +208,8 @@ class _SectionsState extends State<Sections> {
         height: screenHeight * 0.7,
         child: SingleChildScrollView(
           child: Wrap(
-            spacing: 0.01,
-            runSpacing: 10.0,
+            spacing: isTablet ? 0.01 : 0.01,
+            runSpacing: isTablet ? 10.0 : 10.0,
             children: sections.map((section) {
               int index = sections.indexOf(section);
               return RoundIconButton(

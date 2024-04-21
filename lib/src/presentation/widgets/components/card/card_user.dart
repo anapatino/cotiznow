@@ -6,14 +6,18 @@ class CardUser extends StatelessWidget {
 
   final Function onLongPress;
 
-  CardUser({super.key, required this.user, required this.onLongPress});
+  const CardUser({super.key, required this.user, required this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return Padding(
-      padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+      padding: EdgeInsets.only(
+          bottom: screenHeight * 0.02,
+          right: isTablet ? screenHeight * 0.04 : 0),
       child: InkWell(
         onTap: () {
           Get.toNamed('/profiles', arguments: user);
@@ -22,8 +26,8 @@ class CardUser extends StatelessWidget {
           onLongPress();
         },
         child: Container(
-          width: screenWidth * 0.85,
-          height: screenHeight * 0.138,
+          width: isTablet ? screenWidth * 0.55 : screenWidth * 0.85,
+          height: isTablet ? screenHeight * 0.13 : screenHeight * 0.138,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -40,8 +44,8 @@ class CardUser extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: screenWidth * 0.2,
-                height: screenHeight * 0.15,
+                width: isTablet ? screenWidth * 0.14 : screenWidth * 0.2,
+                height: isTablet ? screenHeight * 0.13 : screenHeight * 0.15,
                 decoration: const BoxDecoration(
                   color: Palette.secondary,
                   borderRadius: BorderRadius.only(
@@ -49,11 +53,11 @@ class CardUser extends StatelessWidget {
                     bottomLeft: Radius.circular(25),
                   ),
                 ),
-                child: const Center(
+                child: Center(
                   child: Icon(
                     Icons.person,
                     color: Colors.white,
-                    size: 40.0,
+                    size: isTablet ? 50.0 : 40.0,
                   ),
                 ),
               ),
@@ -69,20 +73,24 @@ class CardUser extends StatelessWidget {
                     child: Text(
                       user.name,
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.045,
+                          fontSize: isTablet
+                              ? screenWidth * 0.035
+                              : screenWidth * 0.045,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
                   Text(
                     'Correo: ${user.email}',
                     style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.03,
+                        fontSize:
+                            isTablet ? screenWidth * 0.025 : screenWidth * 0.03,
                         fontWeight: FontWeight.w300),
                   ),
                   Text(
                     'Teléfono: ${user.phone}',
                     style: GoogleFonts.varelaRound(
-                        fontSize: screenWidth * 0.03,
+                        fontSize:
+                            isTablet ? screenWidth * 0.025 : screenWidth * 0.03,
                         fontWeight: FontWeight.w300),
                   ),
                 ],

@@ -125,6 +125,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         : ['cliente', 'administrador'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     bool isEnable = true;
 
     return PopScope(
@@ -148,7 +150,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   Text("Perfil",
                       style: GoogleFonts.varelaRound(
                         color: Colors.black,
-                        fontSize: screenWidth * 0.06,
+                        fontSize:
+                            isTablet ? screenWidth * 0.04 : screenWidth * 0.06,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 1,
                       )),
@@ -249,14 +252,16 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         Text("  Cambiar estado",
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.035,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.028
+                                  : screenWidth * 0.035,
                               fontWeight: FontWeight.w400,
                               letterSpacing: 1,
                             )),
                         CustomDropdown(
                           options: options,
                           width: 0.75,
-                          widthItems: 0.55,
+                          widthItems: isTablet ? 0.62 : 0.55,
                           height: 0.073,
                           border: 10,
                           onChanged: (String? newValue) {
@@ -271,14 +276,16 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                         Text("  Cambiar rol",
                             style: GoogleFonts.varelaRound(
                               color: Colors.black,
-                              fontSize: screenWidth * 0.035,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.028
+                                  : screenWidth * 0.035,
                               fontWeight: FontWeight.w400,
                               letterSpacing: 1,
                             )),
                         CustomDropdown(
                           options: optionsRole,
                           width: 0.75,
-                          widthItems: 0.55,
+                          widthItems: isTablet ? 0.62 : 0.55,
                           height: 0.073,
                           border: 10,
                           onChanged: (String? newValue) {
@@ -298,7 +305,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       height: screenHeight * 0.065,
                       width: screenWidth * 0.75,
                       textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
+                      textSize:
+                          isTablet ? screenWidth * 0.034 : screenWidth * 0.04,
                       backgroundColor: Palette.primary,
                       hasBorder: false,
                     ),

@@ -9,7 +9,7 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     return Scaffold(
       backgroundColor: Palette.secondary,
       body: SingleChildScrollView(
@@ -49,7 +49,8 @@ class Main extends StatelessWidget {
                   child: Text("CotizNow",
                       style: GoogleFonts.pacifico(
                         color: Palette.primary,
-                        fontSize: screenWidth * 0.25,
+                        fontSize:
+                            isTablet ? screenWidth * 0.18 : screenWidth * 0.25,
                         letterSpacing: 1.6,
                       )),
                 ),
@@ -83,7 +84,7 @@ class Main extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: screenHeight * 0.04,
+                bottom: isTablet ? screenWidth * 0.1 : screenHeight * 0.04,
                 left: screenWidth * 0.14,
                 child: SizedBox(
                   width: screenWidth * 0.65,
@@ -93,14 +94,18 @@ class Main extends StatelessWidget {
                       Text("Ventas y cotizaciones al alcance de tu mano.",
                           style: GoogleFonts.varelaRound(
                             color: Colors.white,
-                            fontSize: screenWidth * 0.049,
+                            fontSize: isTablet
+                                ? screenWidth * 0.035
+                                : screenWidth * 0.049,
                             fontWeight: FontWeight.w100,
                             letterSpacing: 1,
                           )),
                       Text("¡Negocio optimizado en un clic!",
                           style: GoogleFonts.varelaRound(
                             color: Colors.white,
-                            fontSize: screenWidth * 0.049,
+                            fontSize: isTablet
+                                ? screenWidth * 0.035
+                                : screenWidth * 0.049,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 1,
                           )),
@@ -112,10 +117,11 @@ class Main extends StatelessWidget {
                         onPressed: () {
                           Get.offAllNamed('/login');
                         },
-                        height: 50.0,
-                        width: 150.0,
+                        height: isTablet ? 70 : 50.0,
+                        width: isTablet ? 240 : 150.0,
                         textColor: Palette.secondary,
-                        textSize: screenWidth * 0.04,
+                        textSize:
+                            isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                         backgroundColor: Palette.primary,
                         hasBorder: false,
                       )

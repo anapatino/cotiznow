@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/class/class.dart';
@@ -202,6 +200,8 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     if (isLoading) {
       return const LoadingScreen();
     }
@@ -230,7 +230,8 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                   "Actualizar material",
                   style: GoogleFonts.varelaRound(
                     color: Colors.white,
-                    fontSize: screenWidth * 0.05,
+                    fontSize:
+                        isTablet ? screenWidth * 0.04 : screenWidth * 0.05,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
@@ -252,7 +253,9 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                               "Agregar imagen ",
                               style: GoogleFonts.varelaRound(
                                 color: Colors.white,
-                                fontSize: screenWidth * 0.03,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.025
+                                    : screenWidth * 0.03,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
                               ),
@@ -350,7 +353,9 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                           Text("  Seccion",
                               style: GoogleFonts.varelaRound(
                                 color: Colors.white,
-                                fontSize: screenWidth * 0.035,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.025
+                                    : screenWidth * 0.035,
                                 fontWeight: FontWeight.w400,
                                 letterSpacing: 1,
                               )),
@@ -404,7 +409,9 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.07,
+                          horizontal: isTablet
+                              ? screenWidth * 0.13
+                              : screenWidth * 0.07,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -413,9 +420,13 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                               text: 'Cancelar',
                               onPressed: _onCancelForm,
                               height: screenHeight * 0.065,
-                              width: screenWidth * 0.35,
+                              width: isTablet
+                                  ? screenWidth * 0.32
+                                  : screenWidth * 0.35,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               borderColor: Palette.accent,
                               backgroundColor: Palette.accent,
                               hasBorder: true,
@@ -424,9 +435,13 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                               text: 'Actualizar',
                               onPressed: updateMaterial,
                               height: screenHeight * 0.065,
-                              width: screenWidth * 0.35,
+                              width: isTablet
+                                  ? screenWidth * 0.32
+                                  : screenWidth * 0.35,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               backgroundColor: Palette.primary,
                               hasBorder: false,
                             ),

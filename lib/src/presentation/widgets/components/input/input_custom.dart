@@ -48,6 +48,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double? border = widget.border ?? 10;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return SizedBox(
       height: widget.height + screenHeight * 0.032,
@@ -70,6 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     Icon(
                       widget.icon,
                       color: Palette.textlabel,
+                      size: isTablet ? 40 : 24,
                     ),
                   const SizedBox(width: 10.0),
                   Expanded(
@@ -92,7 +94,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       cursorHeight: 22,
                       style: GoogleFonts.varelaRound(
                         color: widget.textColor,
-                        fontSize: screenWidth * 0.037,
+                        fontSize: isTablet
+                            ? screenWidth * 0.027
+                            : screenWidth * 0.037,
                         fontWeight: FontWeight.w100,
                         letterSpacing: 1,
                       ),
@@ -100,7 +104,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         labelText: widget.hintText,
                         labelStyle: GoogleFonts.varelaRound(
                           color: widget.textColor,
-                          fontSize: screenWidth * 0.04,
+                          fontSize: isTablet
+                              ? screenWidth * 0.03
+                              : screenWidth * 0.04,
                         ),
                         border: InputBorder.none,
                         filled: true,
@@ -118,6 +124,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       child: Icon(
                         _obscureText ? Icons.visibility : Icons.visibility_off,
                         color: const Color.fromARGB(255, 176, 176, 176),
+                        size: isTablet ? 40 : 24,
                       ),
                     ),
                 ],
@@ -131,7 +138,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 'Este campo no puede estar vacío',
                 style: GoogleFonts.varelaRound(
                   color: Colors.red,
-                  fontSize: screenWidth * 0.035,
+                  fontSize:
+                      isTablet ? screenWidth * 0.023 : screenWidth * 0.035,
                   fontWeight: FontWeight.w300,
                   letterSpacing: 1,
                 ),

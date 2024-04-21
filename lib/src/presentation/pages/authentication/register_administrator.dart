@@ -91,6 +91,8 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     List<String> options = userController.role == "administrador"
         ? ['cliente', 'administrador']
         : ['cliente', 'administrador', 'super administrador'];
@@ -120,7 +122,8 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
                   "Registrar cliente",
                   style: GoogleFonts.varelaRound(
                     color: Colors.white,
-                    fontSize: screenWidth * 0.05,
+                    fontSize:
+                        isTablet ? screenWidth * 0.04 : screenWidth * 0.05,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
@@ -208,7 +211,9 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
                             "Eliga un rol",
                             style: GoogleFonts.varelaRound(
                               color: Colors.white,
-                              fontSize: screenWidth * 0.035,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.035,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 1,
                             ),
@@ -243,7 +248,9 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
                               height: screenHeight * 0.065,
                               width: screenWidth * 0.35,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               borderColor: Palette.accent,
                               backgroundColor: Palette.accent,
                               hasBorder: true,
@@ -254,7 +261,9 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
                               height: screenHeight * 0.065,
                               width: screenWidth * 0.35,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               backgroundColor: Palette.primary,
                               hasBorder: false,
                             ),

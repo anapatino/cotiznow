@@ -23,6 +23,8 @@ class CardMaterialSimple extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     int salePrice = int.parse(material.salePrice);
     double percentage = 0;
     double discount = 0;
@@ -30,7 +32,10 @@ class CardMaterialSimple extends StatelessWidget {
       percentage = double.parse(material.discount);
       discount = salePrice - (salePrice * percentage);
     }
-
+    double textPrincipal = isLarge ? screenWidth * 0.45 : screenWidth * 0.45;
+    double widthContainer = isLarge ? screenWidth * 0.83 : screenWidth * 0.83;
+    double heightContainer =
+        isLarge ? screenHeight * 0.16 : screenHeight * 0.155;
     return Padding(
       padding: EdgeInsets.only(bottom: screenHeight * 0.02),
       child: InkWell(
@@ -45,8 +50,8 @@ class CardMaterialSimple extends StatelessWidget {
           onDoubleTap();
         },
         child: Container(
-          width: isLarge ? screenWidth * 0.83 : screenWidth * 0.83,
-          height: isLarge ? screenHeight * 0.16 : screenHeight * 0.155,
+          width: isTablet ? screenWidth * 0.7 : widthContainer,
+          height: heightContainer,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -63,7 +68,7 @@ class CardMaterialSimple extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: screenWidth * 0.27,
+                width: isTablet ? screenWidth * 0.22 : screenWidth * 0.27,
                 height: double.infinity,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -97,9 +102,8 @@ class CardMaterialSimple extends StatelessWidget {
                     child: Text(
                       '${material.name} ${material.unit} ${material.size}',
                       style: GoogleFonts.varelaRound(
-                          fontSize: isLarge
-                              ? screenWidth * 0.045
-                              : screenWidth * 0.039,
+                          fontSize:
+                              isTablet ? screenWidth * 0.03 : textPrincipal,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -113,14 +117,18 @@ class CardMaterialSimple extends StatelessWidget {
                     Text(
                       'Antes: ${material.salePrice} ${material.size}',
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.028,
+                          fontSize: isTablet
+                              ? screenWidth * 0.025
+                              : screenWidth * 0.028,
                           fontWeight: FontWeight.w300),
                     ),
                   if (showDescount != true)
                     Text(
                       'Cantidad: ${material.quantity}',
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.03,
+                          fontSize: isTablet
+                              ? screenWidth * 0.029
+                              : screenWidth * 0.03,
                           fontWeight: FontWeight.w300),
                     ),
                   if (percentage > 0)
@@ -129,14 +137,18 @@ class CardMaterialSimple extends StatelessWidget {
                           ? '\$${(discount.round() * int.parse(material.quantity))}'
                           : '\$${discount.round()}',
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.04,
+                          fontSize: isTablet
+                              ? screenWidth * 0.035
+                              : screenWidth * 0.04,
                           fontWeight: FontWeight.w600),
                     ),
                   if (percentage <= 0)
                     Text(
                       '\$${material.salePrice}',
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.038,
+                          fontSize: isTablet
+                              ? screenWidth * 0.033
+                              : screenWidth * 0.038,
                           fontWeight: FontWeight.w600),
                     ),
                 ],

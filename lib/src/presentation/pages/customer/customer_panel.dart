@@ -97,6 +97,8 @@ class _CustomerState extends State<Customer> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     List<String> options = widget.userController.role == "administrador"
         ? ['clientes']
         : ['todos', 'clientes', 'administradores', 'super administrador'];
@@ -130,15 +132,17 @@ class _CustomerState extends State<Customer> {
                           "Usuarios",
                           style: GoogleFonts.varelaRound(
                             color: Colors.black,
-                            fontSize: screenWidth * 0.06,
+                            fontSize: isTablet
+                                ? screenWidth * 0.04
+                                : screenWidth * 0.06,
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         CustomDropdown(
                           options: options,
-                          width: 0.9,
+                          width: isTablet ? 0.8 : 0.9,
                           height: 0.06,
-                          widthItems: 0.65,
+                          widthItems: isTablet ? 0.67 : 0.65,
                           onChanged: (String? newValue) {
                             setState(() {
                               selectedOption = newValue;

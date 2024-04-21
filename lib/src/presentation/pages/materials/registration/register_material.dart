@@ -201,6 +201,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return PopScope(
       canPop: true,
@@ -228,7 +229,8 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                   "Registrar material",
                   style: GoogleFonts.varelaRound(
                     color: Colors.white,
-                    fontSize: screenWidth * 0.05,
+                    fontSize:
+                        isTablet ? screenWidth * 0.04 : screenWidth * 0.05,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
@@ -251,7 +253,9 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                               "Agregar imagen ",
                               style: GoogleFonts.varelaRound(
                                 color: Colors.white,
-                                fontSize: screenWidth * 0.03,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.025
+                                    : screenWidth * 0.03,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
                               ),
@@ -305,7 +309,9 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                               "Agregar unidades",
                               style: GoogleFonts.varelaRound(
                                 color: Colors.white,
-                                fontSize: screenWidth * 0.03,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.025
+                                    : screenWidth * 0.03,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
                               ),
@@ -340,7 +346,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                                     options: options,
                                     width: 0.55,
                                     height: 0.075,
-                                    widthItems: 0.33,
+                                    widthItems: isTablet ? 0.4 : 0.33,
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         selectedOption = newValue;
@@ -416,7 +422,9 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                           Text("  Seccion",
                               style: GoogleFonts.varelaRound(
                                 color: Colors.white,
-                                fontSize: screenWidth * 0.035,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.025
+                                    : screenWidth * 0.035,
                                 fontWeight: FontWeight.w400,
                                 letterSpacing: 1,
                               )),
@@ -426,7 +434,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                             options: optionsSection,
                             width: 0.75,
                             height: 0.075,
-                            widthItems: 0.55,
+                            widthItems: isTablet ? 0.59 : 0.55,
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedOptionSectionId = newValue;
@@ -464,7 +472,9 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.07,
+                          horizontal: isTablet
+                              ? screenWidth * 0.13
+                              : screenWidth * 0.07,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -473,9 +483,13 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                               text: 'Cancelar',
                               onPressed: _onCancelForm,
                               height: screenHeight * 0.065,
-                              width: screenWidth * 0.35,
+                              width: isTablet
+                                  ? screenWidth * 0.32
+                                  : screenWidth * 0.35,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               borderColor: Palette.accent,
                               backgroundColor: Palette.accent,
                               hasBorder: true,
@@ -484,9 +498,13 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                               text: 'Registrar',
                               onPressed: registerMaterial,
                               height: screenHeight * 0.065,
-                              width: screenWidth * 0.35,
+                              width: isTablet
+                                  ? screenWidth * 0.32
+                                  : screenWidth * 0.35,
                               textColor: Colors.white,
-                              textSize: screenWidth * 0.04,
+                              textSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               backgroundColor: Palette.primary,
                               hasBorder: false,
                             ),

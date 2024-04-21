@@ -52,6 +52,8 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     List<String> options = ['activo', 'inactivo'];
     return PopScope(
       canPop: true,
@@ -79,7 +81,8 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
                     "Actualizar material",
                     style: GoogleFonts.varelaRound(
                       color: Colors.white,
-                      fontSize: screenWidth * 0.05,
+                      fontSize:
+                          isTablet ? screenWidth * 0.04 : screenWidth * 0.05,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1,
                     ),
@@ -91,7 +94,9 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
                     Text("  Cambiar estado",
                         style: GoogleFonts.varelaRound(
                           color: Colors.white,
-                          fontSize: screenWidth * 0.035,
+                          fontSize: isTablet
+                              ? screenWidth * 0.025
+                              : screenWidth * 0.035,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 1,
                         )),
@@ -121,9 +126,11 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
                         text: 'Cancelar',
                         onPressed: _onCancelForm,
                         height: screenHeight * 0.065,
-                        width: screenWidth * 0.35,
+                        width:
+                            isTablet ? screenWidth * 0.32 : screenWidth * 0.35,
                         textColor: Colors.white,
-                        textSize: screenWidth * 0.04,
+                        textSize:
+                            isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                         borderColor: Palette.accent,
                         backgroundColor: Palette.accent,
                         hasBorder: true,
@@ -132,9 +139,11 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
                         text: 'Actualizar',
                         onPressed: changeMaterialStatus,
                         height: screenHeight * 0.065,
-                        width: screenWidth * 0.35,
+                        width:
+                            isTablet ? screenWidth * 0.32 : screenWidth * 0.35,
                         textColor: Colors.white,
-                        textSize: screenWidth * 0.04,
+                        textSize:
+                            isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                         backgroundColor: Palette.primary,
                         hasBorder: false,
                       ),

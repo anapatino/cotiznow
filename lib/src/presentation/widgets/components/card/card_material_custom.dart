@@ -18,6 +18,8 @@ class CardMaterialCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = screenWidth >= 600;
+
     int salePrice = int.parse(material.salePrice);
     double percentage = 0;
     double discount = 0;
@@ -39,7 +41,7 @@ class CardMaterialCustom extends StatelessWidget {
           onDoubleTap();
         },
         child: Container(
-          width: screenWidth * 0.4,
+          width: isTablet ? screenWidth * 0.3 : screenWidth * 0.4,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -56,8 +58,8 @@ class CardMaterialCustom extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: screenWidth * 0.4,
-                height: screenHeight * 0.15,
+                width: isTablet ? screenWidth * 0.32 : screenWidth * 0.4,
+                height: isTablet ? screenHeight * 0.14 : screenHeight * 0.15,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25),
@@ -94,14 +96,18 @@ class CardMaterialCustom extends StatelessWidget {
                       child: Text(
                         material.name,
                         style: GoogleFonts.varelaRound(
-                            fontSize: screenWidth * 0.038,
+                            fontSize: isTablet
+                                ? screenWidth * 0.025
+                                : screenWidth * 0.038,
                             fontWeight: FontWeight.w600),
                       ),
                     ),
                     Text(
                       'Codigo: ${material.code}',
                       style: GoogleFonts.varelaRound(
-                          fontSize: screenWidth * 0.03,
+                          fontSize: isTablet
+                              ? screenWidth * 0.022
+                              : screenWidth * 0.03,
                           fontWeight: FontWeight.w300),
                     ),
                     if (percentage > 0)
@@ -111,13 +117,17 @@ class CardMaterialCustom extends StatelessWidget {
                           Text(
                             'Antes: ${material.salePrice} ${material.size}',
                             style: GoogleFonts.varelaRound(
-                                fontSize: screenWidth * 0.03,
+                                fontSize: isTablet
+                                    ? screenWidth * 0.022
+                                    : screenWidth * 0.03,
                                 fontWeight: FontWeight.w300),
                           ),
                           Text(
                             '\$${discount.round()}',
                             style: GoogleFonts.varelaRound(
-                              fontSize: screenWidth * 0.04,
+                              fontSize: isTablet
+                                  ? screenWidth * 0.03
+                                  : screenWidth * 0.04,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -127,7 +137,9 @@ class CardMaterialCustom extends StatelessWidget {
                       Text(
                         '\$${material.salePrice} ${material.size}',
                         style: GoogleFonts.varelaRound(
-                            fontSize: screenWidth * 0.04,
+                            fontSize: isTablet
+                                ? screenWidth * 0.03
+                                : screenWidth * 0.04,
                             fontWeight: FontWeight.w300),
                       ),
                   ],
