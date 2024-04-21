@@ -96,7 +96,7 @@ class Register extends StatelessWidget {
     }
 
     return PopScope(
-      canPop: true,
+      canPop: false,
       child: SlideInRight(
         duration: const Duration(milliseconds: 10),
         child: Scaffold(

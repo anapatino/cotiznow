@@ -53,7 +53,12 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           total: totalQuotation,
           userId: userController.idUser,
           customizedServices: shoppingCartController.selectCustomizedService);
-      confirmationRegistrationQuotation(quotation);
+      if (int.parse(totalQuotation) <= 0) {
+        MessageHandler.showMessageWarning('Validación de campos',
+            "No se puede registrar una cotización sin haber elegido un servicio/material");
+      } else {
+        confirmationRegistrationQuotation(quotation);
+      }
     }
   }
 

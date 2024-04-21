@@ -228,15 +228,17 @@ class _MaterialDetailsState extends State<MaterialDetails> {
       ),
       floatingActionButton: isUpdateFormVisible
           ? const SizedBox()
-          : FloatingActionButton(
-              onPressed: toggleUpdateFormVisibility,
-              backgroundColor: Palette.accent,
-              child: Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-              shape: const CircleBorder(),
-            ),
+          : userController.role != "cliente"
+              ? FloatingActionButton(
+                  onPressed: toggleUpdateFormVisibility,
+                  backgroundColor: Palette.accent,
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
+                )
+              : null,
     );
   }
 }
