@@ -108,6 +108,7 @@ class CustomDropdownInitial extends StatefulWidget {
 
 class _CustomDropdownInitial extends State<CustomDropdownInitial> {
   String selectedOption = "";
+  String? selectedOptionValue;
 
   @override
   void initState() {
@@ -119,6 +120,7 @@ class _CustomDropdownInitial extends State<CustomDropdownInitial> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     return Container(
       width: screenWidth * widget.width,
@@ -131,7 +133,7 @@ class _CustomDropdownInitial extends State<CustomDropdownInitial> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
         child: DropdownButton<String>(
-          value: selectedOption,
+          value: selectedOption != "" ? selectedOption : selectedOptionValue,
           underline: Container(
             height: 0,
           ),
@@ -153,7 +155,8 @@ class _CustomDropdownInitial extends State<CustomDropdownInitial> {
                   value,
                   style: GoogleFonts.varelaRound(
                     color: Colors.black,
-                    fontSize: screenWidth * 0.04,
+                    fontSize:
+                        isTablet ? screenWidth * 0.03 : screenWidth * 0.04,
                   ),
                 ),
               ),

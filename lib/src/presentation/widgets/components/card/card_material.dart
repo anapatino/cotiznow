@@ -32,7 +32,7 @@ class CardMaterialSimple extends StatelessWidget {
       percentage = double.parse(material.discount);
       discount = salePrice - (salePrice * percentage);
     }
-    double textPrincipal = isLarge ? screenWidth * 0.45 : screenWidth * 0.45;
+    double textPrincipal = isLarge ? screenWidth * 0.04 : screenWidth * 0.45;
     double widthContainer = isLarge ? screenWidth * 0.83 : screenWidth * 0.83;
     double heightContainer =
         isLarge ? screenHeight * 0.16 : screenHeight * 0.155;

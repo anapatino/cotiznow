@@ -58,13 +58,13 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
       controllerPurchasePrice.text = widget.material.purchasePrice;
       controllerCode.text = widget.material.code;
       selectedOption = widget.material.size;
-      setState(() {
-        isLoading = false;
-      });
     } catch (e) {
       MessageHandler.showMessageError(
           'Error al cargar información del material', e);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void _resetForm() {
@@ -135,11 +135,10 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     }
   }
 
-  bool validateFields(String name, String description, String unit,
-      String quantity, String salePrice, String purchasePrice, String code) {
+  bool validateFields(String name, String description, String quantity,
+      String salePrice, String purchasePrice, String code) {
     return name.isNotEmpty &&
         description.isNotEmpty &&
-        unit.isNotEmpty &&
         quantity.isNotEmpty &&
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
@@ -160,7 +159,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     String size =
         selectedOption != null ? selectedOption! : widget.material.size;
     if (validateFields(
-        name, description, unit, quantity, salePrice, purchasePrice, code)) {
+        name, description, quantity, salePrice, purchasePrice, code)) {
       if (urlPhoto.isEmpty) {
         urlPhoto = widget.material.urlPhoto;
       }
