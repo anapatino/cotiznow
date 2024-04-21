@@ -1,10 +1,10 @@
 import 'package:cotiznow/lib.dart';
-import 'package:cotiznow/src/domain/controllers/controllers.dart';
-import 'package:cotiznow/src/domain/models/entities/entities.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
 class ShoppingCartController extends GetxController {
   RxList<Materials> cartItems = <Materials>[].obs;
   RxList<Service> selectService = <Service>[].obs;
+  RxList<CustomizedService> selectCustomizedService = <CustomizedService>[].obs;
   ServicesController serviceController = Get.find();
   Service serviceNotFound = Service(
       id: "-1",
@@ -82,6 +82,27 @@ class ShoppingCartController extends GetxController {
   void clearCart() {
     cartItems.clear();
     selectService.clear();
+    selectCustomizedService.clear();
+  }
+
+  void createCustomizedService(
+      Map<String, TextEditingController> heightControllers,
+      Map<String, TextEditingController> widthControllers) {
+    selectCustomizedService.clear();
+    for (Service service in selectService) {
+      int height = int.tryParse(heightControllers[service.id]?.text ?? '') ?? 0;
+      int width = int.tryParse(widthControllers[service.id]?.text ?? '') ?? 0;
+      int servicePrice = int.tryParse(service.price) ?? 0;
+      int total = (height == 0 && width == 0)
+          ? servicePrice
+          : (height * width) * servicePrice;
+      selectCustomizedService.add(CustomizedService(
+        id: service.id,
+        name: service.name,
+        price: total.toString(),
+        measures: Measures(height: height.toString(), width: width.toString()),
+      ));
+    }
   }
 
   double calculateMaterialsTotal() {
@@ -99,31 +120,38 @@ class ShoppingCartController extends GetxController {
   }
 
   void toggleSelectedService(Service service) {
-    if (selectService.contains(service)) {
-      selectService.remove(service);
+    bool found = false;
+    for (Service serviceList in selectService) {
+      if (serviceList.id == service.id) {
+        serviceNotFound = serviceList;
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      selectService.remove(serviceNotFound);
     } else {
       selectService.add(service);
     }
   }
 
-  List<String> extractSelectedServiceIds() {
-    return selectService.map((service) => service.id).toList();
-  }
-
   int calculateServicesTotal() {
-    return selectService.fold(0, (sum, service) {
+    return selectCustomizedService.fold(0, (sum, service) {
       return sum + int.parse(service.price);
     });
   }
 
-  void updateSelectedServices(List<String> serviceIds) async {
+  Future<void> updateSelectedServices(
+      List<CustomizedService> customService) async {
     selectService.clear();
+    selectCustomizedService.clear();
     List<Service> services = await serviceController.getAllServices();
-    for (String id in serviceIds) {
-      Service service =
-          services.firstWhere((s) => s.id == id, orElse: () => serviceNotFound);
+    for (CustomizedService custom in customService) {
+      Service service = services.firstWhere((s) => s.id == custom.id,
+          orElse: () => serviceNotFound);
       if (service.id != "-1") {
         selectService.add(service);
+        selectCustomizedService.add(custom);
       }
     }
   }

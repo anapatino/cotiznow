@@ -52,91 +52,95 @@ class _SectionsState extends State<Sections> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
 
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: AdministratorRoutes().itemConfigs,
-        ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: screenHeight * 1,
-            child: Stack(children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Secciones",
-                      style: GoogleFonts.varelaRound(
-                        color: Colors.black,
-                        fontSize: screenWidth * 0.06,
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    CustomTextField(
-                      icon: Icons.search_rounded,
-                      hintText: 'Buscar',
-                      isPassword: false,
-                      width: screenWidth * 0.9,
-                      height: screenHeight * 0.06,
-                      inputColor: Palette.grey,
-                      textColor: Colors.black,
-                      border: 30,
-                      onChanged: (value) {
-                        filterSections(value);
-                      },
-                      controller: controllerSearch,
-                    ),
-                    SizedBox(height: screenHeight * 0.01),
-                    _buildSectionsList(),
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: isUpdateFormVisible,
-                child: Positioned(
-                  top: screenHeight * 0.22,
-                  child: UpdateSectionForm(
-                    onCancelForm: () {
-                      toggleUpdateFormVisibility(section);
-                    },
-                    section: section,
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: isRegisterFormVisible,
-                child: Positioned(
-                  top: screenHeight * 0.22,
-                  child: RegisterSectionForm(
-                    onCancelForm: () {
-                      toggleRegisterFormVisibility();
-                    },
-                  ),
-                ),
-              ),
-            ]),
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            actions: const [],
           ),
-        ),
-        floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: toggleRegisterFormVisibility,
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: AdministratorRoutes().itemConfigs,
+          ),
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: screenHeight * 1,
+              child: Stack(children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Secciones",
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: screenWidth * 0.06,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      CustomTextField(
+                        icon: Icons.search_rounded,
+                        hintText: 'Buscar',
+                        isPassword: false,
+                        width: screenWidth * 0.9,
+                        height: screenHeight * 0.06,
+                        inputColor: Palette.grey,
+                        textColor: Colors.black,
+                        border: 30,
+                        onChanged: (value) {
+                          filterSections(value);
+                        },
+                        controller: controllerSearch,
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
+                      _buildSectionsList(),
+                    ],
+                  ),
                 ),
-                shape: const CircleBorder(),
-              ),
+                Visibility(
+                  visible: isUpdateFormVisible,
+                  child: Positioned(
+                    top: screenHeight * 0.22,
+                    child: UpdateSectionForm(
+                      onCancelForm: () {
+                        toggleUpdateFormVisibility(section);
+                      },
+                      section: section,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: isRegisterFormVisible,
+                  child: Positioned(
+                    top: screenHeight * 0.22,
+                    child: RegisterSectionForm(
+                      onCancelForm: () {
+                        toggleRegisterFormVisibility();
+                      },
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+          floatingActionButton: isRegisterFormVisible || isUpdateFormVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: toggleRegisterFormVisibility,
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
+                ),
+        ),
       ),
     );
   }

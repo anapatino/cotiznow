@@ -202,298 +202,306 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return BounceInUp(
-      duration: const Duration(microseconds: 10),
-      child: Container(
-        width: screenWidth * 1,
-        height: screenHeight * 1,
-        decoration: const BoxDecoration(
-          color: Palette.accent,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        _onCancelForm();
+      },
+      child: BounceInUp(
+        duration: const Duration(microseconds: 10),
+        child: Container(
+          width: screenWidth * 1,
+          height: screenHeight * 1,
+          decoration: const BoxDecoration(
+            color: Palette.accent,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
-              child: Text(
-                "Registrar material",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.white,
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+                child: Text(
+                  "Registrar material",
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.75,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Agregar imagen ",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.03,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
+              SizedBox(
+                height: screenHeight * 0.75,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.15),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Agregar imagen ",
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.03,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
                             ),
-                          ),
-                          RoundIconButton(
-                            icon: "Icons.add",
-                            title: "",
-                            onClick: _pickImage,
-                            onLongPress: () {
-                              setState(() {
-                                showControllerRegister !=
-                                    showControllerRegister;
-                              });
-                            },
-                            isBackgroundImage: true,
-                          )
-                        ],
+                            RoundIconButton(
+                              icon: "Icons.add",
+                              title: "",
+                              onClick: _pickImage,
+                              onLongPress: () {
+                                setState(() {
+                                  showControllerRegister !=
+                                      showControllerRegister;
+                                });
+                              },
+                              isBackgroundImage: true,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Codigo',
-                      type: TextInputType.number,
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerCode,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Nombre',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerName,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.13,
-                          vertical: screenHeight * 0.02),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Agregar unidades",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.03,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Codigo',
+                        type: TextInputType.number,
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerCode,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Nombre',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerName,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.13,
+                            vertical: screenHeight * 0.02),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Agregar unidades",
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.03,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: screenHeight * 0.01),
-                            child: CustomTextField(
-                              icon: Icons.dehaze_rounded,
-                              hintText: 'Valor unidad',
-                              isPassword: false,
-                              width: screenWidth * 0.75,
-                              height: screenHeight * 0.075,
-                              inputColor: Colors.white,
-                              textColor: Colors.black,
-                              onChanged: (value) {},
-                              controller: controllerUnit,
-                              showIcon: false,
-                              type: TextInputType.number,
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(bottom: screenHeight * 0.03),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomDropdown(
-                                  padding: 0,
-                                  border: 10,
-                                  options: options,
-                                  width: 0.55,
-                                  height: 0.075,
-                                  widthItems: 0.33,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedOption = newValue;
-                                    });
-                                  },
-                                ),
-                                if (selectedOption == null ||
-                                    selectedOption == "")
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        showControllerRegister =
-                                            !showControllerRegister;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      showControllerRegister
-                                          ? Icons.remove
-                                          : Icons.add,
-                                      color: Palette.accentBackground,
-                                      size: 40,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          if (selectedOption == null || selectedOption == "")
-                            Visibility(
-                              visible: showControllerRegister,
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: screenHeight * 0.01),
                               child: CustomTextField(
                                 icon: Icons.dehaze_rounded,
-                                hintText: 'Nueva unidad',
+                                hintText: 'Valor unidad',
                                 isPassword: false,
                                 width: screenWidth * 0.75,
                                 height: screenHeight * 0.075,
                                 inputColor: Colors.white,
                                 textColor: Colors.black,
                                 onChanged: (value) {},
-                                controller: controllerRegisterUnit,
+                                controller: controllerUnit,
                                 showIcon: false,
+                                type: TextInputType.number,
                               ),
                             ),
-                        ],
-                      ),
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Precio compra',
-                      type: TextInputType.number,
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerPurchasePrice,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      type: TextInputType.number,
-                      hintText: 'Precio venta',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerSalePrice,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("  Seccion",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.035,
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 1,
-                            )),
-                        CustomDropdown(
-                          padding: 0,
-                          border: 10,
-                          options: optionsSection,
-                          width: 0.75,
-                          height: 0.075,
-                          widthItems: 0.55,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedOptionSectionId = newValue;
-                            });
-                          },
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: screenHeight * 0.03),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomDropdown(
+                                    padding: 0,
+                                    border: 10,
+                                    options: options,
+                                    width: 0.55,
+                                    height: 0.075,
+                                    widthItems: 0.33,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedOption = newValue;
+                                      });
+                                    },
+                                  ),
+                                  if (selectedOption == null ||
+                                      selectedOption == "")
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          showControllerRegister =
+                                              !showControllerRegister;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        showControllerRegister
+                                            ? Icons.remove
+                                            : Icons.add,
+                                        color: Palette.accentBackground,
+                                        size: 40,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            if (selectedOption == null || selectedOption == "")
+                              Visibility(
+                                visible: showControllerRegister,
+                                child: CustomTextField(
+                                  icon: Icons.dehaze_rounded,
+                                  hintText: 'Nueva unidad',
+                                  isPassword: false,
+                                  width: screenWidth * 0.75,
+                                  height: screenHeight * 0.075,
+                                  inputColor: Colors.white,
+                                  textColor: Colors.black,
+                                  onChanged: (value) {},
+                                  controller: controllerRegisterUnit,
+                                  showIcon: false,
+                                ),
+                              ),
+                          ],
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.04,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Cantidad',
-                      type: TextInputType.number,
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerQuantity,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Descripcion',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.17,
-                      maxLine: 8,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerDescription,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.07,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Precio compra',
+                        type: TextInputType.number,
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerPurchasePrice,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        type: TextInputType.number,
+                        hintText: 'Precio venta',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerSalePrice,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomElevatedButton(
-                            text: 'Cancelar',
-                            onPressed: _onCancelForm,
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.35,
-                            textColor: Colors.white,
-                            textSize: screenWidth * 0.04,
-                            borderColor: Palette.accent,
-                            backgroundColor: Palette.accent,
-                            hasBorder: true,
-                          ),
-                          CustomElevatedButton(
-                            text: 'Registrar',
-                            onPressed: registerMaterial,
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.35,
-                            textColor: Colors.white,
-                            textSize: screenWidth * 0.04,
-                            backgroundColor: Palette.primary,
-                            hasBorder: false,
+                          Text("  Seccion",
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.035,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 1,
+                              )),
+                          CustomDropdown(
+                            padding: 0,
+                            border: 10,
+                            options: optionsSection,
+                            width: 0.75,
+                            height: 0.075,
+                            widthItems: 0.55,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedOptionSectionId = newValue;
+                              });
+                            },
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.1,
-                    ),
-                  ],
+                      SizedBox(
+                        height: screenHeight * 0.04,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Cantidad',
+                        type: TextInputType.number,
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerQuantity,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Descripcion',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.17,
+                        maxLine: 8,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerDescription,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.07,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomElevatedButton(
+                              text: 'Cancelar',
+                              onPressed: _onCancelForm,
+                              height: screenHeight * 0.065,
+                              width: screenWidth * 0.35,
+                              textColor: Colors.white,
+                              textSize: screenWidth * 0.04,
+                              borderColor: Palette.accent,
+                              backgroundColor: Palette.accent,
+                              hasBorder: true,
+                            ),
+                            CustomElevatedButton(
+                              text: 'Registrar',
+                              onPressed: registerMaterial,
+                              height: screenHeight * 0.065,
+                              width: screenWidth * 0.35,
+                              textColor: Colors.white,
+                              textSize: screenWidth * 0.04,
+                              backgroundColor: Palette.primary,
+                              hasBorder: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.1,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -51,7 +51,7 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: details,
-      page: () => MaterialDetails(),
+      page: () => const MaterialDetails(),
     ),
     GetPage(
       name: services,
@@ -59,7 +59,7 @@ class AdministratorRoutes {
     ),
     GetPage(
       name: discounts,
-      page: () => DiscountPanel(),
+      page: () => const DiscountPanel(),
     ),
     GetPage(
       name: discountsUpdate,

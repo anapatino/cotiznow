@@ -6,8 +6,8 @@ class QuotationController extends GetxController {
   final Rxn<List<Quotation>> _quotationsList = Rxn<List<Quotation>>();
   final Rxn<List<Quotation>> _quotationsListByUser = Rxn<List<Quotation>>();
 
-  List<Quotation>? get quotationsList => _quotationsList.value;
-  List<Quotation>? get quotationsListByUser => _quotationsListByUser.value;
+  List<Quotation> get quotationsList => _quotationsList.value!;
+  List<Quotation> get quotationsListByUser => _quotationsListByUser.value!;
 
   Future<String> registerQuotation(Quotation quotation, String date) async {
     try {

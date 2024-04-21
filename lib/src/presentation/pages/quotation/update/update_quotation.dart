@@ -14,8 +14,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   final parameters = Get.arguments as Quotation;
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
-  TextEditingController controllerLength = TextEditingController();
-  TextEditingController controllerWidth = TextEditingController();
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
   ShoppingCartController shoppingCartController = Get.find();
@@ -24,7 +22,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   List<Materials> list = [];
   String totalQuotation = "";
   int _activeCurrentStep = 0;
-
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -34,8 +32,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   void clearControllers() {
     controllerName.clear();
     controllerDescription.clear();
-    controllerLength.clear();
-    controllerWidth.clear();
   }
 
   void handleContinue() {
@@ -50,42 +46,42 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
     });
   }
 
-  void loadControllers() {
+  Future<void> loadControllers() async {
     if (parameters != null) {
+      print(
+          "customizedService update: ${parameters.customizedServices.length}");
+      await shoppingCartController
+          .updateSelectedServices(parameters.customizedServices)
+          .then((value) => {
+                setState(() {
+                  isLoading = false;
+                })
+              });
       list = List<Materials>.from(parameters.materials);
       controllerName.text = parameters.name;
       controllerDescription.text = parameters.description;
-      controllerLength.text = parameters.length;
-      controllerWidth.text = parameters.width;
       totalQuotation = parameters.total;
       shoppingCartController.cartItems =
           RxList<Materials>(parameters.materials);
-
-      shoppingCartController.updateSelectedServices(parameters.idService);
     }
   }
 
   void updateQuotation() {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String length = controllerLength.text;
-    String width = controllerWidth.text;
+
     if (name.isNotEmpty &&
         description.isNotEmpty &&
-        length.isNotEmpty &&
-        width.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation newQuotation = Quotation(
           id: parameters.id,
           name: name,
           description: description,
-          idService: shoppingCartController.extractSelectedServiceIds(),
-          length: length,
           materials: shoppingCartController.cartItems,
           status: parameters.status,
           total: totalQuotation,
-          width: width,
-          userId: parameters.userId);
+          userId: parameters.userId,
+          customizedServices: shoppingCartController.selectCustomizedService);
       if ((userController.role == "cliente" &&
               parameters.status != "aprobado") ||
           (userController.role != "cliente")) {
@@ -130,8 +126,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
             )),
         content: InformationServices(
           onBack: handleBack,
-          controllerLength: controllerLength,
-          controllerWidth: controllerWidth,
           onSelected: (total) {
             setState(() {
               totalQuotation = total;
@@ -177,23 +171,28 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
                       onTap: () {},
                       icon: () {},
                       onDoubleTap: () {}),
-                  SizedBox(
-                    width: screenWidth * 1,
-                    height: screenHeight * 0.65,
-                    child: Stepper(
-                      controlsBuilder: (context, controller) {
-                        return const SizedBox.shrink();
-                      },
-                      physics: const ScrollPhysics(),
-                      type: StepperType.horizontal,
-                      currentStep: _activeCurrentStep,
-                      steps: steps,
-                      onStepTapped: (int index) {
-                        setState(() => _activeCurrentStep = index);
-                      },
-                      elevation: 0,
+                  if (!isLoading)
+                    SizedBox(
+                      width: screenWidth * 1,
+                      height: screenHeight * 0.65,
+                      child: Stepper(
+                        controlsBuilder: (context, controller) {
+                          return const SizedBox.shrink();
+                        },
+                        physics: const ScrollPhysics(),
+                        type: StepperType.horizontal,
+                        currentStep: _activeCurrentStep,
+                        steps: steps,
+                        onStepTapped: (int index) {
+                          setState(() => _activeCurrentStep = index);
+                        },
+                        elevation: 0,
+                      ),
                     ),
-                  )
+                  if (isLoading)
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Palette.accent),
+                    )
                 ]),
           ),
         ),
@@ -220,8 +219,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
               quotation, formattedDate);
           MessageHandler.showMessageSuccess(
               'Actualizacion realizada con exito', message);
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+          Get.offAllNamed("/quotations");
         } catch (error) {
           MessageHandler.showMessageError(
               'Error al actualizar cotización', error);

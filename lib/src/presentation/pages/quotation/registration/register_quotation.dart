@@ -13,8 +13,7 @@ class RegisterQuotation extends StatefulWidget {
 class _RegisterQuotationState extends State<RegisterQuotation> {
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
-  TextEditingController controllerLength = TextEditingController();
-  TextEditingController controllerWidth = TextEditingController();
+  List<CustomizedService> customizedServices = [];
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
   ShoppingCartController shoppingCartController = Get.find();
@@ -24,8 +23,6 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   void clearControllers() {
     controllerName.clear();
     controllerDescription.clear();
-    controllerLength.clear();
-    controllerWidth.clear();
   }
 
   void handleContinue() {
@@ -43,24 +40,19 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   void sendQuotation() {
     String name = controllerName.text;
     String description = controllerDescription.text;
-    String length = controllerLength.text;
-    String width = controllerWidth.text;
+
     if (name.isNotEmpty &&
         description.isNotEmpty &&
-        length.isNotEmpty &&
-        width.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation quotation = Quotation(
           id: '',
           name: name,
           description: description,
-          idService: shoppingCartController.extractSelectedServiceIds(),
-          length: length,
           materials: shoppingCartController.cartItems,
           status: 'pendiente',
           total: totalQuotation,
-          width: width,
-          userId: userController.idUser);
+          userId: userController.idUser,
+          customizedServices: shoppingCartController.selectCustomizedService);
       confirmationRegistrationQuotation(quotation);
     }
   }
@@ -98,8 +90,6 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
             )),
         content: InformationServices(
           onBack: handleBack,
-          controllerLength: controllerLength,
-          controllerWidth: controllerWidth,
           onSelected: (total) {
             setState(() {
               totalQuotation = total;
@@ -191,7 +181,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
               'Registro realizado con exito', message);
 
           // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+          Get.offAllNamed("/quotations");
         } catch (error) {
           MessageHandler.showMessageError(
               'Error al registrar cotización', error);

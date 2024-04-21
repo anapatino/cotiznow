@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/data/service/service.dart';
 
 import '../../../domain/domain.dart';
@@ -13,14 +14,14 @@ class QuotationRequest {
           await database.collection('quotations').add({
         'name': quotation.name,
         'description': quotation.description,
-        'idService': quotation.idService,
-        'length': quotation.length,
         'materials':
             quotation.materials.map((material) => material.toJson()).toList(),
         'status': quotation.status,
         'total': quotation.total,
-        'width': quotation.width,
         'userId': quotation.userId,
+        'customizedServices': quotation.customizedServices
+            .map((service) => service.toJson())
+            .toList(),
       });
       await newQuotation.update({'id': newQuotation.id});
       quotation.id = newQuotation.id;
@@ -58,6 +59,7 @@ class QuotationRequest {
         MaterialsRequest.subtractMaterialsQuantity(
             updatedQuotation.materials, false);
       }
+      await deleteQuotationService(updatedQuotation);
 
       await database
           .collection('quotations')
@@ -76,6 +78,17 @@ class QuotationRequest {
     } catch (e) {
       throw Future.error(
           'Error al actualizar la cotización en la base de datos: $e');
+    }
+  }
+
+  static Future<void> deleteQuotationService(Quotation quotation) async {
+    try {
+      await database.collection('quotations').doc(quotation.id).update({
+        'customizedServices': FieldValue.delete(),
+      });
+      print("Campo 'customizedServices' eliminado correctamente.");
+    } catch (e) {
+      throw Future.error('Error al eliminar el campo customizedServices: $e');
     }
   }
 

@@ -1,12 +1,7 @@
-import 'dart:convert';
-import 'dart:ui';
 import 'package:cotiznow/src/presentation/widgets/components/loading/loading_page.dart';
-import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
-import 'package:http/http.dart' as http;
 
 class DetailsQuotation extends StatefulWidget {
   const DetailsQuotation({super.key});
@@ -37,10 +32,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
   }
 
   Future<void> loadService() async {
-    final filteredServices = servicesController.servicesList!
-        .where((service) => quotation.idService.contains(service.id));
-
-    serviceNames = filteredServices.map((service) => service.name).toList();
+    serviceNames =
+        quotation.customizedServices.map((service) => service.name).toList();
   }
 
   Future<void> generatePDF() async {
@@ -115,9 +108,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
             quotation, selectOption!);
         MessageHandler.showMessageSuccess(
             'Actualización de cotización', message);
-
         // ignore: use_build_context_synchronously
-        Navigator.pop(context);
+        Get.offAllNamed("/quotations");
       } else {
         MessageHandler.showMessageError('Validación de campos',
             'Ingrese los campos requeridos para poder actualizar la cotización');
@@ -189,7 +181,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                           ),
                           children: [
                             TextSpan(
-                              text: 'Servicio: ',
+                              text: 'Servicios seleccionados: ',
                               style: GoogleFonts.varelaRound(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
@@ -204,45 +196,42 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                      child: Text(
-                        'Medidas de la sección',
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.1,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.06),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Ancho: ${quotation.width}',
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.black,
-                              fontSize: screenWidth * 0.045,
-                              fontWeight: FontWeight.w300,
-                              letterSpacing: 0.1,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: quotation.customizedServices
+                          .where((service) =>
+                              service.measures.height != "0" &&
+                              service.measures.width != "0")
+                          .map((service) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenHeight * 0.02),
+                          child: RichText(
+                            text: TextSpan(
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.black,
+                                fontSize: screenWidth * 0.045,
+                                letterSpacing: 0.1,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Medidas ${service.name}: ',
+                                  style: GoogleFonts.varelaRound(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text:
+                                      '${service.measures.width}M x ${service.measures.height}M',
+                                  style: GoogleFonts.varelaRound(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            'Largo: ${quotation.length}',
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.black,
-                              fontSize: screenWidth * 0.045,
-                              fontWeight: FontWeight.w300,
-                              letterSpacing: 0.1,
-                            ),
-                          )
-                        ],
-                      ),
+                        );
+                      }).toList(),
                     ),
                     if (quotation.materials.isNotEmpty)
                       Column(
