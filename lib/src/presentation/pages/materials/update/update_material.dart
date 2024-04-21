@@ -205,237 +205,243 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     if (isLoading) {
       return const LoadingScreen();
     }
-    return BounceInUp(
-      duration: const Duration(microseconds: 10),
-      child: Container(
-        width: screenWidth * 1,
-        height: screenHeight * 1,
-        decoration: const BoxDecoration(
-          color: Palette.accent,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        _onCancelForm();
+      },
+      child: BounceInUp(
+        duration: const Duration(microseconds: 10),
+        child: Container(
+          width: screenWidth * 1,
+          height: screenHeight * 1,
+          decoration: const BoxDecoration(
+            color: Palette.accent,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
-              child: Text(
-                "Actualizar material",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.white,
-                  fontSize: screenWidth * 0.05,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+                child: Text(
+                  "Actualizar material",
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.75,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Agregar imagen ",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.03,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
+              SizedBox(
+                height: screenHeight * 0.75,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.15),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Agregar imagen ",
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.03,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
                             ),
-                          ),
-                          RoundIconButton(
-                            icon: "Icons.add",
-                            title: "",
-                            onClick: _pickImage,
-                            onLongPress: () {},
-                            isBackgroundImage: true,
-                          )
-                        ],
+                            RoundIconButton(
+                              icon: "Icons.add",
+                              title: "",
+                              onClick: _pickImage,
+                              onLongPress: () {},
+                              isBackgroundImage: true,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Codigo',
-                      type: TextInputType.number,
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerCode,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Nombre',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerName,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Unidad',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerUnit,
-                      showIcon: false,
-                      type: TextInputType.number,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: screenHeight * 0.035),
-                      child: CustomDropdownInitial(
-                        initialValue: selectedOption!,
-                        padding: 0,
-                        border: 10,
-                        options: options,
-                        width: 0.75,
-                        height: 0.075,
-                        widthItems: 0.55,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedOption = newValue;
-                          });
-                        },
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Codigo',
+                        type: TextInputType.number,
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerCode,
                       ),
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Precio compra',
-                      type: TextInputType.number,
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerPurchasePrice,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      type: TextInputType.number,
-                      hintText: 'Precio venta',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerSalePrice,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("  Seccion",
-                            style: GoogleFonts.varelaRound(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.035,
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 1,
-                            )),
-                        CustomDropdownInitial(
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Nombre',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerName,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Unidad',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerUnit,
+                        showIcon: false,
+                        type: TextInputType.number,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: screenHeight * 0.035),
+                        child: CustomDropdownInitial(
+                          initialValue: selectedOption!,
                           padding: 0,
                           border: 10,
-                          initialValue: controllerSectionInitial.text,
-                          options: optionsSection,
+                          options: options,
                           width: 0.75,
                           height: 0.075,
                           widthItems: 0.55,
                           onChanged: (String? newValue) {
                             setState(() {
-                              selectedOptionSectionId = newValue;
+                              selectedOption = newValue;
                             });
-                            if (newValue != null) {
-                              Section section = sections.firstWhere(
-                                  (section) => section.name == newValue);
-                              selectedOptionSectionId = section.id;
-                            }
                           },
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.04,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Cantidad',
-                      type: TextInputType.number,
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.075,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerQuantity,
-                    ),
-                    CustomTextField(
-                      icon: Icons.dehaze_rounded,
-                      hintText: 'Descripcion',
-                      isPassword: false,
-                      width: screenWidth * 0.75,
-                      height: screenHeight * 0.17,
-                      maxLine: 8,
-                      inputColor: Colors.white,
-                      textColor: Colors.black,
-                      onChanged: (value) {},
-                      controller: controllerDescription,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.07,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Precio compra',
+                        type: TextInputType.number,
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerPurchasePrice,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        type: TextInputType.number,
+                        hintText: 'Precio venta',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerSalePrice,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomElevatedButton(
-                            text: 'Cancelar',
-                            onPressed: _onCancelForm,
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.35,
-                            textColor: Colors.white,
-                            textSize: screenWidth * 0.04,
-                            borderColor: Palette.accent,
-                            backgroundColor: Palette.accent,
-                            hasBorder: true,
-                          ),
-                          CustomElevatedButton(
-                            text: 'Actualizar',
-                            onPressed: updateMaterial,
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.35,
-                            textColor: Colors.white,
-                            textSize: screenWidth * 0.04,
-                            backgroundColor: Palette.primary,
-                            hasBorder: false,
+                          Text("  Seccion",
+                              style: GoogleFonts.varelaRound(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.035,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 1,
+                              )),
+                          CustomDropdownInitial(
+                            padding: 0,
+                            border: 10,
+                            initialValue: controllerSectionInitial.text,
+                            options: optionsSection,
+                            width: 0.75,
+                            height: 0.075,
+                            widthItems: 0.55,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedOptionSectionId = newValue;
+                              });
+                              if (newValue != null) {
+                                Section section = sections.firstWhere(
+                                    (section) => section.name == newValue);
+                                selectedOptionSectionId = section.id;
+                              }
+                            },
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.1,
-                    ),
-                  ],
+                      SizedBox(
+                        height: screenHeight * 0.04,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Cantidad',
+                        type: TextInputType.number,
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.075,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerQuantity,
+                      ),
+                      CustomTextField(
+                        icon: Icons.dehaze_rounded,
+                        hintText: 'Descripcion',
+                        isPassword: false,
+                        width: screenWidth * 0.75,
+                        height: screenHeight * 0.17,
+                        maxLine: 8,
+                        inputColor: Colors.white,
+                        textColor: Colors.black,
+                        onChanged: (value) {},
+                        controller: controllerDescription,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.07,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomElevatedButton(
+                              text: 'Cancelar',
+                              onPressed: _onCancelForm,
+                              height: screenHeight * 0.065,
+                              width: screenWidth * 0.35,
+                              textColor: Colors.white,
+                              textSize: screenWidth * 0.04,
+                              borderColor: Palette.accent,
+                              backgroundColor: Palette.accent,
+                              hasBorder: true,
+                            ),
+                            CustomElevatedButton(
+                              text: 'Actualizar',
+                              onPressed: updateMaterial,
+                              height: screenHeight * 0.065,
+                              width: screenWidth * 0.35,
+                              textColor: Colors.white,
+                              textSize: screenWidth * 0.04,
+                              backgroundColor: Palette.primary,
+                              hasBorder: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.1,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

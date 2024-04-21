@@ -181,6 +181,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
               'Registro realizado con exito', message);
 
           // ignore: use_build_context_synchronously
+          await quotationController
+              .getQuotationsByUserId(userController.idUser);
+          await quotationController.getAllQuotations();
           Navigator.pop(context);
         } catch (error) {
           MessageHandler.showMessageError(

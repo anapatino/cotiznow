@@ -44,64 +44,67 @@ class _QuotationPanelState extends State<QuotationPanel> {
     );
     selectedOption = "";
     refreshList();
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: widget.userController.role == "cliente"
-              ? CustomerRoutes().itemConfigs
-              : AdministratorRoutes().itemConfigs,
-        ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Cotizaciones",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.black,
-                  fontSize: screenWidth * 0.06,
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              CustomDropdown(
-                options: options,
-                width: 0.9,
-                height: 0.06,
-                widthItems: 0.65,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedOption = newValue;
-                  });
-                },
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              quotationWidget.buildQuotationList(
-                  selectedOption != null ? selectedOption! : "",
-                  true,
-                  showDeleteAlert),
-            ],
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          appBar: AppBar(
+            actions: const [],
           ),
-        ),
-        floatingActionButton: isContainerVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: () {
-                  Get.toNamed('/registration-quotation');
-                },
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: widget.userController.role == "cliente"
+                ? CustomerRoutes().itemConfigs
+                : AdministratorRoutes().itemConfigs,
+          ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Cotizaciones",
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.06,
+                  ),
                 ),
-                shape: const CircleBorder(),
-              ),
+                SizedBox(height: screenHeight * 0.02),
+                CustomDropdown(
+                  options: options,
+                  width: 0.9,
+                  height: 0.06,
+                  widthItems: 0.65,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedOption = newValue;
+                    });
+                  },
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                quotationWidget.buildQuotationList(
+                    selectedOption != null ? selectedOption! : "",
+                    true,
+                    showDeleteAlert),
+              ],
+            ),
+          ),
+          floatingActionButton: isContainerVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: () {
+                    Get.toNamed('/registration-quotation');
+                  },
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
+                ),
+        ),
       ),
     );
   }

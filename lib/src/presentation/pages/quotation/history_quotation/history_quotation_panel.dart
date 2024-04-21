@@ -42,48 +42,51 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
       screenHeight: screenHeight,
       screenWidth: screenWidth,
     );
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: widget.userController.role == "cliente"
-              ? CustomerRoutes().itemConfigs
-              : AdministratorRoutes().itemConfigs,
-        ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Historial de cotizaciones",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.black,
-                  fontSize: screenWidth * 0.06,
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          appBar: AppBar(
+            actions: const [],
+          ),
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: widget.userController.role == "cliente"
+                ? CustomerRoutes().itemConfigs
+                : AdministratorRoutes().itemConfigs,
+          ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Historial de cotizaciones",
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.06,
+                  ),
                 ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              CustomDropdown(
-                options: options,
-                width: 0.9,
-                height: 0.06,
-                widthItems: 0.65,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedOption = newValue;
-                  });
-                },
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              quotationWidget.buildHistoryQuotationList(
-                  selectedOption != null ? selectedOption! : "",
-                  showDeleteAlert),
-            ],
+                SizedBox(height: screenHeight * 0.02),
+                CustomDropdown(
+                  options: options,
+                  width: 0.9,
+                  height: 0.06,
+                  widthItems: 0.65,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedOption = newValue;
+                    });
+                  },
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                quotationWidget.buildHistoryQuotationList(
+                    selectedOption != null ? selectedOption! : "",
+                    showDeleteAlert),
+              ],
+            ),
           ),
         ),
       ),

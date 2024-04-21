@@ -25,7 +25,6 @@ class _DiscountPanelState extends State<DiscountPanel> {
 
   Future<void> loadMaterials() async {
     await materialController.getAllMaterials();
-    setState(() {});
   }
 
   @override
@@ -33,47 +32,50 @@ class _DiscountPanelState extends State<DiscountPanel> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
 
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: userController.name,
-          email: userController.userEmail,
-          itemConfigs: AdministratorRoutes().itemConfigs,
-        ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.05,
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          appBar: AppBar(
+            actions: const [],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Descuentos",
-                style: GoogleFonts.varelaRound(
-                  color: Colors.black,
-                  fontSize: screenWidth * 0.06,
+          drawer: CustomDrawer(
+            name: userController.name,
+            email: userController.userEmail,
+            itemConfigs: AdministratorRoutes().itemConfigs,
+          ),
+          body: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.05,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Descuentos",
+                  style: GoogleFonts.varelaRound(
+                    color: Colors.black,
+                    fontSize: screenWidth * 0.06,
+                  ),
                 ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              _buildMaterials(),
-            ],
+                SizedBox(height: screenHeight * 0.02),
+                _buildMaterials(),
+              ],
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Get.toNamed('/register-discounts');
-          },
-          backgroundColor: Palette.primary,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Get.toNamed('/register-discounts');
+            },
+            backgroundColor: Palette.primary,
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            shape: const CircleBorder(),
           ),
-          shape: const CircleBorder(),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/presentation/widgets/widgets.dart';
+import 'package:flutter/material.dart';
 import '../../../domain/domain.dart';
 import '../../routes/routes.dart';
 import '../authentication/authentication.dart';
@@ -51,7 +52,7 @@ class _CustomerState extends State<Customer> {
           filteredList = _filterListByOption(filteredList);
 
           return SizedBox(
-            height: screenHeight * 0.75,
+            height: screenHeight * 0.85,
             child: ListView.builder(
               itemCount: filteredList.length,
               itemBuilder: (context, index) {
@@ -100,80 +101,84 @@ class _CustomerState extends State<Customer> {
         ? ['clientes']
         : ['todos', 'clientes', 'administradores', 'super administrador'];
 
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: AdministratorRoutes().itemConfigs,
-        ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: screenHeight * 1,
-            child: Stack(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Clientes",
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.06,
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            actions: const [],
+          ),
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: AdministratorRoutes().itemConfigs,
+          ),
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: screenHeight * 1,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Usuarios",
+                          style: GoogleFonts.varelaRound(
+                            color: Colors.black,
+                            fontSize: screenWidth * 0.06,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      CustomDropdown(
-                        options: options,
-                        width: 0.9,
-                        height: 0.06,
-                        widthItems: 0.65,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedOption = newValue;
-                          });
-                        },
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      _buildUserList(),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: isContainerVisible
-                      ? screenHeight * 0.02
-                      : screenHeight * 0.97,
-                  child: SingleChildScrollView(
-                    child: AdministratorRegistration(
-                      onCancelRegistration: () {
-                        _toggleContainerVisibility();
-                      },
+                        SizedBox(height: screenHeight * 0.02),
+                        CustomDropdown(
+                          options: options,
+                          width: 0.9,
+                          height: 0.06,
+                          widthItems: 0.65,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOption = newValue;
+                            });
+                          },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        _buildUserList(),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Visibility(
+                    visible: isContainerVisible,
+                    child: Positioned(
+                      top: screenHeight * 0.02,
+                      child: SingleChildScrollView(
+                        child: AdministratorRegistration(
+                          onCancelRegistration: () {
+                            _toggleContainerVisibility();
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        floatingActionButton: isContainerVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: _toggleContainerVisibility,
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          floatingActionButton: isContainerVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: _toggleContainerVisibility,
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
                 ),
-                shape: const CircleBorder(),
-              ),
+        ),
       ),
     );
   }

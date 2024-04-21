@@ -216,101 +216,104 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: AdministratorRoutes().itemConfigs,
-        ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: screenHeight,
-            child: Stack(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Materiales",
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.06,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Row(
-                        children: [
-                          CustomTextField(
-                            icon: Icons.search_rounded,
-                            hintText: 'Buscar',
-                            isPassword: false,
-                            width: screenWidth * 0.85,
-                            height: screenHeight * 0.06,
-                            inputColor: Palette.grey,
-                            textColor: Colors.black,
-                            border: 30,
-                            onChanged: (value) {
-                              filterMaterials(value);
-                            },
-                            controller: controllerSearch,
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            actions: const [],
+          ),
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: AdministratorRoutes().itemConfigs,
+          ),
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: screenHeight,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Materiales",
+                          style: GoogleFonts.varelaRound(
+                            color: Colors.black,
+                            fontSize: screenWidth * 0.06,
                           ),
-                        ],
-                      ),
-                      _buildSectionsList(),
-                      SizedBox(
-                        height: screenHeight * 0.03,
-                      ),
-                      _buildMaterialsBySectionId(sectionId),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: isRegisterFormVisible,
-                  child: Positioned(
-                    top: screenHeight * 0.05,
-                    child: RegisterMaterialForm(
-                      onCancelForm: () {
-                        toggleRegisterFormVisibility();
-                      },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        Row(
+                          children: [
+                            CustomTextField(
+                              icon: Icons.search_rounded,
+                              hintText: 'Buscar',
+                              isPassword: false,
+                              width: screenWidth * 0.85,
+                              height: screenHeight * 0.06,
+                              inputColor: Palette.grey,
+                              textColor: Colors.black,
+                              border: 30,
+                              onChanged: (value) {
+                                filterMaterials(value);
+                              },
+                              controller: controllerSearch,
+                            ),
+                          ],
+                        ),
+                        _buildSectionsList(),
+                        SizedBox(
+                          height: screenHeight * 0.03,
+                        ),
+                        _buildMaterialsBySectionId(sectionId),
+                      ],
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: isUpdateStatusVisible,
-                  child: Positioned(
-                    top: screenHeight * 0.55,
-                    child: ChangeMaterialStatus(
-                      onCancelForm: () {
-                        toggleStatusFormVisibility();
-                      },
-                      material: material,
+                  Visibility(
+                    visible: isRegisterFormVisible,
+                    child: Positioned(
+                      top: screenHeight * 0.05,
+                      child: RegisterMaterialForm(
+                        onCancelForm: () {
+                          toggleRegisterFormVisibility();
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Visibility(
+                    visible: isUpdateStatusVisible,
+                    child: Positioned(
+                      top: screenHeight * 0.55,
+                      child: ChangeMaterialStatus(
+                        onCancelForm: () {
+                          toggleStatusFormVisibility();
+                        },
+                        material: material,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        floatingActionButton: isRegisterFormVisible || isUpdateStatusVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: toggleRegisterFormVisibility,
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          floatingActionButton: isRegisterFormVisible || isUpdateStatusVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: toggleRegisterFormVisibility,
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
                 ),
-                shape: const CircleBorder(),
-              ),
+        ),
       ),
     );
   }

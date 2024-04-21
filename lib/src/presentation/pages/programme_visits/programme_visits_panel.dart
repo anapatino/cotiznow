@@ -62,7 +62,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
 
   Widget _buildCardProgrammeVisits(List<ProgrammeVisits> list) {
     return SizedBox(
-      height: screenHeight * 0.75,
+      height: screenHeight * 0.85,
       child: ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
@@ -100,81 +100,84 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
     screenHeight = MediaQuery.of(context).size.height;
     List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada'];
 
-    return SlideInLeft(
-      duration: const Duration(milliseconds: 15),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          actions: const [],
-        ),
-        drawer: CustomDrawer(
-          name: widget.userController.name,
-          email: widget.userController.userEmail,
-          itemConfigs: widget.userController.role == "cliente"
-              ? CustomerRoutes().itemConfigs
-              : AdministratorRoutes().itemConfigs,
-        ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: screenHeight * 1,
-            child: Stack(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Visitas programadas",
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.black,
-                          fontSize: screenWidth * 0.06,
+    return PopScope(
+      canPop: false,
+      child: SlideInLeft(
+        duration: const Duration(milliseconds: 15),
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            actions: const [],
+          ),
+          drawer: CustomDrawer(
+            name: widget.userController.name,
+            email: widget.userController.userEmail,
+            itemConfigs: widget.userController.role == "cliente"
+                ? CustomerRoutes().itemConfigs
+                : AdministratorRoutes().itemConfigs,
+          ),
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: screenHeight * 1,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Visitas programadas",
+                          style: GoogleFonts.varelaRound(
+                            color: Colors.black,
+                            fontSize: screenWidth * 0.06,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      CustomDropdown(
-                        options: options,
-                        width: 0.9,
-                        height: 0.06,
-                        widthItems: 0.65,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedOption = newValue;
-                          });
-                        },
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      _buildProgrammeVisitsList()
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: isContainerVisible,
-                  child: Positioned(
-                    top: screenHeight * 0.5,
-                    child: RegisterProgrammeVisits(
-                      onCancelForm: () {
-                        toggleRegisterFormVisibility();
-                      },
+                        SizedBox(height: screenHeight * 0.02),
+                        CustomDropdown(
+                          options: options,
+                          width: 0.9,
+                          height: 0.06,
+                          widthItems: 0.65,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOption = newValue;
+                            });
+                          },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        _buildProgrammeVisitsList()
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Visibility(
+                    visible: isContainerVisible,
+                    child: Positioned(
+                      top: screenHeight * 0.5,
+                      child: RegisterProgrammeVisits(
+                        onCancelForm: () {
+                          toggleRegisterFormVisibility();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        floatingActionButton: isContainerVisible
-            ? const SizedBox()
-            : FloatingActionButton(
-                onPressed: toggleRegisterFormVisibility,
-                backgroundColor: Palette.primary,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+          floatingActionButton: isContainerVisible
+              ? const SizedBox()
+              : FloatingActionButton(
+                  onPressed: toggleRegisterFormVisibility,
+                  backgroundColor: Palette.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  shape: const CircleBorder(),
                 ),
-                shape: const CircleBorder(),
-              ),
+        ),
       ),
     );
   }

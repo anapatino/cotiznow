@@ -53,93 +53,99 @@ class _ChangeMaterialStatusState extends State<ChangeMaterialStatus> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     List<String> options = ['activo', 'inactivo'];
-    return BounceInUp(
-      duration: const Duration(microseconds: 10),
-      child: Container(
-        width: screenWidth * 1,
-        height: screenHeight * 1,
-        decoration: const BoxDecoration(
-          color: Palette.accent,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        _onCancelForm();
+      },
+      child: BounceInUp(
+        duration: const Duration(microseconds: 10),
+        child: Container(
+          width: screenWidth * 1,
+          height: screenHeight * 1,
+          decoration: const BoxDecoration(
+            color: Palette.accent,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
-                child: Text(
-                  "Actualizar material",
-                  style: GoogleFonts.varelaRound(
-                    color: Colors.white,
-                    fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+                  child: Text(
+                    "Actualizar material",
+                    style: GoogleFonts.varelaRound(
+                      color: Colors.white,
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1,
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("  Cambiar estado",
-                      style: GoogleFonts.varelaRound(
-                        color: Colors.white,
-                        fontSize: screenWidth * 0.035,
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 1,
-                      )),
-                  CustomDropdown(
-                    padding: 0,
-                    border: 10,
-                    options: options,
-                    width: 0.79,
-                    height: 0.075,
-                    widthItems: 0.58,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedOption = newValue;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.095,
-                    vertical: screenHeight * 0.028),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomElevatedButton(
-                      text: 'Cancelar',
-                      onPressed: _onCancelForm,
-                      height: screenHeight * 0.065,
-                      width: screenWidth * 0.35,
-                      textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
-                      borderColor: Palette.accent,
-                      backgroundColor: Palette.accent,
-                      hasBorder: true,
-                    ),
-                    CustomElevatedButton(
-                      text: 'Actualizar',
-                      onPressed: changeMaterialStatus,
-                      height: screenHeight * 0.065,
-                      width: screenWidth * 0.35,
-                      textColor: Colors.white,
-                      textSize: screenWidth * 0.04,
-                      backgroundColor: Palette.primary,
-                      hasBorder: false,
+                    Text("  Cambiar estado",
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.white,
+                          fontSize: screenWidth * 0.035,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 1,
+                        )),
+                    CustomDropdown(
+                      padding: 0,
+                      border: 10,
+                      options: options,
+                      width: 0.79,
+                      height: 0.075,
+                      widthItems: 0.58,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedOption = newValue;
+                        });
+                      },
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: screenHeight * 0.1,
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.095,
+                      vertical: screenHeight * 0.028),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomElevatedButton(
+                        text: 'Cancelar',
+                        onPressed: _onCancelForm,
+                        height: screenHeight * 0.065,
+                        width: screenWidth * 0.35,
+                        textColor: Colors.white,
+                        textSize: screenWidth * 0.04,
+                        borderColor: Palette.accent,
+                        backgroundColor: Palette.accent,
+                        hasBorder: true,
+                      ),
+                      CustomElevatedButton(
+                        text: 'Actualizar',
+                        onPressed: changeMaterialStatus,
+                        height: screenHeight * 0.065,
+                        width: screenWidth * 0.35,
+                        textColor: Colors.white,
+                        textSize: screenWidth * 0.04,
+                        backgroundColor: Palette.primary,
+                        hasBorder: false,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: screenHeight * 0.1,
+                ),
+              ],
+            ),
           ),
         ),
       ),

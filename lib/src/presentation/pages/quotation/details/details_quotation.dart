@@ -108,7 +108,8 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
             quotation, selectOption!);
         MessageHandler.showMessageSuccess(
             'Actualización de cotización', message);
-
+        await quotationController.getQuotationsByUserId(userController.idUser);
+        await quotationController.getAllQuotations();
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } else {
