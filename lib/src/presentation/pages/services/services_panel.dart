@@ -264,20 +264,20 @@ class _ServicesPanel extends State<ServicesPanel> {
 
   void showDisableServiceAlert(Service service) {
     DialogUtil.showConfirmationDialog(
-      title: 'Deshabilitar Servicio',
-      message: '¿Desea desahabilitar este servicio?',
+      title: 'Eliminar Servicio',
+      message: '¿Desea eliminar este servicio?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message = await widget.serviceController
-              .updateServiceStatus(service.id, 'inactivo');
+          String message =
+              await widget.serviceController.deleteService(service.id);
+
           MessageHandler.showMessageSuccess(
-              'Actualización de estado del servicio exitoso', message);
+              'Eliminación servicio exitoso', message);
           loadService();
         } catch (e) {
-          MessageHandler.showMessageError(
-              'Error al deshabilitar el servicio', e);
+          MessageHandler.showMessageError('Error al eliminar el servicio', e);
         }
       },
       backgroundConfirmButton: Palette.accentBackground,

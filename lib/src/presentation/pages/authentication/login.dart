@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
         userController.updateController(user);
       }
 
-      if (userController.role == "cliente" &&
+      if (userController.role == "usuario" &&
           userController.account == "activa") {
         Get.offAll(() => CustomerDashboard());
       }
@@ -99,16 +99,20 @@ class _LoginState extends State<Login> {
       if (email.isNotEmpty && password.isNotEmpty) {
         userController.login(email, password).then((value) async {
           if (userController.userEmail.isNotEmpty) {
-            registerDataCache();
-
-            if (userController.role == "cliente" &&
+            if (userController.role == "usuario" &&
                 userController.account == "activa") {
+              registerDataCache();
               Get.offAll(() => CustomerDashboard());
             }
             if (userController.role == "administrador" ||
                 userController.role == "super administrador" &&
                     userController.account == "activa") {
+              registerDataCache();
               Get.offAll(() => AdministratorDashboard());
+            }
+            if (userController.account != "activa") {
+              MessageHandler.showMessageWarning("Cuenta inactiva",
+                  "La cuenta con la que ingresó se encuentra inactiva. Para más información comunicarse con el administrador.");
             }
           }
         }).catchError((error) {
@@ -123,185 +127,207 @@ class _LoginState extends State<Login> {
       }
     }
 
-    return SlideInRight(
-      duration: const Duration(milliseconds: 10),
-      child: Scaffold(
-        backgroundColor: Palette.secondary,
-        body: SingleChildScrollView(
-          child: SizedBox(
-              height: screenHeight * 1,
-              width: screenWidth * 1,
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -180,
-                    left: -80,
-                    child: Container(
-                      height: screenHeight * 0.4,
-                      width: screenWidth * 0.9,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/full_triangle.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: -140,
-                    left: -80,
-                    child: Container(
-                      height: screenHeight * 0.4,
-                      width: screenWidth * 0.9,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/triangle_lines.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: screenHeight * 0.2,
-                    right: -120,
-                    child: Container(
-                      height: screenHeight * 0.4,
-                      width: screenWidth * 0.9,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/triangle_lines.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -70,
-                    left: -120,
-                    child: Container(
-                      height: screenHeight * 0.4,
-                      width: screenWidth * 0.9,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/triangle_lines.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -160,
-                    left: -140,
-                    child: Container(
-                      height: screenHeight * 0.4,
-                      width: screenWidth * 0.9,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/full_triangle.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      top: screenHeight * 0.18,
-                      left: screenWidth * 0.14,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Ingresar",
-                              style: GoogleFonts.varelaRound(
-                                color: Colors.white,
-                                fontSize: isTablet
-                                    ? screenWidth * 0.07
-                                    : screenWidth * 0.1,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 1,
-                              )),
-                          SizedBox(
-                            height: screenHeight * 0.004,
+    return PopScope(
+      canPop: false,
+      child: SlideInRight(
+        duration: const Duration(milliseconds: 10),
+        child: Scaffold(
+          backgroundColor: Palette.secondary,
+          body: SingleChildScrollView(
+            child: SizedBox(
+                height: screenHeight * 1,
+                width: screenWidth * 1,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: -180,
+                      left: -80,
+                      child: Container(
+                        height: screenHeight * 0.4,
+                        width: screenWidth * 0.9,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/full_triangle.png'),
+                            fit: BoxFit.contain,
                           ),
-                          SizedBox(
-                            width: screenWidth * 0.75,
-                            child: Text(
-                                "Por favor, ingresa los campos para continuar.",
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: -140,
+                      left: -80,
+                      child: Container(
+                        height: screenHeight * 0.4,
+                        width: screenWidth * 0.9,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/triangle_lines.png'),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: screenHeight * 0.2,
+                      right: -120,
+                      child: Container(
+                        height: screenHeight * 0.4,
+                        width: screenWidth * 0.9,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/triangle_lines.png'),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -70,
+                      left: -120,
+                      child: Container(
+                        height: screenHeight * 0.4,
+                        width: screenWidth * 0.9,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/triangle_lines.png'),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -160,
+                      left: -140,
+                      child: Container(
+                        height: screenHeight * 0.4,
+                        width: screenWidth * 0.9,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/full_triangle.png'),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: screenHeight * 0.04,
+                      left: screenWidth * 0.05,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: isTablet ? 45.0 : 25.0,
+                        ),
+                        onPressed: () {
+                          Get.offAllNamed('principal');
+                        },
+                      ),
+                    ),
+                    Positioned(
+                        top: screenHeight * 0.18,
+                        left: screenWidth * 0.14,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Ingresar",
                                 style: GoogleFonts.varelaRound(
                                   color: Colors.white,
                                   fontSize: isTablet
-                                      ? screenWidth * 0.03
-                                      : screenWidth * 0.04,
-                                  fontWeight: FontWeight.normal,
+                                      ? screenWidth * 0.07
+                                      : screenWidth * 0.1,
+                                  fontWeight: FontWeight.w700,
                                   letterSpacing: 1,
                                 )),
-                          ),
-                          SizedBox(
-                            height: isTablet
-                                ? screenWidth * 0.04
-                                : screenHeight * 0.02,
-                          ),
-                          CustomTextField(
-                            type: TextInputType.emailAddress,
-                            icon: Icons.mail_rounded,
-                            hintText: 'Correo electronico',
-                            isPassword: false,
-                            width: screenWidth * 0.75,
-                            height: screenHeight * 0.075,
-                            inputColor: Colors.white,
-                            textColor: Colors.black,
-                            onChanged: (value) {},
-                            controller: controllerEmail,
-                          ),
-                          SizedBox(
-                            height: screenHeight * 0.015,
-                          ),
-                          CustomTextField(
-                            icon: Icons.key_outlined,
-                            hintText: 'Contraseña',
-                            isPassword: true,
-                            width: screenWidth * 0.75,
-                            height: screenHeight * 0.075,
-                            inputColor: Colors.white,
-                            textColor: Colors.black,
-                            onChanged: (value) {},
-                            controller: controllerPassword,
-                          ),
-                          SizedBox(
-                            height: screenHeight * 0.07,
-                          ),
-                          CustomElevatedButton(
-                            text: 'Ingresar',
-                            onPressed: authenticateUser,
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.75,
-                            textColor: Palette.secondary,
-                            textSize: isTablet
-                                ? screenWidth * 0.035
-                                : screenWidth * 0.045,
-                            backgroundColor: Palette.primary,
-                            hasBorder: false,
-                          ),
-                          SizedBox(
-                            height: screenHeight * 0.02,
-                          ),
-                          CustomElevatedButton(
-                            text: '¿No tienes cuenta? Registrate.',
-                            onPressed: () {
-                              Get.offAllNamed('/register');
-                            },
-                            height: screenHeight * 0.065,
-                            width: screenWidth * 0.75,
-                            textColor: Palette.primary,
-                            textSize: isTablet
-                                ? screenWidth * 0.028
-                                : screenWidth * 0.035,
-                            backgroundColor:
-                                Palette.secondary.withOpacity(0.55),
-                            hasBorder: false,
-                          )
-                        ],
-                      ))
-                ],
-              )),
+                            SizedBox(
+                              height: screenHeight * 0.004,
+                            ),
+                            SizedBox(
+                              width: screenWidth * 0.75,
+                              child: Text(
+                                  "Por favor, ingresa los campos para continuar.",
+                                  style: GoogleFonts.varelaRound(
+                                    color: Colors.white,
+                                    fontSize: isTablet
+                                        ? screenWidth * 0.03
+                                        : screenWidth * 0.04,
+                                    fontWeight: FontWeight.normal,
+                                    letterSpacing: 1,
+                                  )),
+                            ),
+                            SizedBox(
+                              height: isTablet
+                                  ? screenWidth * 0.04
+                                  : screenHeight * 0.02,
+                            ),
+                            CustomTextField(
+                              type: TextInputType.emailAddress,
+                              icon: Icons.mail_rounded,
+                              hintText: 'Correo electronico',
+                              isPassword: false,
+                              width: screenWidth * 0.75,
+                              height: screenHeight * 0.075,
+                              inputColor: Colors.white,
+                              textColor: Colors.black,
+                              onChanged: (value) {},
+                              controller: controllerEmail,
+                            ),
+                            SizedBox(
+                              height: screenHeight * 0.015,
+                            ),
+                            CustomTextField(
+                              icon: Icons.key_outlined,
+                              hintText: 'Contraseña',
+                              isPassword: true,
+                              width: screenWidth * 0.75,
+                              height: screenHeight * 0.075,
+                              inputColor: Colors.white,
+                              textColor: Colors.black,
+                              onChanged: (value) {},
+                              controller: controllerPassword,
+                            ),
+                            SizedBox(
+                              height: screenHeight * 0.07,
+                            ),
+                            CustomElevatedButton(
+                              text: 'Ingresar',
+                              onPressed: authenticateUser,
+                              height: screenHeight * 0.065,
+                              width: screenWidth * 0.75,
+                              textColor: Palette.secondary,
+                              textSize: isTablet
+                                  ? screenWidth * 0.035
+                                  : screenWidth * 0.045,
+                              backgroundColor: Palette.primary,
+                              hasBorder: false,
+                            ),
+                            SizedBox(
+                              height: screenHeight * 0.02,
+                            ),
+                            CustomElevatedButton(
+                              text: '¿No tienes cuenta? Registrate.',
+                              onPressed: () {
+                                Get.offAllNamed('/register');
+                              },
+                              height: screenHeight * 0.065,
+                              width: screenWidth * 0.75,
+                              textColor: Palette.primary,
+                              textSize: isTablet
+                                  ? screenWidth * 0.028
+                                  : screenWidth * 0.035,
+                              backgroundColor:
+                                  Palette.secondary.withOpacity(0.55),
+                              hasBorder: false,
+                            )
+                          ],
+                        ))
+                  ],
+                )),
+          ),
         ),
       ),
     );

@@ -94,8 +94,8 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     List<String> options = userController.role == "administrador"
-        ? ['cliente', 'administrador']
-        : ['cliente', 'administrador', 'super administrador'];
+        ? ['usuario', 'administrador']
+        : ['usuario', 'administrador', 'super administrador'];
 
     return PopScope(
       canPop: true,
@@ -119,7 +119,7 @@ class _AdministratorRegistrationState extends State<AdministratorRegistration> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
                 child: Text(
-                  "Registrar cliente",
+                  "Registrar usuario",
                   style: GoogleFonts.varelaRound(
                     color: Colors.white,
                     fontSize:

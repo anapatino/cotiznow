@@ -250,20 +250,19 @@ class _SectionsState extends State<Sections> {
 
   void showDisableSectionAlert(Section section) {
     DialogUtil.showConfirmationDialog(
-      title: 'Deshabilitar Sección',
-      message: '¿Desea deshabilitar esta sección?',
+      title: 'Eliminar Sección',
+      message: '¿Desea eliminar esta sección?',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message = await widget.sectionsController
-              .updateSectionStatus(section.id, 'inactivo');
+          String message =
+              await widget.sectionsController.deleteSection(section.id);
           MessageHandler.showMessageSuccess(
-              'Actualización de sección exitosa', message);
+              'Eliminación de sección exitosa', message);
           loadSections();
         } catch (e) {
-          MessageHandler.showMessageError(
-              'Error al deshabilitar la sección', e);
+          MessageHandler.showMessageError('Error al eliminar la sección', e);
         }
       },
       backgroundConfirmButton: Palette.accentBackground,

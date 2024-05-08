@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cotiznow/src/data/data.dart';
+import 'package:cotiznow/src/domain/domain.dart';
 
 import '../../../domain/models/entities/section.dart';
 
@@ -81,9 +83,19 @@ class SectionsRequest {
   static Future<String> deleteSection(String sectionId) async {
     try {
       await database.collection('sections').doc(sectionId).delete();
-      return "Se ha eliminado con exito la sección";
+
+      List<Materials> materials =
+          await MaterialsRequest.getMaterialsBySectionId(sectionId);
+
+      if (materials.isNotEmpty) {
+        for (Materials material in materials) {
+          await MaterialsRequest.deleteMaterial(material.id, material.urlPhoto);
+        }
+      }
+
+      return "Se ha eliminado con éxito la sección y sus materiales.";
     } catch (e) {
-      throw Future.error('Error al eliminar el sección: $e');
+      throw Future.error('Error al eliminar la sección: $e');
     }
   }
 }

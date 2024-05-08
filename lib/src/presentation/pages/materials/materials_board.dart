@@ -213,6 +213,12 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
         }));
   }
 
+  void refreshList() {
+    setState(() {
+      filterMaterials("");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -335,6 +341,7 @@ class _MaterialsBoardState extends State<MaterialsBoard> {
               .deleteMaterial(material.id, material.urlPhoto);
           MessageHandler.showMessageSuccess(
               "Se ha realizado con exito la operación", message);
+          refreshList();
         } catch (e) {
           MessageHandler.showMessageError(
               "Error al realizar esta operación", e);

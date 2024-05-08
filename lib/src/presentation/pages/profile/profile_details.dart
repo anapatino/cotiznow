@@ -112,6 +112,12 @@ class _ProfileDetailsState extends State<ProfileDetails> {
       userController.findUser(userController.authId);
       MessageHandler.showMessageSuccess(
           'Usuario actualizado correctamente', message);
+
+      setState(() {
+        controllerRole.text = role.isEmpty ? controllerRole.text : role;
+        controllerAccount.text =
+            account.isEmpty ? controllerAccount.text : account;
+      });
     } catch (error) {
       MessageHandler.showMessageError('Error al actualizar usuario', error);
     }
@@ -121,8 +127,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     List<String> options = ['activa', 'inactiva'];
     List<String> optionsRole = userController.role == "super administrador"
-        ? ['cliente', 'administrador', 'super administrador']
-        : ['cliente', 'administrador'];
+        ? ['usuario', 'administrador', 'super administrador']
+        : ['usuario', 'administrador'];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
@@ -138,7 +144,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
           drawer: CustomDrawer(
             name: userController.name,
             email: userController.userEmail,
-            itemConfigs: userController.role == "cliente"
+            itemConfigs: userController.role == "usuario"
                 ? CustomerRoutes().itemConfigs
                 : AdministratorRoutes().itemConfigs,
           ),

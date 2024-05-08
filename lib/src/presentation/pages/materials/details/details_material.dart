@@ -228,7 +228,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
       ),
       floatingActionButton: isUpdateFormVisible
           ? const SizedBox()
-          : userController.role != "cliente"
+          : userController.role != "usuario"
               ? FloatingActionButton(
                   onPressed: toggleUpdateFormVisibility,
                   backgroundColor: Palette.accent,

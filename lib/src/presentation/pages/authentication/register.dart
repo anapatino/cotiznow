@@ -43,7 +43,7 @@ class Register extends StatelessWidget {
       String email = controllerEmail.text;
       String password = controllerPassword.text;
       String address = controllerAddress.text;
-      String role = "cliente";
+      String role = "usuario";
       String account = "activa";
       if (name.isNotEmpty &&
           lastName.isNotEmpty &&
@@ -183,7 +183,21 @@ class Register extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                        top: screenHeight * 0.065,
+                      top: screenHeight * 0.04,
+                      left: screenWidth * 0.05,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: isTablet ? 45.0 : 25.0,
+                        ),
+                        onPressed: () {
+                          Get.offAllNamed('/login');
+                        },
+                      ),
+                    ),
+                    Positioned(
+                        top: screenHeight * 0.085,
                         left: screenWidth * 0.14,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

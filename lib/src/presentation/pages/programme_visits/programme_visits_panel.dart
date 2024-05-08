@@ -34,7 +34,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
 
   Widget _buildProgrammeVisitsList() {
     return FutureBuilder<List<ProgrammeVisits>>(
-      future: widget.userController.role == "cliente"
+      future: widget.userController.role == "usuario"
           ? widget.programmeVisitsController
               .getAllVisitsByUser(widget.userController.authId)
           : widget.programmeVisitsController.getAllVisits(),
@@ -70,7 +70,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
           ProgrammeVisits programmeVisits = list[index];
           return CardVisits(
               showCardClient:
-                  widget.userController.role == "cliente" ? true : false,
+                  widget.userController.role == "usuario" ? true : false,
               onLongPress: () {
                 showDeleteAlert(programmeVisits);
               },
@@ -115,7 +115,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
           drawer: CustomDrawer(
             name: widget.userController.name,
             email: widget.userController.userEmail,
-            itemConfigs: widget.userController.role == "cliente"
+            itemConfigs: widget.userController.role == "usuario"
                 ? CustomerRoutes().itemConfigs
                 : AdministratorRoutes().itemConfigs,
           ),

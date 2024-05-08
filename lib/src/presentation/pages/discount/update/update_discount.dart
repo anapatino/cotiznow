@@ -235,7 +235,7 @@ class UpdateDiscount extends StatelessWidget {
                                 letterSpacing: 0.1,
                               ),
                             ),
-                          if (userController.role != "cliente")
+                          if (userController.role != "usuario")
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 vertical: screenHeight * 0.02,

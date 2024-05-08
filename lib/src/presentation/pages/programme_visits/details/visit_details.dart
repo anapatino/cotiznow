@@ -47,7 +47,7 @@ class _VisitDetailsState extends State<VisitDetails> {
       drawer: CustomDrawer(
         name: userController.name,
         email: userController.userEmail,
-        itemConfigs: userController.role == "cliente"
+        itemConfigs: userController.role == "usuario"
             ? CustomerRoutes().itemConfigs
             : AdministratorRoutes().itemConfigs,
       ),
@@ -164,7 +164,7 @@ class _VisitDetailsState extends State<VisitDetails> {
                         isTablet ? 0.035 : 0.042,
                       ),
                       SizedBox(height: screenHeight * 0.015),
-                      if (userController.role != "cliente")
+                      if (userController.role != "usuario")
                         Padding(
                           padding: EdgeInsets.only(
                               top: screenHeight * 0.04,
@@ -198,7 +198,7 @@ class _VisitDetailsState extends State<VisitDetails> {
                             ],
                           ),
                         ),
-                      if (userController.role != "cliente")
+                      if (userController.role != "usuario")
                         Padding(
                           padding: EdgeInsets.only(
                               top: screenHeight * 0.02,

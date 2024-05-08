@@ -43,7 +43,7 @@ class QuotationWidget {
   Widget buildQuotationList(
       String selectedOption, bool showOptionUpdate, Function showDeleteAlert) {
     return FutureBuilder<List<Quotation>>(
-      future: userController.role == "cliente"
+      future: userController.role == "usuario"
           ? quotationController.getQuotationsByUserId(userController.idUser)
           : quotationController.getAllQuotations(),
       builder: (context, snapshot) {

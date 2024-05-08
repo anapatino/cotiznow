@@ -65,7 +65,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
         "Tengo algunas dudas sobre la cotización: *${quotation.name}*.%0A%0A"
         "*Código de la cotización:* ${quotation.id}%0A"
         "*Estado de la cotización:* ${quotation.status}%0A"
-        "*Cliente:* ${userController.name} ${userController.lastName}%0A"
+        "*Usuario:* ${userController.name} ${userController.lastName}%0A"
         "*Descripción:* ${quotation.description}%0A%0A"
         "¿Me podrías ayudar con esto? 🤔%0A%0A";
     final Uri url =
@@ -263,7 +263,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                           _buildCardMaterial(quotation.materials),
                         ],
                       ),
-                    if (userController.role != "cliente")
+                    if (userController.role != "usuario")
                       Padding(
                         padding: EdgeInsets.only(
                             bottom: screenHeight * 0.02,
@@ -300,16 +300,16 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                           vertical: screenHeight * 0.03,
                           horizontal: screenWidth * 0.02),
                       child: Row(
-                        mainAxisAlignment: userController.role == "cliente"
+                        mainAxisAlignment: userController.role == "usuario"
                             ? MainAxisAlignment.end
                             : MainAxisAlignment.spaceBetween,
                         children: [
-                          if (userController.role != "cliente")
+                          if (userController.role != "usuario")
                             CustomElevatedButton(
                               text: 'Actualizar',
                               onPressed: updateQuotation,
                               height: screenHeight * 0.065,
-                              width: userController.role == "cliente"
+                              width: userController.role == "usuario"
                                   ? screenWidth * 0.65
                                   : screenWidth * 0.85,
                               textColor: Colors.white,
@@ -319,7 +319,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                               backgroundColor: Palette.primary,
                               hasBorder: false,
                             ),
-                          if (userController.role == "cliente")
+                          if (userController.role == "usuario")
                             InkWell(
                               splashColor: Colors.transparent,
                               highlightColor: Colors.transparent,

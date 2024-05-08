@@ -82,9 +82,9 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           total: totalQuotation,
           userId: parameters.userId,
           customizedServices: shoppingCartController.selectCustomizedService);
-      if ((userController.role == "cliente" &&
+      if ((userController.role == "usuario" &&
               parameters.status != "aprobado") ||
-          (userController.role != "cliente")) {
+          (userController.role != "usuario")) {
         confirmationUpdateQuotation(newQuotation);
       } else {
         MessageHandler.showMessageError('Validación de campos',

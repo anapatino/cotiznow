@@ -71,10 +71,10 @@ class _CustomerState extends State<Customer> {
 
   List<Users> _filterListByOption(List<Users> userList) {
     if (widget.userController.role == "administrador") {
-      return userList.where((user) => user.role == 'cliente').toList();
+      return userList.where((user) => user.role == 'usuario').toList();
     } else {
-      if (selectedOption == 'clientes') {
-        return userList.where((user) => user.role == 'cliente').toList();
+      if (selectedOption == 'usuarios') {
+        return userList.where((user) => user.role == 'usuario').toList();
       } else if (selectedOption == 'administradores') {
         return userList.where((user) => user.role == 'administrador').toList();
       } else if (selectedOption == 'super administrador') {
@@ -100,8 +100,8 @@ class _CustomerState extends State<Customer> {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
     List<String> options = widget.userController.role == "administrador"
-        ? ['clientes']
-        : ['todos', 'clientes', 'administradores', 'super administrador'];
+        ? ['usuarios']
+        : ['todos', 'usuarios', 'administradores', 'super administrador'];
 
     return PopScope(
       canPop: false,

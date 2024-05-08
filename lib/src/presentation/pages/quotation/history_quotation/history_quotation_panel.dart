@@ -56,7 +56,7 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
           drawer: CustomDrawer(
             name: widget.userController.name,
             email: widget.userController.userEmail,
-            itemConfigs: widget.userController.role == "cliente"
+            itemConfigs: widget.userController.role == "usuario"
                 ? CustomerRoutes().itemConfigs
                 : AdministratorRoutes().itemConfigs,
           ),
