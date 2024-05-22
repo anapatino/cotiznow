@@ -40,7 +40,7 @@ class _HistoryQuotationPanelState extends State<HistoryQuotationPanel> {
     screenHeight = MediaQuery.of(context).size.height;
     isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
-    List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada'];
+    List<String> options = ['todos', 'pendiente', 'aprobada', 'rechazada',"terminado"];
     final QuotationWidget quotationWidget = QuotationWidget(
       screenHeight: screenHeight,
       screenWidth: screenWidth,

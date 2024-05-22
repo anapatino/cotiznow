@@ -2,14 +2,15 @@ import 'package:cotiznow/lib.dart';
 
 class CardQuotation extends StatelessWidget {
   final Color backgroundColor;
-  final String title;
-  final String description;
+  final String name;
+  final String address;
+  final String phone;
   final String status;
   final String total;
   final Function onTap;
   final Function onLongPress;
   final Function onDoubleTap;
-  final bool showDescription;
+  final bool showMoreInfo;
   final bool showIcon;
   final Function icon;
   final bool isHistory;
@@ -19,10 +20,11 @@ class CardQuotation extends StatelessWidget {
     super.key,
     required this.onLongPress,
     required this.backgroundColor,
-    this.showDescription = false,
+    this.showMoreInfo = false,
     this.showIcon = false,
-    required this.title,
-    required this.description,
+    required this.name,
+    required this.address,
+    required this.phone,
     required this.status,
     required this.total,
     required this.onTap,
@@ -79,7 +81,7 @@ class CardQuotation extends StatelessWidget {
                 SizedBox(
                   width: screenWidth * 0.7,
                   child: Text(
-                    title,
+                    name,
                     style: GoogleFonts.varelaRound(
                       fontSize:
                           isTablet ? screenWidth * 0.039 : screenWidth * 0.049,
@@ -97,18 +99,34 @@ class CardQuotation extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                if (showDescription)
+                if (showMoreInfo)
                   SizedBox(
                     width: screenWidth * 0.7,
-                    child: Text(
-                      description,
-                      style: GoogleFonts.varelaRound(
-                        fontSize: isTablet
-                            ? screenWidth * 0.028
-                            : screenWidth * 0.033,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white,
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Ubicación: $address",
+                          style: GoogleFonts.varelaRound(
+                            fontSize: isTablet
+                                ? screenWidth * 0.028
+                                : screenWidth * 0.033,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          "Telefono: $phone",
+                          style: GoogleFonts.varelaRound(
+                            fontSize: isTablet
+                                ? screenWidth * 0.028
+                                : screenWidth * 0.033,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 Row(

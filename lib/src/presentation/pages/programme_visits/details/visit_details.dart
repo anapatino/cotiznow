@@ -29,7 +29,7 @@ class _VisitDetailsState extends State<VisitDetails> {
           "Se ha actualizado en la base de datos con exito");
 
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      Get.toNamed('/request-visit');
     } catch (error) {
       MessageHandler.showMessageError('Error al actualizar visita', error);
     }
@@ -113,6 +113,12 @@ class _VisitDetailsState extends State<VisitDetails> {
                       customText(
                         'Fecha de registro:',
                         programmeVisit.date,
+                        screenWidth,
+                        isTablet ? 0.035 : 0.04,
+                      ),
+                      customText(
+                        'Fecha de la visita:',
+                        programmeVisit.visitingDate,
                         screenWidth,
                         isTablet ? 0.035 : 0.04,
                       ),

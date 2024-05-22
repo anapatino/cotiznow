@@ -99,7 +99,8 @@ class ShoppingCartController extends GetxController {
       selectCustomizedService.add(CustomizedService(
         id: service.id,
         name: service.name,
-        price: total.toString(),
+        total: total.toString(),
+        price: servicePrice.toString(),
         measures: Measures(height: height.toString(), width: width.toString()),
       ));
     }
@@ -137,7 +138,7 @@ class ShoppingCartController extends GetxController {
 
   int calculateServicesTotal() {
     return selectCustomizedService.fold(0, (sum, service) {
-      return sum + int.parse(service.price);
+      return sum + int.parse(service.total);
     });
   }
 

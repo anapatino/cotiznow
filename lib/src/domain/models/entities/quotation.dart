@@ -3,7 +3,8 @@ import 'package:cotiznow/src/domain/domain.dart';
 class Quotation {
   String id;
   String name;
-  String description;
+  String address;
+  String phone;
   List<Materials> materials;
   List<CustomizedService> customizedServices;
   String status;
@@ -13,7 +14,8 @@ class Quotation {
   Quotation({
     required this.id,
     required this.name,
-    required this.description,
+    required this.address,
+    required this.phone,
     required this.materials,
     required this.status,
     required this.total,
@@ -25,7 +27,8 @@ class Quotation {
     return Quotation(
       id: json?['id'] ?? '',
       name: json?['name'] ?? '',
-      description: json?['description'] ?? '',
+      address: json?['address'] ?? '',
+      phone: json?['phone'] ?? '',
       materials: (json?['materials'] as List<dynamic>?)
               ?.map((materialJson) => Materials.fromJson(materialJson))
               .toList() ??
@@ -44,7 +47,8 @@ class Quotation {
   Map<String, dynamic> toJson() {
     return {
       "name": name,
-      "description": description,
+      "address": address,
+      "phone": phone,
       "materials": materials.map((material) => material.toJson()).toList(),
       "status": status,
       "total": total,

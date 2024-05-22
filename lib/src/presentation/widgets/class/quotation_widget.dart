@@ -112,8 +112,9 @@ class QuotationWidget {
                 : quotation.status == "rechazada"
                     ? Palette.error
                     : Palette.primary,
-            title: quotation.name,
-            description: quotation.description,
+            name: quotation.name,
+            address: quotation.address,
+            phone: quotation.phone,
             status: quotation.status,
             total: quotation.total,
             onTap: () async {
@@ -153,8 +154,9 @@ class QuotationWidget {
                 : quotation.status == "rechazada"
                     ? Palette.error
                     : Palette.primary,
-            title: quotation.name,
-            description: quotation.description,
+            name: quotation.name,
+            address: quotation.address,
+            phone: quotation.phone,
             status: quotation.status,
             total: quotation.total,
             onTap: () async {

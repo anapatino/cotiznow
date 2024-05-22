@@ -6,6 +6,7 @@ class ProgrammeVisits {
   String date;
   String motive;
   String status;
+  String visitingDate;
 
   ProgrammeVisits({
     required this.id,
@@ -13,6 +14,7 @@ class ProgrammeVisits {
     required this.motive,
     required this.date,
     required this.status,
+    required this.visitingDate,
   });
 
   factory ProgrammeVisits.fromJson(Map<String, dynamic>? json) {
@@ -22,6 +24,7 @@ class ProgrammeVisits {
       motive: json?['motive'] ?? '',
       date: json?['date'] ?? '',
       status: json?['status'] ?? '',
+      visitingDate: json?['visitingDate'] ?? '',
     );
   }
 
@@ -32,6 +35,7 @@ class ProgrammeVisits {
       'motive': motive,
       'date': date,
       'status': status,
+      'visitingDate': visitingDate,
     };
   }
 }

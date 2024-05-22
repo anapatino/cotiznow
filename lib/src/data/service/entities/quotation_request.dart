@@ -13,7 +13,8 @@ class QuotationRequest {
       DocumentReference newQuotation =
           await database.collection('quotations').add({
         'name': quotation.name,
-        'description': quotation.description,
+        'address': quotation.address,
+        'phone': quotation.phone,
         'materials':
             quotation.materials.map((material) => material.toJson()).toList(),
         'status': quotation.status,
@@ -86,7 +87,6 @@ class QuotationRequest {
       await database.collection('quotations').doc(quotation.id).update({
         'customizedServices': FieldValue.delete(),
       });
-      print("Campo 'customizedServices' eliminado correctamente.");
     } catch (e) {
       throw Future.error('Error al eliminar el campo customizedServices: $e');
     }

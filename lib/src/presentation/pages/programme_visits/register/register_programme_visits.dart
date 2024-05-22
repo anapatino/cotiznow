@@ -18,6 +18,7 @@ class RegisterProgrammeVisits extends StatefulWidget {
 
 class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
   TextEditingController controllerMotive = TextEditingController();
+  TextEditingController controllerDate = TextEditingController();
   double screenWidth = 0;
   double screenHeight = 0;
   bool isTablet = false;
@@ -36,13 +37,15 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
     String formattedDate =
         "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     String motive = controllerMotive.text;
-    if (motive.isNotEmpty) {
+    String visitingDate = controllerDate.text;
+    if (motive.isNotEmpty && visitingDate.isNotEmpty) {
       ProgrammeVisits programmeVisit = ProgrammeVisits(
           id: "",
           user: widget.userController.user!,
           motive: motive,
           date: formattedDate,
-          status: 'pendiente');
+          status: 'pendiente',
+          visitingDate: visitingDate);
       widget.programmeVisitsController
           .registerVisit(programmeVisit)
           .then((value) async {
@@ -52,7 +55,7 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
       });
       _onCancelForm();
     } else {
-      MessageHandler.showMessageError('Validación de campos',
+      MessageHandler.showMessageWarning('Validación de campos',
           'Ingrese los campos requeridos para poder registrar');
     }
   }
@@ -88,7 +91,8 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.04),
+                padding: EdgeInsets.only(
+                    top: screenHeight * 0.04, bottom: screenHeight * 0.02),
                 child: Text(
                   "Registrar Visita",
                   style: GoogleFonts.varelaRound(
@@ -97,6 +101,40 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
                         isTablet ? screenWidth * 0.04 : screenWidth * 0.05,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.125,
+                    vertical: screenHeight * 0.02),
+                child: GestureDetector(
+                  onTap: () {
+                    showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(DateTime.now().year - 100),
+                            lastDate: DateTime(DateTime.now().year + 1))
+                        .then((value) {
+                      if (value != null) {
+                        controllerDate.text =
+                            '${value.day.toString()}/${value.month.toString()}/${value.year.toString()}';
+                      }
+                    });
+                  },
+                  child: TextField(
+                    controller: controllerDate,
+                    decoration: InputDecoration(
+                        labelText: 'Fecha de visita ',
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(8.0),
+                        )),
+                    style: const TextStyle(color: Colors.black),
+                    enabled: false,
                   ),
                 ),
               ),

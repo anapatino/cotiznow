@@ -12,7 +12,9 @@ class RegisterQuotation extends StatefulWidget {
 
 class _RegisterQuotationState extends State<RegisterQuotation> {
   TextEditingController controllerName = TextEditingController();
-  TextEditingController controllerDescription = TextEditingController();
+  TextEditingController controllerAddress = TextEditingController();
+  TextEditingController controllerPhone = TextEditingController();
+
   List<CustomizedService> customizedServices = [];
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
@@ -20,9 +22,18 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   String totalQuotation = "";
   int _activeCurrentStep = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    controllerAddress.text = userController.address;
+    controllerPhone.text = userController.phone;
+    controllerName.text = userController.name;
+  }
+
   void clearControllers() {
     controllerName.clear();
-    controllerDescription.clear();
+    controllerAddress.clear();
+    controllerPhone.clear();
   }
 
   void handleContinue() {
@@ -39,15 +50,18 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
 
   void sendQuotation() {
     String name = controllerName.text;
-    String description = controllerDescription.text;
+    String address = controllerAddress.text;
+    String phone = controllerPhone.text;
 
     if (name.isNotEmpty &&
-        description.isNotEmpty &&
+        address.isNotEmpty &&
+        phone.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation quotation = Quotation(
           id: '',
           name: name,
-          description: description,
+          address: address,
+          phone: phone,
           materials: shoppingCartController.cartItems,
           status: 'pendiente',
           total: totalQuotation,
@@ -81,7 +95,8 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
             )),
         content: GeneralInformation(
           controllerName: controllerName,
-          controllerDescription: controllerDescription,
+          controllerAddress: controllerAddress,
+          controllerPhone: controllerPhone,
           onNext: handleContinue,
         ),
       ),
@@ -135,11 +150,12 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
                     ),
                   ),
                   CardQuotation(
-                    showDescription: true,
+                    showMoreInfo: true,
                     onLongPress: () {},
                     backgroundColor: Palette.accent,
-                    title: controllerName.text,
-                    description: controllerDescription.text,
+                    name: controllerName.text,
+                    address: controllerAddress.text,
+                    phone: controllerPhone.text,
                     status: "pendiente",
                     total: totalQuotation,
                     onTap: () {},

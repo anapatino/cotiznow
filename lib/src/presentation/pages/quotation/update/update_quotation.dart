@@ -13,7 +13,8 @@ class UpdateQuotation extends StatefulWidget {
 class _UpdateQuotationState extends State<UpdateQuotation> {
   final parameters = Get.arguments as Quotation;
   TextEditingController controllerName = TextEditingController();
-  TextEditingController controllerDescription = TextEditingController();
+  TextEditingController controllerAddress = TextEditingController();
+  TextEditingController controllerPhone = TextEditingController();
   UserController userController = Get.find();
   QuotationController quotationController = Get.find();
   ShoppingCartController shoppingCartController = Get.find();
@@ -31,7 +32,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
 
   void clearControllers() {
     controllerName.clear();
-    controllerDescription.clear();
+    controllerAddress.clear();
+    controllerPhone.clear();
   }
 
   void handleContinue() {
@@ -48,8 +50,6 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
 
   Future<void> loadControllers() async {
     if (parameters != null) {
-      print(
-          "customizedService update: ${parameters.customizedServices.length}");
       await shoppingCartController
           .updateSelectedServices(parameters.customizedServices)
           .then((value) => {
@@ -59,7 +59,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
               });
       list = List<Materials>.from(parameters.materials);
       controllerName.text = parameters.name;
-      controllerDescription.text = parameters.description;
+      controllerAddress.text = parameters.address;
+      controllerPhone.text = parameters.phone;
       totalQuotation = parameters.total;
       shoppingCartController.cartItems =
           RxList<Materials>(parameters.materials);
@@ -68,22 +69,26 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
 
   void updateQuotation() {
     String name = controllerName.text;
-    String description = controllerDescription.text;
+    String address = controllerAddress.text;
+    String phone = controllerPhone.text;
 
     if (name.isNotEmpty &&
-        description.isNotEmpty &&
+        address.isNotEmpty &&
+        phone.isNotEmpty &&
         totalQuotation.isNotEmpty) {
       Quotation newQuotation = Quotation(
           id: parameters.id,
           name: name,
-          description: description,
+          address: address,
+          phone: phone,
           materials: shoppingCartController.cartItems,
           status: parameters.status,
           total: totalQuotation,
           userId: parameters.userId,
           customizedServices: shoppingCartController.selectCustomizedService);
       if ((userController.role == "usuario" &&
-              parameters.status != "aprobado") ||
+              parameters.status != "aprobado" &&
+              parameters.status != "terminado") ||
           (userController.role != "usuario")) {
         confirmationUpdateQuotation(newQuotation);
       } else {
@@ -110,7 +115,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
             )),
         content: GeneralInformation(
           controllerName: controllerName,
-          controllerDescription: controllerDescription,
+          controllerAddress: controllerAddress,
+          controllerPhone: controllerPhone,
           onNext: handleContinue,
         ),
       ),
@@ -161,11 +167,12 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
                     ),
                   ),
                   CardQuotation(
-                      showDescription: true,
+                      showMoreInfo: true,
                       onLongPress: () {},
                       backgroundColor: Palette.accent,
-                      title: controllerName.text,
-                      description: controllerDescription.text,
+                      name: controllerName.text,
+                      address: controllerAddress.text,
+                      phone: controllerPhone.text,
                       status: parameters.status,
                       total: totalQuotation,
                       onTap: () {},

@@ -26,18 +26,8 @@ class InvoiceRequest {
   }
 
   static Future<String> generatePDF(
-      Quotation quotation, Users user, Management management) async {
-    List<Map<String, dynamic>> serviceDetailsList =
-        quotation.customizedServices.map((service) {
-      return {
-        'name': service.name,
-        'price': service.price,
-      };
-    }).toList();
+      Quotation quotation, Management management) async {
     var quotationJson = quotation.toJson();
-    quotationJson.remove('customizedServices');
-    quotationJson['idService'] = serviceDetailsList;
-
     var url = Uri.parse('https://pdf-invoicing-app.onrender.com/invoice');
     var methodJson = management.methodOfPayment.toJson();
 
@@ -46,9 +36,9 @@ class InvoiceRequest {
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          'name': '${user.name} ${user.lastName}',
-          'address': user.address,
-          'phone': user.phone,
+          'name': quotation.name,
+          'address': quotation.address,
+          'phone': quotation.phone,
           'quotation': quotationJson,
           'methodOfPayment': methodJson
         }),

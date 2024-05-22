@@ -3,13 +3,15 @@ import 'package:cotiznow/src/presentation/widgets/components/components.dart';
 
 class GeneralInformation extends StatelessWidget {
   final TextEditingController controllerName;
-  final TextEditingController controllerDescription;
+  final TextEditingController controllerAddress;
+  final TextEditingController controllerPhone;
   final VoidCallback onNext;
 
   const GeneralInformation(
       {super.key,
       required this.controllerName,
-      required this.controllerDescription,
+      required this.controllerAddress,
+      required this.controllerPhone,
       required this.onNext});
 
   @override
@@ -21,8 +23,8 @@ class GeneralInformation extends StatelessWidget {
     return Column(
       children: [
         CustomTextField(
-          icon: Icons.dehaze_rounded,
-          hintText: 'Nombre',
+          icon: Icons.person,
+          hintText: 'Nombre completo',
           maxLine: 3,
           isPassword: false,
           width: screenWidth * 0.75,
@@ -33,16 +35,28 @@ class GeneralInformation extends StatelessWidget {
           controller: controllerName,
         ),
         CustomTextField(
-          icon: Icons.dehaze_rounded,
-          hintText: 'Descripción',
-          maxLine: 9,
+          icon: Icons.location_on_rounded,
+          hintText: 'Direccion',
+          maxLine: 3,
           isPassword: false,
           width: screenWidth * 0.75,
-          height: screenHeight * 0.17,
+          height: screenHeight * 0.1,
           inputColor: Palette.grey,
           textColor: Palette.textColor,
           onChanged: (value) {},
-          controller: controllerDescription,
+          controller: controllerAddress,
+        ),
+        CustomTextField(
+          icon: Icons.phone,
+          hintText: 'Telefono',
+          maxLine: 3,
+          isPassword: false,
+          width: screenWidth * 0.75,
+          height: screenHeight * 0.1,
+          inputColor: Palette.grey,
+          textColor: Palette.textColor,
+          onChanged: (value) {},
+          controller: controllerPhone,
         ),
         Padding(
           padding: EdgeInsets.symmetric(

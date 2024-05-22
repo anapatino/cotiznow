@@ -47,7 +47,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
         },
       );
       String downloadPath = await invoiceController.generatePDF(
-          quotation, userController.user!, managementController.management!);
+          quotation, managementController.management!);
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
 
@@ -65,8 +65,9 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
         "Tengo algunas dudas sobre la cotización: *${quotation.name}*.%0A%0A"
         "*Código de la cotización:* ${quotation.id}%0A"
         "*Estado de la cotización:* ${quotation.status}%0A"
-        "*Usuario:* ${userController.name} ${userController.lastName}%0A"
-        "*Descripción:* ${quotation.description}%0A%0A"
+        "*Usuario:* ${quotation.name}%0A"
+        "*Dirección:* ${quotation.address}%0A%0A"
+        "*Phone:* ${quotation.phone}%0A%0A"
         "¿Me podrías ayudar con esto? 🤔%0A%0A";
     final Uri url =
         Uri.parse('https://wa.me/${managementController.phone}?text=$message');
@@ -126,7 +127,7 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
     screenHeight = MediaQuery.of(context).size.height;
     isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
-    List<String> options = ['pendiente', 'aprobada', 'rechazada'];
+    List<String> options = ['pendiente', 'aprobada', 'rechazada',"terminado"];
 
     return SlideInRight(
       duration: const Duration(milliseconds: 15),
@@ -155,15 +156,16 @@ class _DetailsQuotationState extends State<DetailsQuotation> {
                 ),
                 CardQuotation(
                     showIcon: true,
-                    showDescription: true,
+                    showMoreInfo: true,
                     onLongPress: () {},
                     backgroundColor: quotation.status == "pendiente"
                         ? Palette.accent
                         : quotation.status == "rechazada"
                             ? Palette.error
                             : Palette.primary,
-                    title: quotation.name,
-                    description: quotation.description,
+                    name: quotation.name,
+                    address: quotation.address,
+                    phone: quotation.phone,
                     status: quotation.status,
                     total: quotation.total,
                     onTap: () {},

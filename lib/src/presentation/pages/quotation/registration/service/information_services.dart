@@ -84,7 +84,7 @@ class _InformationServicesState extends State<InformationServices> {
     int servicesTotal = shoppingCartController.calculateServicesTotal();
     int iva = 19;
     int total = materialsTotal.round() + servicesTotal;
-    int newTotal = (total + (total * iva / 100)).toInt();
+    int newTotal = (total + (total * iva / 100)).round();
 
     widget.onSelected(
       newTotal.toString(),
@@ -223,18 +223,47 @@ class _InformationServicesState extends State<InformationServices> {
                 letterSpacing: 1,
               )),
         ),
-        Text(
-          shoppingCartController.selectService.isEmpty
-              ? "No hay servicios seleccionados"
-              : shoppingCartController.selectService
-                  .map((service) => service.name)
-                  .join(", "),
-          style: GoogleFonts.varelaRound(
-            color: Palette.textColor,
-            fontSize: isTablet ? screenWidth * 0.028 : screenWidth * 0.035,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 1,
-          ),
+        Column(
+          children: [
+            if (shoppingCartController.selectService.isEmpty)
+              Text(
+                "No hay servicios seleccionados",
+                style: GoogleFonts.varelaRound(
+                  color: Colors.black,
+                  fontSize:
+                      isTablet ? screenWidth * 0.028 : screenWidth * 0.035,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 1,
+                ),
+              )
+            else
+              Column(
+                children: shoppingCartController.selectService.map((service) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        service.name,
+                        style: GoogleFonts.varelaRound(
+                          color: Colors.black,
+                          fontSize: isTablet
+                              ? screenWidth * 0.028
+                              : screenWidth * 0.035,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _onServiceDropdownChangedRegister(service);
+                        },
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+          ],
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

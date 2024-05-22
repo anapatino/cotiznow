@@ -12,6 +12,7 @@ class ProgrammeVisitsRequest {
         'motive': visit.motive,
         'date': visit.date,
         'status': visit.status,
+        'visitingDate': visit.visitingDate
       });
 
       String visitId = documentReference.id;

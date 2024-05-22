@@ -159,7 +159,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
                   Visibility(
                     visible: isContainerVisible,
                     child: Positioned(
-                      top: screenHeight * 0.5,
+                      top: screenHeight * 0.45,
                       child: RegisterProgrammeVisits(
                         onCancelForm: () {
                           toggleRegisterFormVisibility();
@@ -176,7 +176,7 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
               : FloatingActionButton(
                   onPressed: toggleRegisterFormVisibility,
                   backgroundColor: Palette.primary,
-                  child: Icon(
+                  child:  Icon(
                     Icons.add,
                     color: Colors.white,
                   ),

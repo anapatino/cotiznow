@@ -2,12 +2,14 @@ class CustomizedService {
   String id;
   String name;
   String price;
+  String total;
   Measures measures;
 
   CustomizedService({
     required this.id,
     required this.name,
     required this.price,
+    required this.total,
     required this.measures,
   });
 
@@ -16,6 +18,7 @@ class CustomizedService {
       id: json?['id'] ?? '',
       name: json?['name'] ?? '',
       price: json?['price'] ?? '',
+      total: json?['total'] ?? '',
       measures: Measures.fromJson(json?['measures']),
     );
   }
@@ -25,6 +28,7 @@ class CustomizedService {
       'id': id,
       'name': name,
       'price': price,
+      'total': total,
       'measures': measures.toJson(),
     };
   }
