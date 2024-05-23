@@ -118,6 +118,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         controllerAccount.text =
             account.isEmpty ? controllerAccount.text : account;
       });
+      Get.offAllNamed('/customers');
     } catch (error) {
       MessageHandler.showMessageError('Error al actualizar usuario', error);
     }
