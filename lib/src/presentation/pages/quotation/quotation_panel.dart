@@ -129,11 +129,16 @@ class _QuotationPanelState extends State<QuotationPanel> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          String message =
-              await widget.quotationController.deleteQuotation(quotation);
-          MessageHandler.showMessageSuccess(
-              'Eliminación de cotizacion exitosa', message);
-          refreshList();
+          if (widget.userController.role != 'administrador') {
+            String message =
+                await widget.quotationController.deleteQuotation(quotation);
+            MessageHandler.showMessageSuccess(
+                'Eliminación de cotizacion exitosa', message);
+            refreshList();
+          } else {
+            MessageHandler.showMessageWarning('Acceso denegado',
+                'No tiene permisos para eliminar, comuniquese con el super administrador. ');
+          }
         } catch (e) {
           MessageHandler.showMessageError('Error al eliminar cotización', e);
         }

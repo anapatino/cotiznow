@@ -1,9 +1,12 @@
 import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/domain/domain.dart';
 import 'package:cotiznow/src/presentation/widgets/class/class.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../../routes/routes.dart';
 import '../../../widgets/components/components.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class VisitDetails extends StatefulWidget {
   const VisitDetails({
@@ -30,8 +33,36 @@ class _VisitDetailsState extends State<VisitDetails> {
 
       // ignore: use_build_context_synchronously
       Get.toNamed('/request-visit');
+      await _showNotification(programmeVisit);
     } catch (error) {
       MessageHandler.showMessageError('Error al actualizar visita', error);
+    }
+  }
+
+  Future<void> _showNotification(programmeVisit) async {
+    String statusIcon;
+
+    if (programmeVisit.status == 'pendiente') {
+      statusIcon = '⌛';
+    } else if (programmeVisit.status == 'aceptada') {
+      statusIcon = '✅';
+    } else if (programmeVisit.status == 'rechazada') {
+      statusIcon = '❌';
+    } else {
+      statusIcon = '';
+    }
+
+    String message =
+        "*¡Hola ${programmeVisit.user.name} ${programmeVisit.user.lastName}!* 🛠️%0A%0A"
+        "DmSolumax te informa que la visita con el código *${programmeVisit.id}*, registrada el *${programmeVisit.date}*,%0A"
+        "para el día: *${programmeVisit.visitingDate}* 📅%0A"
+        "ha sido *${programmeVisit.status}* $statusIcon.%0A%0A"
+        "Para más información, puedes comunicarte por este medio.%0A%0A";
+
+    final Uri url = Uri.parse(
+        'https://wa.me/+57${programmeVisit.user.phone}?text=$message');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 
