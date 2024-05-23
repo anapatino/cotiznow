@@ -57479,7 +57479,7 @@ while(true)switch(s){case 0:if(b==="pendiente")q="\u231b"
 else if(b==="aceptada")q="\u2705"
 else q=b==="rechazada"?"\u274c":""
 p=a.b
-o=A.fe("https://wa.me/+57"+p.d+"?text="+("*\xa1Hola "+p.a+" "+p.b+"!* \ud83d\udee0\ufe0f%0A%0ADmSolumax te informa que la visita con el c\xf3digo *"+a.a+"*, registrada el *"+a.c+"*,%0Apara el d\xeda: *"+a.f+"* %0Aha sido *"+a.e+"* "+q+".%0A%0APara m\xe1s informaci\xf3n, puedes comunicarte por este medio.%0A%0A"),0,null)
+o=A.fe("https://wa.me/+57"+p.d+"?text="+("*\xa1Hola "+p.a+" "+p.b+"!* \ud83d\udee0\ufe0f%0A%0ADmSolumax te informa que la visita con el c\xf3digo *"+a.a+"*, registrada el *"+a.c+"*,%0Apara el d\xeda: *"+a.f+"* %0Aha sido *"+b+"* "+q+".%0A%0APara m\xe1s informaci\xf3n, puedes comunicarte por este medio.%0A%0A"),0,null)
 s=2
 return A.j(A.a5W(o),$async$AD)
 case 2:if(!d)throw A.c(A.ci("Could not launch "+o.j(0)))

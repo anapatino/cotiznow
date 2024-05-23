@@ -57,7 +57,7 @@ class _VisitDetailsState extends State<VisitDetails> {
         "*¡Hola ${programmeVisit.user.name} ${programmeVisit.user.lastName}!* 🛠️%0A%0A"
         "DmSolumax te informa que la visita con el código *${programmeVisit.id}*, registrada el *${programmeVisit.date}*,%0A"
         "para el día: *${programmeVisit.visitingDate}* %0A"
-        "ha sido *${programmeVisit.status}* $statusIcon.%0A%0A"
+        "ha sido *$selectedOption* $statusIcon.%0A%0A"
         "Para más información, puedes comunicarte por este medio.%0A%0A";
 
     final Uri url = Uri.parse(
