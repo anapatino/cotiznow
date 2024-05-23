@@ -33,20 +33,21 @@ class _VisitDetailsState extends State<VisitDetails> {
 
       // ignore: use_build_context_synchronously
       Get.toNamed('/request-visit');
-      await _showNotification(programmeVisit);
+      await _showNotification(programmeVisit, selectedOption!);
     } catch (error) {
       MessageHandler.showMessageError('Error al actualizar visita', error);
     }
   }
 
-  Future<void> _showNotification(programmeVisit) async {
+  Future<void> _showNotification(
+      ProgrammeVisits programmeVisit, String selectedOption) async {
     String statusIcon;
 
-    if (programmeVisit.status == 'pendiente') {
+    if (selectedOption == 'pendiente') {
       statusIcon = '⌛';
-    } else if (programmeVisit.status == 'aceptada') {
+    } else if (selectedOption == 'aceptada') {
       statusIcon = '✅';
-    } else if (programmeVisit.status == 'rechazada') {
+    } else if (selectedOption == 'rechazada') {
       statusIcon = '❌';
     } else {
       statusIcon = '';
@@ -55,7 +56,7 @@ class _VisitDetailsState extends State<VisitDetails> {
     String message =
         "*¡Hola ${programmeVisit.user.name} ${programmeVisit.user.lastName}!* 🛠️%0A%0A"
         "DmSolumax te informa que la visita con el código *${programmeVisit.id}*, registrada el *${programmeVisit.date}*,%0A"
-        "para el día: *${programmeVisit.visitingDate}* 📅%0A"
+        "para el día: *${programmeVisit.visitingDate}* %0A"
         "ha sido *${programmeVisit.status}* $statusIcon.%0A%0A"
         "Para más información, puedes comunicarte por este medio.%0A%0A";
 
