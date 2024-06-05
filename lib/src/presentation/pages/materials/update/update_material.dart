@@ -25,7 +25,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   TextEditingController controllerDescription = TextEditingController();
   TextEditingController controllerQuantity = TextEditingController();
   TextEditingController controllerSalePrice = TextEditingController();
-  TextEditingController controllerPurchasePrice = TextEditingController();
   TextEditingController controllerCode = TextEditingController();
   TextEditingController controllerSectionInitial = TextEditingController();
   List<String> optionsSection = [];
@@ -55,7 +54,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
       controllerDescription.text = widget.material.description;
       controllerQuantity.text = widget.material.quantity;
       controllerSalePrice.text = widget.material.salePrice;
-      controllerPurchasePrice.text = widget.material.purchasePrice;
       controllerCode.text = widget.material.code;
       selectedOption = widget.material.size;
     } catch (e) {
@@ -73,7 +71,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
     controllerDescription.clear();
     controllerQuantity.clear();
     controllerSalePrice.clear();
-    controllerPurchasePrice.clear();
     controllerCode.clear();
     urlPhoto = "";
   }
@@ -136,13 +133,12 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
   }
 
   bool validateFields(String name, String description, String quantity,
-      String salePrice, String purchasePrice, String code) {
+      String salePrice, String code) {
     return name.isNotEmpty &&
         description.isNotEmpty &&
         quantity.isNotEmpty &&
         salePrice.isNotEmpty &&
-        code.isNotEmpty &&
-        purchasePrice.isNotEmpty;
+        code.isNotEmpty;
   }
 
   Future<void> updateMaterial() async {
@@ -154,12 +150,10 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         ? selectedOptionSectionId!
         : widget.material.sectionId;
     String salePrice = controllerSalePrice.text;
-    String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
     String size =
         selectedOption != null ? selectedOption! : widget.material.size;
-    if (validateFields(
-        name, description, quantity, salePrice, purchasePrice, code)) {
+    if (validateFields(name, description, quantity, salePrice, code)) {
       if (urlPhoto.isEmpty) {
         urlPhoto = widget.material.urlPhoto;
       }
@@ -169,7 +163,7 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
         name: name,
         unit: unit,
         size: size,
-        purchasePrice: purchasePrice,
+        purchasePrice: "",
         salePrice: salePrice,
         sectionId: sectionId,
         quantity: quantity,
@@ -321,18 +315,6 @@ class _UpdateFormMaterialState extends State<UpdateFormMaterial> {
                             });
                           },
                         ),
-                      ),
-                      CustomTextField(
-                        icon: Icons.dehaze_rounded,
-                        hintText: 'Precio compra',
-                        type: TextInputType.number,
-                        isPassword: false,
-                        width: screenWidth * 0.75,
-                        height: screenHeight * 0.075,
-                        inputColor: Colors.white,
-                        textColor: Colors.black,
-                        onChanged: (value) {},
-                        controller: controllerPurchasePrice,
                       ),
                       CustomTextField(
                         icon: Icons.dehaze_rounded,

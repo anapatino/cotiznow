@@ -23,7 +23,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
   TextEditingController controllerDescription = TextEditingController();
   TextEditingController controllerQuantity = TextEditingController();
   TextEditingController controllerSalePrice = TextEditingController();
-  TextEditingController controllerPurchasePrice = TextEditingController();
   TextEditingController controllerCode = TextEditingController();
   TextEditingController controllerRegisterUnit = TextEditingController();
   List<String> optionsSection = [];
@@ -44,7 +43,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     controllerDescription.clear();
     controllerQuantity.clear();
     controllerSalePrice.clear();
-    controllerPurchasePrice.clear();
     controllerCode.clear();
     controllerRegisterUnit.clear();
   }
@@ -104,7 +102,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
     String sectionId =
         selectedOptionSectionId != null ? selectedOptionSectionId! : "";
     String salePrice = controllerSalePrice.text;
-    String purchasePrice = controllerPurchasePrice.text;
     String code = controllerCode.text;
     String status = "activo";
     String unit = controllerUnit.text;
@@ -114,10 +111,10 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
       await registerNewUnitIfNeeded(newSize);
     }
 
-    if (validateFields(name, description, quantity, sectionId, salePrice,
-        purchasePrice, code, unit, newSize)) {
+    if (validateFields(name, description, quantity, sectionId, salePrice, code,
+        unit, newSize)) {
       registerMaterialInDatabase(name, description, quantity, sectionId,
-          salePrice, purchasePrice, code, status, unit, newSize);
+          salePrice, code, status, unit, newSize);
     } else {
       MessageHandler.showMessageWarning('Validación de campos',
           'Ingrese los campos requeridos para poder registrar');
@@ -143,7 +140,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
       String quantity,
       String sectionId,
       String salePrice,
-      String purchasePrice,
       String code,
       String unit,
       String size) {
@@ -153,7 +149,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
         sectionId.isNotEmpty &&
         salePrice.isNotEmpty &&
         code.isNotEmpty &&
-        purchasePrice.isNotEmpty &&
         unit.isNotEmpty &&
         size.isNotEmpty &&
         url_photo.isNotEmpty;
@@ -165,7 +160,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
       String quantity,
       String sectionId,
       String salePrice,
-      String purchasePrice,
       String code,
       String status,
       String unit,
@@ -179,7 +173,7 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
       name: name,
       unit: unit,
       size: newSize,
-      purchasePrice: purchasePrice,
+      purchasePrice: "",
       salePrice: salePrice,
       sectionId: sectionFound.id,
       quantity: quantity,
@@ -391,18 +385,6 @@ class _RegisterMaterialFormState extends State<RegisterMaterialForm> {
                               ),
                           ],
                         ),
-                      ),
-                      CustomTextField(
-                        icon: Icons.dehaze_rounded,
-                        hintText: 'Precio compra',
-                        type: TextInputType.number,
-                        isPassword: false,
-                        width: screenWidth * 0.75,
-                        height: screenHeight * 0.075,
-                        inputColor: Colors.white,
-                        textColor: Colors.black,
-                        onChanged: (value) {},
-                        controller: controllerPurchasePrice,
                       ),
                       CustomTextField(
                         icon: Icons.dehaze_rounded,

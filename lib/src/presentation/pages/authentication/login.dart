@@ -99,20 +99,18 @@ class _LoginState extends State<Login> {
       if (email.isNotEmpty && password.isNotEmpty) {
         userController.login(email, password).then((value) async {
           if (userController.userEmail.isNotEmpty) {
-            if (userController.role == "usuario" &&
-                userController.account == "activa") {
-              registerDataCache();
-              Get.offAll(() => CustomerDashboard());
-            }
-            if (userController.role == "administrador" ||
-                userController.role == "super administrador" &&
-                    userController.account == "activa") {
-              registerDataCache();
-              Get.offAll(() => AdministratorDashboard());
-            }
             if (userController.account != "activa") {
               MessageHandler.showMessageWarning("Cuenta inactiva",
                   "La cuenta con la que ingresó se encuentra inactiva. Para más información comunicarse con el administrador.");
+            } else {
+              if (userController.role == "usuario") {
+                registerDataCache();
+                Get.offAll(() => CustomerDashboard());
+              } else if (userController.role == "administrador" ||
+                  userController.role == "super administrador") {
+                registerDataCache();
+                Get.offAll(() => AdministratorDashboard());
+              }
             }
           }
         }).catchError((error) {
