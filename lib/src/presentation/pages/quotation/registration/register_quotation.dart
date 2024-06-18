@@ -49,6 +49,9 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
   }
 
   void sendQuotation() {
+        DateTime now = DateTime.now();
+    String formattedDate =
+        "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     String name = controllerName.text;
     String address = controllerAddress.text;
     String phone = controllerPhone.text;
@@ -56,7 +59,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
     if (name.isNotEmpty &&
         address.isNotEmpty &&
         phone.isNotEmpty &&
-        totalQuotation.isNotEmpty) {
+        totalQuotation.isNotEmpty && formattedDate.isNotEmpty) {
       Quotation quotation = Quotation(
           id: '',
           name: name,
@@ -66,7 +69,7 @@ class _RegisterQuotationState extends State<RegisterQuotation> {
           status: 'pendiente',
           total: totalQuotation,
           userId: userController.idUser,
-          customizedServices: shoppingCartController.selectCustomizedService);
+          customizedServices: shoppingCartController.selectCustomizedService, date: formattedDate);
       if (int.parse(totalQuotation) <= 0) {
         MessageHandler.showMessageWarning('Validación de campos',
             "No se puede registrar una cotización sin haber elegido un servicio/material");

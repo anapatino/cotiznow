@@ -66,6 +66,8 @@ class _InformationServicesState extends State<InformationServices> {
       sections = await sectionsController.getAllSections();
       services = await servicesController.getAllServices();
       setState(() {
+        services =
+            services.where((service) => service.status == "activo").toList();
         optionsSection = sections
             .where((section) => section.status == "activo")
             .map((section) => section.name)

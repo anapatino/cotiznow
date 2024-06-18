@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cotiznow/lib.dart';
 import 'package:cotiznow/src/data/service/service.dart';
 
 import '../../../domain/domain.dart';
@@ -23,6 +22,7 @@ class QuotationRequest {
         'customizedServices': quotation.customizedServices
             .map((service) => service.toJson())
             .toList(),
+        'date': quotation.date,
       });
       await newQuotation.update({'id': newQuotation.id});
       quotation.id = newQuotation.id;
@@ -92,10 +92,15 @@ class QuotationRequest {
     }
   }
 
+  static String _addLeadingZero(int number) {
+    return number.toString().padLeft(2, '0');
+  }
+
   static Future<String> updateQuotationStatus(
       Quotation quotation, String newStatus) async {
     DateTime now = DateTime.now();
-
+    String formattedDate =
+        "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     try {
       await database.collection('quotations').doc(quotation.id).update({
         'status': newStatus,
@@ -104,7 +109,7 @@ class QuotationRequest {
       QuotationHistory quotationHistory = QuotationHistory(
         id: "",
         quotation: quotation,
-        date: now.toString(),
+        date: formattedDate,
       );
 
       if (newStatus == "rechazada") {

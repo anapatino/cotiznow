@@ -10,6 +10,7 @@ class Quotation {
   String status;
   String total;
   String userId;
+  String date;
 
   Quotation({
     required this.id,
@@ -21,6 +22,7 @@ class Quotation {
     required this.total,
     required this.userId,
     required this.customizedServices,
+    required this.date,
   });
 
   factory Quotation.fromJson(Map<String, dynamic>? json) {
@@ -41,6 +43,7 @@ class Quotation {
                   CustomizedService.fromJson(customizedServices))
               .toList() ??
           [],
+      date: json?['date'] ?? '',
     );
   }
 
@@ -56,6 +59,7 @@ class Quotation {
       "userId": userId,
       "customizedServices":
           customizedServices.map((service) => service.toJson()).toList(),
+      "date": date,
     };
   }
 }

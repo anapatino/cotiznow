@@ -38,22 +38,38 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
         "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     String motive = controllerMotive.text;
     String visitingDate = controllerDate.text;
+
     if (motive.isNotEmpty && visitingDate.isNotEmpty) {
-      ProgrammeVisits programmeVisit = ProgrammeVisits(
-          id: "",
-          user: widget.userController.user!,
-          motive: motive,
-          date: formattedDate,
-          status: 'pendiente',
-          visitingDate: visitingDate);
-      widget.programmeVisitsController
-          .registerVisit(programmeVisit)
-          .then((value) async {
-        MessageHandler.showMessageSuccess('Registro de visita exitosa', value);
-      }).catchError((error) {
-        MessageHandler.showMessageError('Error al registrar visita', error);
-      });
-      _onCancelForm();
+      DateTime selectedDate = DateTime.parse(visitingDate);
+
+      if (selectedDate.year > now.year ||
+          (selectedDate.year == now.year && selectedDate.month > now.month) ||
+          (selectedDate.year == now.year &&
+              selectedDate.month == now.month &&
+              selectedDate.day > now.day)) {
+        ProgrammeVisits programmeVisit = ProgrammeVisits(
+            id: "",
+            user: widget.userController.user!,
+            motive: motive,
+            date: formattedDate,
+            status: 'pendiente',
+            visitingDate: visitingDate);
+        widget.programmeVisitsController
+            .registerVisit(programmeVisit)
+            .then((value) async {
+          MessageHandler.showMessageSuccess(
+              'Registro de visita exitosa', value);
+        }).catchError((error) {
+          MessageHandler.showMessageError('Error al registrar visita', error);
+        });
+        _onCancelForm();
+      } else {
+        MessageHandler.showMessageWarning(
+          'Fecha inválida',
+          'La fecha de visita no puede ser posterior a la fecha actual',
+        );
+        return;
+      }
     } else {
       MessageHandler.showMessageWarning('Validación de campos',
           'Ingrese los campos requeridos para poder registrar');
@@ -118,7 +134,7 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
                         .then((value) {
                       if (value != null) {
                         controllerDate.text =
-                            '${value.day.toString()}/${value.month.toString()}/${value.year.toString()}';
+                            '${value.year.toString()}-${_addLeadingZero(value.month)}-${_addLeadingZero(value.day)}';
                       }
                     });
                   },

@@ -69,7 +69,7 @@ class GeneralInformation extends StatelessWidget {
                 text: 'Continuar',
                 onPressed: onNext,
                 height: screenHeight * 0.058,
-                width: screenWidth * 0.33,
+                width: screenWidth * 0.4,
                 textColor: Colors.white,
                 textSize: isTablet ? screenWidth * 0.03 : screenWidth * 0.039,
                 backgroundColor: Palette.accent,

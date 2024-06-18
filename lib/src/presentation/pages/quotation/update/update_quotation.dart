@@ -85,7 +85,8 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
           status: parameters.status,
           total: totalQuotation,
           userId: parameters.userId,
-          customizedServices: shoppingCartController.selectCustomizedService);
+          customizedServices: shoppingCartController.selectCustomizedService,
+          date: parameters.date);
       if ((userController.role == "usuario" &&
               parameters.status != "aprobado" &&
               parameters.status != "terminado") ||
@@ -212,7 +213,7 @@ class _UpdateQuotationState extends State<UpdateQuotation> {
   }
 
   Future<void> confirmationUpdateQuotation(Quotation quotation) async {
-    DateTime now = DateTime.now();
+   DateTime now = DateTime.now();
     String formattedDate =
         "${now.year}-${_addLeadingZero(now.month)}-${_addLeadingZero(now.day)} ${_addLeadingZero(now.hour)}:${_addLeadingZero(now.minute)}:${_addLeadingZero(now.second)}";
     DialogUtil.showConfirmationDialog(
