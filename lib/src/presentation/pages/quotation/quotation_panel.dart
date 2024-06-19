@@ -129,7 +129,7 @@ class _QuotationPanelState extends State<QuotationPanel> {
       cancelButtonText: 'Cancelar',
       onConfirm: () async {
         try {
-          if (widget.userController.role != 'administrador') {
+          if (widget.userController.role == 'super administrador') {
             String message =
                 await widget.quotationController.deleteQuotation(quotation);
             MessageHandler.showMessageSuccess(

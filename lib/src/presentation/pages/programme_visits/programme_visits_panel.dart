@@ -72,7 +72,9 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
               showCardClient:
                   widget.userController.role == "usuario" ? true : false,
               onLongPress: () {
-                showDeleteAlert(programmeVisits);
+                if (widget.userController.role != "usuario") {
+                  showDeleteAlert(programmeVisits);
+                }
               },
               backgroundColor: programmeVisits.status == "pendiente"
                   ? Palette.accent
@@ -171,17 +173,18 @@ class _ProgrammeVisitsPanelState extends State<ProgrammeVisitsPanel> {
               ),
             ),
           ),
-          floatingActionButton: isContainerVisible
-              ? const SizedBox()
-              : FloatingActionButton(
-                  onPressed: toggleRegisterFormVisibility,
-                  backgroundColor: Palette.primary,
-                  child:  Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  shape: const CircleBorder(),
-                ),
+          floatingActionButton:
+              !isContainerVisible && widget.userController.role == "usuario"
+                  ? FloatingActionButton(
+                      onPressed: toggleRegisterFormVisibility,
+                      backgroundColor: Palette.primary,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      shape: const CircleBorder(),
+                    )
+                  : const SizedBox(),
         ),
       ),
     );

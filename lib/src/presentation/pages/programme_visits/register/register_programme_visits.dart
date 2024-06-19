@@ -42,11 +42,7 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
     if (motive.isNotEmpty && visitingDate.isNotEmpty) {
       DateTime selectedDate = DateTime.parse(visitingDate);
 
-      if (selectedDate.year > now.year ||
-          (selectedDate.year == now.year && selectedDate.month > now.month) ||
-          (selectedDate.year == now.year &&
-              selectedDate.month == now.month &&
-              selectedDate.day > now.day)) {
+      if (selectedDate.isAfter(now.subtract(const Duration(days: 1)))) {
         ProgrammeVisits programmeVisit = ProgrammeVisits(
             id: "",
             user: widget.userController.user!,
@@ -66,7 +62,7 @@ class _RegisterProgrammeVisitsState extends State<RegisterProgrammeVisits> {
       } else {
         MessageHandler.showMessageWarning(
           'Fecha inválida',
-          'La fecha de visita no puede ser posterior a la fecha actual',
+          'La fecha de visita no puede ser anterior a la fecha actual',
         );
         return;
       }
